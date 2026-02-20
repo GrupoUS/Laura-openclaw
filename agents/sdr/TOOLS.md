@@ -14,7 +14,7 @@ python3 /Users/mauricio/.openclaw/scripts/kiwify_cli.py search "email@exemplo.co
 
 ### Buscar Informação no RAG
 ```bash
-python3 /Users/mauricio/.openclaw/skills/uds-search/scripts/uds-search.py search "termo"
+python3 /Users/mauricio/.openclaw/workspace/skills/uds-search/scripts/uds-search.py search "termo"
 ```
 
 ---
@@ -62,7 +62,7 @@ python3 /Users/mauricio/.openclaw/skills/uds-search/scripts/uds-search.py search
 ## Skills Disponíveis
 
 ### gog-workspace (Google Workspace)
-**Path:** `/Users/mauricio/.openclaw/skills/gog-workspace/SKILL.md`
+**Path:** `/Users/mauricio/.openclaw/workspace/skills/gog-workspace/SKILL.md`
 
 **Usar para:**
 - Verificar agenda do closer (disponibilidade)
@@ -82,7 +82,7 @@ gog gmail send --to lead@email.com --subject "Confirmação de Call" --body "...
 ```
 
 ### zoom
-**Path:** `/Users/mauricio/.openclaw/skills/zoom/SKILL.md`
+**Path:** `/Users/mauricio/.openclaw/workspace/skills/zoom/SKILL.md`
 
 **Usar para:**
 - Criar link de reunião para call de qualificação
@@ -98,7 +98,7 @@ python3 /Users/mauricio/.openclaw/scripts/zoom_cli.py list-meetings
 ```
 
 ### voice-calling
-**Path:** `/Users/mauricio/.openclaw/skills/voice-calling/SKILL.md`
+**Path:** `/Users/mauricio/.openclaw/workspace/skills/voice-calling/SKILL.md`
 
 **Usar para:**
 - Ligações outbound para leads

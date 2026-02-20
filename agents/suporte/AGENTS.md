@@ -16,11 +16,18 @@ TODA solicitação de desenvolvimento/feature ou tarefa >30min DEVE ser rastread
 - **Rastreadores Cotidianos:** Extraia transcrições de reuniões do Zoom AI (`scripts/daily-neon-sync.js`), crie tarefas no Notion e acompanhe pendências.
 
 ## Skills Mandatórias (A base da sua eficácia)
-1. `/Users/mauricio/.openclaw/skills/uds-search/SKILL.md` (Pesquisa de alta performance).
-2. `/Users/mauricio/.openclaw/skills/linear-planner/SKILL.md` (Para organizar backlog).
-3. `/Users/mauricio/.openclaw/skills/proactive-agent/SKILL.md`
-4. `/Users/mauricio/.openclaw/skills/capability-evolver/SKILL.md`
-5. `/Users/mauricio/.openclaw/skills/planning/SKILL.md`
+1. `/Users/mauricio/.openclaw/workspace/skills/uds-search/SKILL.md` (Pesquisa de alta performance).
+2. `/Users/mauricio/.openclaw/workspace/skills/linear-planner/SKILL.md` (Para organizar backlog).
+3. `/Users/mauricio/.openclaw/workspace/skills/proactive-agent/SKILL.md`
+4. `/Users/mauricio/.openclaw/workspace/skills/capability-evolver/SKILL.md`
+5. `/Users/mauricio/.openclaw/workspace/skills/planning/SKILL.md`
 
-## Sistema de Memória Ephemeral
-- Não perca tempo detalhando tarefas minúsculas em `memory/YYYY-MM-DD.md`; liste apenas "Resolvido #ID", resumos cruciais de reuniões de board, e a chave de acesso a dados complexos gerados do dia.
+## Memória e UDS (Universal Data System)
+- **Ontology Graph (Tarefas e Reuniões):** Ao extrair resumos cruciais de reuniões de board ou gerar pendências, salve o contexto estruturado usando a API do UDS (`POST http://localhost:8000/ontology/entities`).
+- **Local Ephemeral:** Não perca tempo detalhando tarefas minúsculas em `memory/YYYY-MM-DD.md`; liste apenas IDs resolvidos e chaves de acesso para que a recuperação seja sempre feita no UDS e Notion.
+
+## 📋 Tasks (Central de Acompanhamento)
+Antes de iniciar qualquer trabalho, chame `neondb_tasks.list_tasks(status='backlog', agent='suporte')` ou `status='in_progress'`.
+Ao concluir cada subtask, chame `neondb_tasks.update_subtask(id, status='done')`.
+E, se aplicável, mude a task pai chamando `neondb_tasks.update_task(id, status='done')`.
+Nunca marque done sem ter executado de fato.

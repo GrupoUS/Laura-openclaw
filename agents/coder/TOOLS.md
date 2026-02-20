@@ -15,7 +15,7 @@ opencode session list
 ```
 
 **Workflow completo:** Ver skill `opencode-acp-control`
-**Path:** `/Users/mauricio/.openclaw/skills/opencode-acp-control/SKILL.md`
+**Path:** `/Users/mauricio/.openclaw/workspace/skills/opencode-acp-control/SKILL.md`
 
 **Uso típico:**
 1. `bash(command: "opencode acp", background: true, workdir: "/path/to/project")`
@@ -202,31 +202,31 @@ Ver `REFERENCE.md` para documentação técnica detalhada das integrações.
 ## Skills Disponíveis
 
 ### planning
-**Path:** `/Users/mauricio/.openclaw/skills/planning/SKILL.md`
+**Path:** `/Users/mauricio/.openclaw/workspace/skills/planning/SKILL.md`
 
 **Usar para:** Planejamento R.P.I.V de features complexas
 
 ### nano-banana-pro
-**Path:** `/Users/mauricio/.openclaw/skills/nano-banana-pro/SKILL.md`
+**Path:** `/Users/mauricio/.openclaw/workspace/skills/nano-banana-pro/SKILL.md`
 
 **Usar para:** Geração de imagens com Gemini 3 Pro
 
 ```bash
-uv run ~/.openclaw/skills/nano-banana-pro/scripts/generate_image.py \
+uv run /Users/mauricio/.openclaw/workspace/skills/nano-banana-pro/scripts/generate_image.py \
   --prompt "descrição da imagem" \
   --filename "output.png" \
   --resolution 4K
 ```
 
 ### gpus-theme
-**Path:** `/Users/mauricio/.openclaw/skills/gpus-theme/SKILL.md`
+**Path:** `/Users/mauricio/.openclaw/workspace/skills/gpus-theme/SKILL.md`
 
 **Usar para:** Design system Navy/Gold (Grupo US)
 - CSS variables em `assets/theme-tokens.css`
 - Tailwind config em `assets/tailwind-theme.ts`
 
 ### frontend-design
-**Path:** `/Users/mauricio/.openclaw/skills/frontend-design/SKILL.md`
+**Path:** `/Users/mauricio/.openclaw/workspace/skills/frontend-design/SKILL.md`
 
 **Usar para:**
 - UI/UX design, Tailwind v4
@@ -234,12 +234,12 @@ uv run ~/.openclaw/skills/nano-banana-pro/scripts/generate_image.py \
 - Canvas art (PDF/PNG)
 
 ### notion
-**Path:** `/Users/mauricio/.openclaw/skills/notion/SKILL.md`
+**Path:** `/Users/mauricio/.openclaw/workspace/skills/notion/SKILL.md`
 
 **Usar para:** Sync Notion → Website (CMS)
 
 ### agent-browser
-**Path:** `/Users/mauricio/.openclaw/skills/agent-browser/SKILL.md`
+**Path:** `/Users/mauricio/.openclaw/workspace/skills/agent-browser/SKILL.md`
 
 **Usar para:** Browser automation, scraping, testes
 
@@ -251,16 +251,16 @@ agent-browser fill @e2 "texto"
 ```
 
 ### skill-creator
-**Path:** `/Users/mauricio/.openclaw/skills/skill-creator/SKILL.md`
+**Path:** `/Users/mauricio/.openclaw/workspace/skills/skill-creator/SKILL.md`
 
 **Usar para:** Criar novas skills para OpenClaw
 
 ```bash
-python scripts/init_skill.py <skill-name> --path ~/.openclaw/skills/
+python scripts/init_skill.py <skill-name> --path /Users/mauricio/.openclaw/workspace/skills/
 ```
 
 ### opencode-acp-control
-**Path:** `/Users/mauricio/.openclaw/skills/opencode-acp-control/SKILL.md`
+**Path:** `/Users/mauricio/.openclaw/workspace/skills/opencode-acp-control/SKILL.md`
 
 **Usar para:** Controlar OpenCode via ACP protocol
 - Delegar tarefas de coding complexas

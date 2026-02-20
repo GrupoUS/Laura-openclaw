@@ -6,11 +6,9 @@
       "token": "***REMOVED***",
       "role": "operator",
       "scopes": [
-        "operator.admin",
-        "operator.approvals",
-        "operator.pairing"
+        "operator.read"
       ],
-      "updatedAtMs": 1771590522313
+      "updatedAtMs": 1771595084280
     }
   }
 }

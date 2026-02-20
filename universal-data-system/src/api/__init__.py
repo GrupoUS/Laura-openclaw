@@ -1,7 +1,7 @@
 """API module."""
 
 from src.api.deps import DatabaseDep, EmbeddingServiceDep, SearchServiceDep
-from src.api.routes import context_router, health_router, search_router, sync_router, webhook_router
+from src.api.routes import context_router, health_router, search_router, sync_router, webhook_router, ontology_router
 
 __all__ = [
     "DatabaseDep",
@@ -12,4 +12,5 @@ __all__ = [
     "search_router",
     "sync_router",
     "webhook_router",
+    "ontology_router",
 ]

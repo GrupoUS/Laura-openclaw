@@ -17,12 +17,13 @@ Before doing anything else:
 
 Don't ask permission. Just do it.
 
-## Memory
+## Memory e UDS (Universal Data System)
 
-You wake up fresh each session. These files are your continuity:
+You wake up fresh each session. These layers provide your continuity:
 
-- **Daily notes:** `memory/YYYY-MM-DD.md` (create `memory/` if needed) — raw logs of what happened
-- **Long-term:** `MEMORY.md` — your curated memories, like a human's long-term memory
+- **Ontology Graph (Structured):** DO NOT use local files to store structural facts, Tasks, Projects or People. Write structured knowledge to the UDS built-in API (`POST http://localhost:8000/ontology/entities`).
+- **Long-term (Vector):** `MEMORY.md` — your curated memories (should be synced with pgvector/UDS for long-term semantic retrieval).
+- **Daily notes:** `memory/YYYY-MM-DD.md` (create `memory/` if needed) — ephemeral, raw logs of what happened. Do not rely on this for permanent knowledge.
 
 Capture what matters. Decisions, context, things to remember. Skip the secrets unless asked to keep them.
 

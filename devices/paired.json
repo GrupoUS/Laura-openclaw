@@ -3,8 +3,8 @@
     "deviceId": "a8ba2f748c2f33ab8e17f426eb0b6e57c28f89dde7f8d86952d9601b026c8c2a",
     "publicKey": "gEd7wz1tpUixwnDRGwSW_awvd0a0_KhYpphYwYcTyEw",
     "platform": "darwin",
-    "clientId": "cli",
-    "clientMode": "cli",
+    "clientId": "gateway-client",
+    "clientMode": "backend",
     "role": "operator",
     "roles": [
       "operator"
@@ -20,12 +20,10 @@
         "token": "***REMOVED***",
         "role": "operator",
         "scopes": [
-          "operator.admin",
-          "operator.approvals",
-          "operator.pairing"
+          "operator.read"
         ],
         "createdAtMs": 1771560393297,
-        "rotatedAtMs": 1771589623135,
+        "rotatedAtMs": 1771593974503,
         "lastUsedAtMs": 1771560393297
       }
     },

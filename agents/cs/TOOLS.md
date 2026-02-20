@@ -11,12 +11,12 @@ python3 /Users/mauricio/.openclaw/scripts/kiwify_cli.py products
 
 ### Buscar no RAG (Documentação e FAQs)
 ```bash
-python3 /Users/mauricio/.openclaw/skills/uds-search/scripts/uds-search.py search "termo do problema"
+python3 /Users/mauricio/.openclaw/workspace/skills/uds-search/scripts/uds-search.py search "termo do problema"
 ```
 
 ### Buscar Cronogramas
 ```bash
-python3 /Users/mauricio/.openclaw/skills/uds-search/scripts/uds-search.py search "cronograma TRINTAE3"
+python3 /Users/mauricio/.openclaw/workspace/skills/uds-search/scripts/uds-search.py search "cronograma TRINTAE3"
 ```
 
 ### Testar Conexão Google
@@ -84,7 +84,7 @@ node /Users/mauricio/.openclaw/scripts/test-google.js
 ## Skills Disponíveis
 
 ### gog-workspace (Google Workspace)
-**Path:** `/Users/mauricio/.openclaw/skills/gog-workspace/SKILL.md`
+**Path:** `/Users/mauricio/.openclaw/workspace/skills/gog-workspace/SKILL.md`
 
 **Usar para:**
 - Agendar mentorias no Calendar
@@ -114,7 +114,7 @@ gog gmail search 'subject:("Zoom Summary" OR "Resumo da Reunião") newer_than:7d
 ```
 
 ### zoom
-**Path:** `/Users/mauricio/.openclaw/skills/zoom/SKILL.md`
+**Path:** `/Users/mauricio/.openclaw/workspace/skills/zoom/SKILL.md`
 
 **Usar para:**
 - Agendar check-ins com alunos
@@ -130,7 +130,7 @@ python3 /Users/mauricio/.openclaw/scripts/zoom_cli.py get-summary <meetingId>
 ```
 
 ### notion
-**Path:** `/Users/mauricio/.openclaw/skills/notion/SKILL.md`
+**Path:** `/Users/mauricio/.openclaw/workspace/skills/notion/SKILL.md`
 
 **Usar para:**
 - Consultar cronogramas e jornada do aluno

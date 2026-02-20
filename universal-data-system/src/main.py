@@ -5,7 +5,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from src.api import context_router, health_router, search_router, sync_router, webhook_router
+from src.api import context_router, health_router, search_router, sync_router, webhook_router, ontology_router
 from src.config import get_settings
 from src.db import close_db
 from src.services.search import close_asyncpg_pool
@@ -55,6 +55,7 @@ def create_app() -> FastAPI:
     app.include_router(search_router)
     app.include_router(context_router)
     app.include_router(sync_router)
+    app.include_router(ontology_router)
 
     return app
 

@@ -93,6 +93,8 @@ class SearchService:
         mime_types: list[str] | None = None,
         modified_after: datetime | None = None,
         modified_before: datetime | None = None,
+        auto_fallback: bool = False,
+        fallback_threshold: float = 0.01,
     ) -> list[SearchResult]:
         """
         Execute hybrid BM25 + vector search with RRF fusion.
@@ -143,6 +145,33 @@ class SearchService:
             )
             for row in rows
         ]
+
+        top_score = results[0].rrf_score if results else 0
+
+        # Fallback to Tavily if enabled and top score is below threshold
+        if auto_fallback and top_score < fallback_threshold:
+            logger.info("Local search confidence low. Triggering Tavily fallback.", rrf_score=top_score)
+            from src.services.tavily import TavilyService
+            tavily = TavilyService()
+            web_response = await tavily.search(query, max_results=top_k)
+            web_results = web_response.get("results", [])
+            
+            if web_results:
+                results = [
+                    SearchResult(
+                        chunk_id="tavily",
+                        file_id="tavily",
+                        drive_file_id=r.get("url", ""),
+                        file_name=r.get("title", ""),
+                        file_path=r.get("url", ""),
+                        content=r.get("content", ""),
+                        heading="Web Search Result",
+                        bm25_score=0.0,
+                        vector_score=0.0,
+                        rrf_score=1.0,  # Mark high score for fallback result
+                    )
+                    for r in web_results
+                ]
 
         logger.info(
             "Hybrid search completed",

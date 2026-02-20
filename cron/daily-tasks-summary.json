@@ -1,0 +1,9 @@
+{
+  "name": "daily-tasks-summary",
+  "schedule": "0 8 * * *",
+  "agentTurn": {
+    "prompt": "Busque todas as tasks com status != done via neondb_tasks.list_tasks(). Gere um resumo por agente e fase. Envie para o canal WhatsApp do Maurício.",
+    "model": "anthropic/claude-opus-4-6",
+    "thinking": "low"
+  }
+}

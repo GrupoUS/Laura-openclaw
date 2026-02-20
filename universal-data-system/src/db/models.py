@@ -13,8 +13,9 @@ from sqlalchemy import (
     String,
     Text,
     BigInteger,
+    Index,
 )
-from sqlalchemy.dialects.postgresql import ARRAY, UUID as PG_UUID
+from sqlalchemy.dialects.postgresql import ARRAY, JSONB, UUID as PG_UUID
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
 
@@ -178,4 +179,62 @@ class Chunk(Base):
     __table_args__ = (
         # Unique constraint on file + chunk_index
         {"sqlite_autoincrement": True},
+    )
+
+
+class OntologyEntity(Base):
+    """Ontology entity (Person, Project, Task, etc.)."""
+
+    __tablename__ = "ontology_entities"
+
+    id: Mapped[UUID] = mapped_column(
+        PG_UUID(as_uuid=True), primary_key=True, server_default="uuid_generate_v4()"
+    )
+    type: Mapped[str] = mapped_column(String, nullable=False, index=True)
+    properties: Mapped[dict] = mapped_column(JSONB, nullable=False, server_default="{}")
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), server_default="NOW()", nullable=False
+    )
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), server_default="NOW()", nullable=False
+    )
+
+    # Indexes
+    __table_args__ = (
+        Index("ix_ontology_entities_properties", "properties", postgresql_using="gin"),
+    )
+
+
+class OntologyRelation(Base):
+    """Ontology relation between entities."""
+
+    __tablename__ = "ontology_relations"
+
+    id: Mapped[UUID] = mapped_column(
+        PG_UUID(as_uuid=True), primary_key=True, server_default="uuid_generate_v4()"
+    )
+    from_id: Mapped[UUID] = mapped_column(
+        PG_UUID(as_uuid=True), ForeignKey("ontology_entities.id", ondelete="CASCADE"), nullable=False, index=True
+    )
+    relation_type: Mapped[str] = mapped_column(String, nullable=False, index=True)
+    to_id: Mapped[UUID] = mapped_column(
+        PG_UUID(as_uuid=True), ForeignKey("ontology_entities.id", ondelete="CASCADE"), nullable=False, index=True
+    )
+    properties: Mapped[dict] = mapped_column(JSONB, nullable=False, server_default="{}")
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), server_default="NOW()", nullable=False
+    )
+
+    # Relationships
+    from_entity: Mapped["OntologyEntity"] = relationship(
+        "OntologyEntity", foreign_keys=[from_id]
+    )
+    to_entity: Mapped["OntologyEntity"] = relationship(
+        "OntologyEntity", foreign_keys=[to_id]
+    )
+
+    # Indexes
+    __table_args__ = (
+        Index("ix_ontology_relations_properties", "properties", postgresql_using="gin"),
+        Index("ix_ontology_relations_from_type_to", "from_id", "relation_type", "to_id", unique=True),
     )

@@ -8,9 +8,12 @@ from pydantic import BaseModel, Field
 
 from src.api.deps import get_search_service
 from src.services.search import SearchService
+from src.services.tavily import TavilyService
 from src.utils.logging import get_logger
 
 logger = get_logger(__name__)
+
+tavily_service = TavilyService()
 
 router = APIRouter(prefix="/search", tags=["search"])
 
@@ -25,6 +28,7 @@ class SearchRequest(BaseModel):
     modified_after: Optional[datetime] = Field(default=None, description="Modified after date")
     modified_before: Optional[datetime] = Field(default=None, description="Modified before date")
     search_type: str = Field(default="hybrid", description="Search type: hybrid, bm25, vector")
+    auto_fallback: bool = Field(default=False, description="Use Tavily web search if local confidence is low")
 
 
 class SearchResultItem(BaseModel):
@@ -81,6 +85,7 @@ async def search(
             mime_types=request.mime_types,
             modified_after=request.modified_after,
             modified_before=request.modified_before,
+            auto_fallback=request.auto_fallback,
         )
 
     logger.info(
@@ -110,3 +115,23 @@ async def search(
         total=len(results),
         search_type=request.search_type,
     )
+
+class WebSearchRequest(BaseModel):
+    """Web search request body."""
+
+    query: str = Field(..., min_length=1, description="Search query text")
+    search_depth: str = Field(default="basic", description="Search depth: basic or advanced")
+    topic: str = Field(default="general", description="Search topic: general or news")
+    max_results: int = Field(default=5, ge=1, le=20, description="Number of results")
+
+@router.post("/web")
+async def web_search(request: WebSearchRequest):
+    """Execute AI-optimized web search via Tavily API."""
+    logger.info("Web search executed", query=request.query[:50])
+    results = await tavily_service.search(
+        query=request.query,
+        search_depth=request.search_depth,
+        topic=request.topic,
+        max_results=request.max_results,
+    )
+    return results

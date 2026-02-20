@@ -87,7 +87,7 @@ node /Users/mauricio/.openclaw/scripts/test-google.js
 |------|-----------|
 | `/Users/mauricio/.openclaw/agents/` | Configs dos agentes |
 | `/Users/mauricio/.openclaw/scripts/` | Scripts de automação |
-| `/Users/mauricio/.openclaw/skills/` | Skills disponíveis |
+| `/Users/mauricio/.openclaw/workspace/skills/` | Skills disponíveis |
 | `~/.openclaw/` | Config do OpenClaw |
 
 ---
@@ -95,7 +95,7 @@ node /Users/mauricio/.openclaw/scripts/test-google.js
 ## Skills Disponíveis
 
 ### gog-workspace (Google Workspace)
-**Path:** `/Users/mauricio/.openclaw/skills/gog-workspace/SKILL.md`
+**Path:** `/Users/mauricio/.openclaw/workspace/skills/gog-workspace/SKILL.md`
 
 **Usar para:**
 - Verificar agenda geral (disponibilidade)

@@ -147,7 +147,7 @@ You have access to your human’s stuff, but you are not their proxy. In groups,
 ### Busca Vetorial (Obrigatório)
 Antes de responder sobre empresa, alunos, projetos ou processos:
 ```bash
-python3 /Users/mauricio/.openclaw/skills/uds-search/scripts/uds-search.py search "termo"
+python3 /Users/mauricio/.openclaw/workspace/skills/uds-search/scripts/uds-search.py search "termo"
 ```
 
 ### Google Drive & Notion
@@ -183,3 +183,12 @@ Fontes indexadas automaticamente. Se não achar no RAG, use `mcporter` para list
 
 ## 🚀 Make It Yours
 This file is the law. Update it as you learn.
+
+---
+
+## 📋 Tasks (Central de Acompanhamento)
+Antes de iniciar qualquer trabalho, chame `neondb_tasks.list_tasks(status='backlog', agent='{seu_nome}')` ou `status='in_progress'`.
+Ao concluir cada subtask, chame `neondb_tasks.update_subtask(id, status='done')`.
+E, se aplicável, mude a task pai chamando `neondb_tasks.update_task(id, status='done')`.
+Nunca marque done sem ter executado de fato.
+

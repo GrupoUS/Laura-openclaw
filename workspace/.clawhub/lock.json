@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "skills": {
+    "gog": {
+      "version": "1.0.0",
+      "installedAt": 1771591507434
+    },
+    "client-flow": {
+      "version": "1.0.0",
+      "installedAt": 1771591793715
+    },
+    "agent-team-orchestration": {
+      "version": "1.0.0",
+      "installedAt": 1771591943278
+    },
+    "agent-builder": {
+      "version": "1.0.0",
+      "installedAt": 1771591967347
+    },
+    "ontology": {
+      "version": "0.1.2",
+      "installedAt": 1771592092482
+    },
+    "tavily-search": {
+      "version": "1.0.0",
+      "installedAt": 1771592108528
+    }
+  }
+}

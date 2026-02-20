@@ -478,12 +478,13 @@ See [evolution-config.md](references/evolution-config.md) for cron configuration
 
 ## Vector Memory Architecture
 
-**Dual-layer memory system**: file-based (fast, ephemeral) + pgvector (persistent, semantic).
+**Triple-layer memory system**: file-based (fast, ephemeral) + pgvector (persistent, semantic) + Ontology Graph (structured entities).
 
 | Layer | Storage | Search | Use Case |
 |-------|---------|--------|----------|
 | **File-based** | `MEMORY.md`, `memory/YYYY-MM-DD.md` | Text search | Daily notes, quick capture |
 | **Vector (pgvector)** | NeonDB `agent_memories` table | Cosine similarity | Semantic recall, long-term learning |
+| **Ontology Graph** | UDS API (`/ontology/**`) | Entity relations | Structured tracking of People, Projects, Tasks, Events |
 
 ### Memory Categories
 
@@ -508,6 +509,24 @@ curl -X POST http://localhost:3000/trpc/evolution.memories.store \
 **Semantic recall** (before answering questions):
 ```bash
 curl "http://localhost:3000/trpc/evolution.memories.search?input=%7B%22query%22%3A%22database+migration%22%7D"
+```
+
+### Ontology Graph Memory (Structured Entities)
+
+Instead of using local `memory/ontology/graph.jsonl`, always write entities and relations to the Universal Data System (UDS) API:
+
+**Create Entity:**
+```bash
+curl -X POST http://localhost:8000/ontology/entities \
+  -H "Content-Type: application/json" \
+  -d '{"type":"Task", "properties":{"title":"Fix auth bugs", "status":"open"}}'
+```
+
+**Create Relation:**
+```bash
+curl -X POST http://localhost:8000/ontology/relations \
+  -H "Content-Type: application/json" \
+  -d '{"from_id":"<uuid>", "relation_type":"has_task", "to_id":"<uuid>"}'
 ```
 
 ### Dashboard

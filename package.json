@@ -8,5 +8,8 @@
   },
   "devDependencies": {
     "oxlint": "^1.49.0"
+  },
+  "dependencies": {
+    "@neondatabase/serverless": "^1.0.2"
   }
 }

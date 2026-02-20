@@ -156,21 +156,21 @@ node /Users/mauricio/.openclaw/scripts/daily-neon-sync.js
 ## Skills Disponíveis
 
 ### linear-planner
-**Path:** `/Users/mauricio/.openclaw/skills/linear-planner/SKILL.md`
+**Path:** `/Users/mauricio/.openclaw/workspace/skills/linear-planner/SKILL.md`
 
 **Usar para:**
 - Tracking de tasks no Linear (Projeto Benício)
 - Decomposição em subtasks atômicas
 
 ### planning
-**Path:** `/Users/mauricio/.openclaw/skills/planning/SKILL.md`
+**Path:** `/Users/mauricio/.openclaw/workspace/skills/planning/SKILL.md`
 
 **Usar para:**
 - Planejamento R.P.I.V (Research → Plan → Implement → Validate)
 - Criar PRPs (Project Requirement Plans)
 
 ### gog-workspace (Google Workspace)
-**Path:** `/Users/mauricio/.openclaw/skills/gog-workspace/SKILL.md`
+**Path:** `/Users/mauricio/.openclaw/workspace/skills/gog-workspace/SKILL.md`
 
 **Usar para:**
 - Gerenciar agenda do time
@@ -179,7 +179,7 @@ node /Users/mauricio/.openclaw/scripts/daily-neon-sync.js
 - Ler/escrever planilhas
 
 ### zoom
-**Path:** `/Users/mauricio/.openclaw/skills/zoom/SKILL.md`
+**Path:** `/Users/mauricio/.openclaw/workspace/skills/zoom/SKILL.md`
 
 **Usar para:**
 - Gerar resumos de reuniões (AI Companion)
@@ -187,7 +187,7 @@ node /Users/mauricio/.openclaw/scripts/daily-neon-sync.js
 - Extrair action items de calls
 
 ### uds-search (Busca Unificada)
-**Path:** `/Users/mauricio/.openclaw/skills/uds-search/SKILL.md`
+**Path:** `/Users/mauricio/.openclaw/workspace/skills/uds-search/SKILL.md`
 
 **Usar para:**
 - Buscar QUALQUER informação (Drive, Notion, Kiwify)
@@ -199,7 +199,7 @@ node /Users/mauricio/.openclaw/scripts/daily-neon-sync.js
 > Usar Kiwify API direta apenas para dados real-time de vendas.
 
 ### notion
-**Path:** `/Users/mauricio/.openclaw/skills/notion/SKILL.md`
+**Path:** `/Users/mauricio/.openclaw/workspace/skills/notion/SKILL.md`
 
 **Usar para:**
 - Acompanhar tarefas no Notion e cobrar prazos
@@ -224,7 +224,7 @@ node /Users/mauricio/.openclaw/scripts/daily-neon-sync.js
 | Script | Uso |
 |--------|-----|
 | `/Users/mauricio/.openclaw/scripts/kiwify.js` | API Kiwify (real-time) |
-| `/Users/mauricio/.openclaw/skills/uds-search/scripts/uds-search.py` | Busca unificada UDS |
+| `/Users/mauricio/.openclaw/workspace/skills/uds-search/scripts/uds-search.py` | Busca unificada UDS |
 | `/Users/mauricio/.openclaw/scripts/google-services.js` | Google Workspace |
 | `/Users/mauricio/.openclaw/scripts/zoom.js` | Zoom API |
 | `/Users/mauricio/.openclaw/scripts/test-google.js` | Testar conexão |
@@ -234,8 +234,8 @@ node /Users/mauricio/.openclaw/scripts/daily-neon-sync.js
 ## Referências
 
 - **Config mcporter:** `~/.mcporter/mcporter.json`
-- **Skill Linear:** `/Users/mauricio/.openclaw/skills/linear-planner/SKILL.md`
-- **Integração:** `/Users/mauricio/.openclaw/skills/linear-planner/references/linear-integration.md`
+- **Skill Linear:** `/Users/mauricio/.openclaw/workspace/skills/linear-planner/SKILL.md`
+- **Integração:** `/Users/mauricio/.openclaw/workspace/skills/linear-planner/references/linear-integration.md`
 
 ---
 

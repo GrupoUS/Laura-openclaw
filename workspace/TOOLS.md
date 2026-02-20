@@ -89,7 +89,7 @@ node scripts/schedule-call.js test
 
 ### Buscar
 ```bash
-python3 /Users/mauricio/.openclaw/skills/uds-search/scripts/uds-search.py search "termo"
+python3 /Users/mauricio/.openclaw/workspace/skills/uds-search/scripts/uds-search.py search "termo"
 ```
 
 ### Qdrant
@@ -158,7 +158,7 @@ GOOGLE_PLACES_API_KEY=AIzaSyDH5HiJWMdVyKCtfFqMs3nZR0IPYJtpDcA goplaces search "c
 ### Comandos Qdrant (Universal Data System)
 ```bash
 # Buscar documentos via UDS
-python3 /Users/mauricio/.openclaw/skills/uds-search/scripts/uds-search.py search "termo de busca"
+python3 /Users/mauricio/.openclaw/workspace/skills/uds-search/scripts/uds-search.py search "termo de busca"
 ```
 
 ## Notion

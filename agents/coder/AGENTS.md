@@ -18,7 +18,7 @@ Desenvolvimento, automação e manutenção de código do Grupo US.
 > Estas skills DEVEM ser lidas e aplicadas em TODA sessão.
 
 ### 1. proactive-agent
-**Path:** `/Users/mauricio/.openclaw/skills/proactive-agent/SKILL.md`
+**Path:** `/Users/mauricio/.openclaw/workspace/skills/proactive-agent/SKILL.md`
 
 **Usar para:**
 - Memory Flush quando contexto > 70%
@@ -27,7 +27,7 @@ Desenvolvimento, automação e manutenção de código do Grupo US.
 - "O que posso automatizar para surpreender o Maurício?"
 
 ### 2. capability-evolver
-**Path:** `/Users/mauricio/.openclaw/skills/capability-evolver/SKILL.md`
+**Path:** `/Users/mauricio/.openclaw/workspace/skills/capability-evolver/SKILL.md`
 
 **Usar para:**
 - Após bugs: analisar e cristalizar lição
@@ -35,7 +35,7 @@ Desenvolvimento, automação e manutenção de código do Grupo US.
 - Atualizar KNOWLEDGE_BASE com aprendizados técnicos
 
 ### 3. opencode-acp-control
-**Path:** `/Users/mauricio/.openclaw/skills/opencode-acp-control/SKILL.md`
+**Path:** `/Users/mauricio/.openclaw/workspace/skills/opencode-acp-control/SKILL.md`
 
 **Usar para:**
 - Delegar tarefas de codificação complexas ao OpenCode via ACP
@@ -175,18 +175,18 @@ gh run list --limit 3
 
 ---
 
-## Memória
+## Memória e UDS (Universal Data System)
 
 ### Onde registrar:
-- **memory/YYYY-MM-DD.md** - Log diário de atividades
-- **MEMORY.md** - Aprendizados de longo prazo
-- **TOOLS.md** - Novas ferramentas/configs
+- **Ontology Graph (Estruturado):** Para criar memórias sobre Pessoas, Tarefas, Projetos ou Eventos, NUNCA use arquivos JSONL. Use SEMPRE a API do UDS (`POST http://localhost:8000/ontology/entities` e `/ontology/relations`).
+- **Vector (Modelos/Padrões):** Aprendizados de código, métricas e decisões de arquitetura duradouras devem ir para o DB via API do evolver.
+- **memory/YYYY-MM-DD.md**: Use APENAS para logs efêmeros, rascunhos em andamento ou debug logs rápidos da sessão.
+- **MEMORY.md** e **TOOLS.md**: Mantenha para aprendizados locais de backup e configurações de ferramentas de uso imediato.
 
-### O que registrar:
-- Mudanças significativas no código
-- Bugs resolvidos e suas causas
-- Decisões técnicas importantes
-- Novos padrões descobertos
+### O que registrar no UDS:
+- Mudanças significativas no código e arquitetura.
+- Estruturação de novos serviços (Entities) e suas dependências (Relations).
+- Bugs resolvidos, causas raízes, e novas regras identificadas.
 
 ---
 
@@ -196,6 +196,14 @@ gh run list --limit 3
 - ⚠️ Usar variáveis de ambiente para secrets
 - ⚠️ Verificar .gitignore antes de push
 - ⚠️ Backup antes de ações destrutivas
+
+---
+
+## 📋 Tasks (Central de Acompanhamento)
+Antes de iniciar qualquer trabalho, chame `neondb_tasks.list_tasks(status='backlog', agent='coder')` ou `status='in_progress'`.
+Ao concluir cada subtask, chame `neondb_tasks.update_subtask(id, status='done')`.
+E, se aplicável, mude a task pai chamando `neondb_tasks.update_task(id, status='done')`.
+Nunca marque done sem ter executado de fato.
 
 ---
 

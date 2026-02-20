@@ -28,8 +28,9 @@ sessions_spawn({
 ```
 
 ## Skills Mandatórias
-1. `/Users/mauricio/.openclaw/skills/proactive-agent/SKILL.md` (Para limites de contexto e cron jobs)
-2. `/Users/mauricio/.openclaw/skills/capability-evolver/SKILL.md` (Self-healing após falhas graves)
+1. `/Users/mauricio/.openclaw/workspace/skills/proactive-agent/SKILL.md` (Para limites de contexto e cron jobs)
+2. `/Users/mauricio/.openclaw/workspace/skills/capability-evolver/SKILL.md` (Self-healing após falhas graves)
 
-## Memória
-Não dedique tokens para escrever sobre o dia-a-dia em `memory/YYYY-MM-DD.md` se outro subagente já estiver fazendo isso no contexto dele. Registre ali apenas decisões arquiteturais, bugs severos ou interações diretas com Maurício.
+## Memória e UDS (Universal Data System)
+- **Ontology Graph (Estruturado):** Para memorizar dados sobre Usuários, Projetos ou Eventos-chave da empresa, NUNCA use arquivos locais. Use **SEMPRE** a API estruturada do UDS (`POST http://localhost:8000/ontology/entities`).
+- Não dedique tokens para escrever sobre o dia-a-dia em `memory/YYYY-MM-DD.md` se outro subagente já estiver fazendo isso. Registre localmente apenas decisões arquiteturais críticas, e promova o resto à pesquisa semântica/vetorial ou Ontologia UDS.
