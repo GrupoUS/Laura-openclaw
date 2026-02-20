@@ -417,7 +417,7 @@
       "description": "Check for unresponded leads every hour",
       "enabled": true,
       "createdAtMs": 1771560754062,
-      "updatedAtMs": 1771614756765,
+      "updatedAtMs": 1771617298982,
       "schedule": {
         "kind": "every",
         "everyMs": 3600000,
@@ -427,21 +427,22 @@
       "wakeMode": "now",
       "payload": {
         "kind": "agentTurn",
-        "message": "Verify unresponded leads in WhatsApp. List any numbers that sent messages and haven't received a reply yet, or leads that we messaged but didn't reply back to us. If you find any, summarize them ONLY for Maurício (+556299776996). If all is clear, say NO_REPLY.",
-        "thinking": "low",
+        "message": "Verifique todos os leads do WhatsApp que estão sem resposta. Analise a última mensagem de cada um e responda o que eles perguntaram (não peça permissão para perguntar, entregue valor primeiro conforme SOUL.md). Se o lead não responder após sua mensagem inicial, envie um áudio (usando sag) com uma abordagem diferente, forçando a interação: 'Sei que o dia a dia é corrido, mas o objetivo da mentoria/TRINTAE3 é justamente te dar mais tempo'. Use sessions_spawn para cada lead se necessário para manter a performance. Reporte um resumo para Maurício (+556299776996) via sessions_send ou message tool apenas se houver ações tomadas. Se tudo estiver em dia, não envie nada (NO_REPLY).",
+        "thinking": "medium",
         "model": "gemini3-flash"
       },
       "delivery": {
-        "mode": "announce",
+        "mode": "none",
         "channel": "whatsapp",
         "to": "+556299776996"
       },
       "state": {
         "nextRunAtMs": 1771618354062,
-        "lastRunAtMs": 1771614754080,
-        "lastStatus": "ok",
-        "lastDurationMs": 2685,
-        "consecutiveErrors": 0
+        "lastRunAtMs": 1771617298966,
+        "lastStatus": "error",
+        "lastDurationMs": 16,
+        "consecutiveErrors": 2,
+        "lastError": "Error: All models failed (1): google-gemini-cli/gemini-3-flash-preview: Provider google-gemini-cli is in cooldown (all profiles unavailable) (rate_limit)"
       }
     },
     {
@@ -450,7 +451,7 @@
       "name": "followup-comercial-diario",
       "enabled": true,
       "createdAtMs": 1771610323090,
-      "updatedAtMs": 1771611083047,
+      "updatedAtMs": 1771616555932,
       "schedule": {
         "kind": "cron",
         "expr": "0 10 * * 1-5"
@@ -459,10 +460,10 @@
       "wakeMode": "now",
       "payload": {
         "kind": "agentTurn",
-        "message": "Incentivar o time comercial no grupo US - COMERCIAL (120363361363907454@g.us). Mencione Lucas (@100653246464136) e Erica (@79719592640575). Pergunte sobre o progresso com os leads, objeções encontradas e proponha melhorias no script. Lema: 'Always think: What would make the entire GrupoUS say I didn't even ask for that but it's amazing?'. Registre tudo no NeonDB."
+        "message": "Incentivar o time comercial no grupo US - COMERCIAL (120363361363907454@g.us). Mencione Lucas (@100653246464136) e Erica (@79719592640575). Pergunte sobre o progresso com os leads, objeções encontradas e proponha melhorias no script. Lema: 'Always think: What would make the entire GrupoUS say I didn't even ask for that but it's amazing?'. Registre tudo no NeonDB. Envie a mensagem diretamente para o grupo."
       },
       "delivery": {
-        "mode": "announce",
+        "mode": "none",
         "channel": "whatsapp",
         "to": "120363361363907454@g.us"
       },
