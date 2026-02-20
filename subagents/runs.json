@@ -24,6 +24,32 @@
         "status": "ok"
       },
       "cleanupCompletedAt": 1771625217696
+    },
+    "0931c553-ef4a-4a41-8368-ffd66e389e44": {
+      "runId": "0931c553-ef4a-4a41-8368-ffd66e389e44",
+      "childSessionKey": "agent:chat:subagent:c3ad1727-7d98-4bdc-886d-86f2127c9112",
+      "requesterSessionKey": "agent:chat:whatsapp:direct:+556299776996",
+      "requesterOrigin": {
+        "channel": "whatsapp",
+        "to": "+556299776996",
+        "accountId": "default"
+      },
+      "requesterDisplayKey": "agent:chat:whatsapp:direct:+556299776996",
+      "task": "Você é o orquestrador da tarefa de extração de dados de alunos do Grupo US.\n\n## Contexto da Task (Dashboard NeonDB)\nMain Task ID: 3\nSubtasks: 8, 9, 10\n\n## Objetivo\nLer todos os xlsx da pasta alunos no repositório GitHub (GrupoUS/Laura-openclaw), extrair dados de cada aluno e criar, para cada um, uma pasta e um arquivo .docx estruturado dentro da hierarquia alunos/{curso}/{turma}/{nome_aluno}/.\n\n## Mapeamento da Pasta `alunos`\n- Mentoria e Pós TRINTAE3 (Turma 3).xlsx -> alunos/33/Turma 3/\n- Mentoria e Pós TRINTAE3 (Turma 4).xlsx -> alunos/33/Turma 4/\n- Mentoria e Pós TRINTAE3 (Turma 5).xlsx -> alunos/33/Turma 5/\n- Mentoria e Pós TRINTAE3 (Turma 6).xlsx -> alunos/33/Turma 6/\n- NEON (Ciclo 1).xlsx -> alunos/NEON/Ciclo 1/\n- NEON (Ciclo 2).xlsx -> alunos/NEON/Ciclo 2/\n- NEON (Ciclo 3).xlsx -> alunos/NEON/Ciclo 3/\n- OTB - Out of The Box.xlsx -> alunos/OTB/\n\n## Plano de Ação\n1. Use a skill de `xlsx` ou spawn um agente `coder` para criar um script Python que faça o parser dos arquivos via GitHub RAW URL.\n2. Extraia campos como Nome, CPF, E-mail, Telefone, Endereço, etc.\n3. Gere arquivos .docx (via `python-docx`) e envie para o GitHub via API (use GitHub Trees API para turmas grandes).\n4. Informe o Maurício (+556299776996) via WhatsApp quando concluir.\n5. Atualize o Dashboard (neondb-tasks) em cada etapa.\n\n## Restrições\n- Não modifique arquivos originais.\n- Target branch: main.\n- Sanitizar nomes de pastas.",
+      "cleanup": "keep",
+      "expectsCompletionMessage": true,
+      "label": "aluno-data-orchestration-main",
+      "model": "google-gemini-cli/gemini-3-flash-preview",
+      "runTimeoutSeconds": 0,
+      "createdAt": 1771626507102,
+      "startedAt": 1771626814048,
+      "archiveAtMs": 1771630413928,
+      "cleanupHandled": true,
+      "endedAt": 1771626905880,
+      "outcome": {
+        "status": "ok"
+      },
+      "cleanupCompletedAt": 1771626906208
     }
   }
 }
