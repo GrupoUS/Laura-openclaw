@@ -1,6 +1,7 @@
 import { initTRPC, TRPCError } from '@trpc/server'
 import { z } from 'zod'
 import { gatewayCall } from './ws/openclaw'
+import { evolutionRouter } from './routers/evolution'
 
 // Create context types
 export type Context = {
@@ -42,9 +43,7 @@ const agentsRouter = router({
 })
 
 const toolsRouter = router({
-  // Tool policy management mapping
   list: publicProcedure.query(async ({ ctx }) => {
-    // Requires a custom gateway call if tools_list exists, otherwise handled via config patch
     return gatewayCall('tools_list', {}, ctx.gatewayToken).catch(() => [])
   })
 })
@@ -74,7 +73,8 @@ export const appRouter = router({
   tools: toolsRouter,
   providers: providersRouter,
   crons: cronsRouter,
-  channels: channelsRouter
+  channels: channelsRouter,
+  evolution: evolutionRouter,
 })
 
 export type AppRouter = typeof appRouter

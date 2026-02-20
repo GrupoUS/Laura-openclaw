@@ -20,6 +20,7 @@ metadata: {"openclaw":{"emoji":"🗄️"}}
 | `indexing.md`           | Index types, composite indexes        | Performance tuning |
 | `optimization.md`       | N+1, EXPLAIN ANALYZE                  | Query optimization |
 | `migrations.md`         | Safe migrations, serverless DBs       | Schema changes     |
+| `neonctl.md`            | neonctl CLI: branches, schema-diff    | Neon DB operations |
 
 ---
 
@@ -50,3 +51,5 @@ Before designing schema:
 ❌ Use SELECT \* in production
 ❌ Store JSON when structured data is better
 ❌ Ignore N+1 queries
+❌ Hardcode Neon connection strings — use `neonctl connection-string`
+❌ Run schema changes on main without branch + schema-diff first

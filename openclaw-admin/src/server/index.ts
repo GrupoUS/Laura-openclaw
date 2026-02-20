@@ -3,6 +3,7 @@ import { trpcServer } from '@hono/trpc-server'
 import { appRouter } from './trpc'
 import { serveStatic } from 'hono/bun'
 import { getCookie, setCookie, deleteCookie } from 'hono/cookie'
+import { runEvolutionCycle } from './services/evolution'
 
 const app = new Hono()
 
@@ -63,6 +64,18 @@ app.use(
 
 // Health API (public, no auth)
 app.get('/api/health', (c) => c.json({ ok: true }))
+
+// Evolution cron trigger (called by OpenClaw cron scheduler)
+app.post('/api/evolution/trigger', async (c) => {
+  try {
+    const body = await c.req.json<{ trigger?: string }>().catch(() => ({ trigger: undefined }))
+    const trigger = (body.trigger || 'cron') as 'cron' | 'heartbeat' | 'manual' | 'mad_dog'
+    const result = await runEvolutionCycle(trigger)
+    return c.json(result)
+  } catch (err) {
+    return c.json({ error: (err as Error).message }, 500)
+  }
+})
 
 // Static Serving (Production build)
 app.use('/*', serveStatic({ root: './dist/public' }))

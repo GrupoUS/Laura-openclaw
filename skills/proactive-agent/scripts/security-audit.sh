@@ -115,7 +115,28 @@ else
 fi
 echo ""
 
-# 6. Check .gitignore
+# 6. Check NeonDB connectivity
+echo "🗄️  Checking NeonDB connectivity..."
+if command -v neonctl &> /dev/null; then
+    pass "neonctl CLI is installed ($(neonctl --version 2>/dev/null || echo 'unknown'))"
+    # Test connection if neonctl is authenticated
+    if neonctl me &> /dev/null; then
+        pass "neonctl is authenticated"
+        conn_str=$(neonctl connection-string 2>/dev/null || true)
+        if [ -n "$conn_str" ]; then
+            pass "Connection string retrievable"
+        else
+            warn "Could not retrieve connection string — check project context"
+        fi
+    else
+        warn "neonctl not authenticated — run 'neonctl auth'"
+    fi
+else
+    warn "neonctl CLI not installed — run 'brew install neonctl'"
+fi
+echo ""
+
+# 7. Check .gitignore
 echo "📄 Checking .gitignore..."
 if [ -f ".gitignore" ]; then
     if grep -q "\.credentials" ".gitignore"; then

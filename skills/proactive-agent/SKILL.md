@@ -161,6 +161,24 @@ workspace/
 - [ ] Could future-me continue this conversation from notes alone?
 ```
 
+**Tier 3: DB Persistence (NeonDB)**
+
+For long-term, searchable memory at scale, use NeonDB with pgvector:
+
+| Tier | Storage | Use Case |
+|------|---------|----------|
+| File memory | `memory/*.md`, `MEMORY.md` | Immediate capture, curated wisdom |
+| DB persistence | NeonDB + pgvector | Structured memories, semantic search |
+| Semantic search | `memory_search` tool | "Do I know about X?" queries |
+
+```bash
+# Verify DB connectivity before evolution cycles
+neonctl --version
+psql $(neonctl connection-string) -c "SELECT 1;"
+```
+
+> **Deep dive:** See [references/neondb-persistence.md](references/neondb-persistence.md) for full setup + verification.
+
 **The Rule:** If it's important enough to remember, write it down NOW — not later. Don't assume future-you will have this conversation in context. Check your context usage. Act on thresholds, not vibes.
 
 ### 2. Security Hardening
@@ -405,11 +423,139 @@ Starter files in `assets/`:
 
 ---
 
+## Pillar 6: Autonomous Evolution (from Capability Evolver)
+
+> **"I don't just run code. I write it. And I learn from everything."**
+
+The Capability Evolver is now integrated directly into this skill. It provides systematic self-improvement via the **Ascension Protocol** and **Compound Loop**, backed by vector memory in NeonDB.
+
+### Ascension Protocol (Immediate Evolution)
+
+**Phase 1: INTROSPECT** — Scan session transcripts for errors, user corrections, and patterns.
+
+**Phase 2: EVOLVE** — Act on findings:
+- **Fix**: If error found → edit code to fix it
+- **Optimize**: If code is slow/verbose → refactor it
+- **Crystallize**: If you learned a new rule → **WRITE IT DOWN** in `memory/KNOWLEDGE_BASE/LESSONS_LEARNED.md` AND **store it** via the admin API for semantic recall
+
+**Phase 3: PERSIST** — Store findings as vector embeddings in NeonDB for permanent semantic recall.
+
+### Compound Loop (Systematic Learning)
+
+```
+┌─────────────────────────────────────┐
+│           DAILY WORK                │
+│  Sessions, chats, tasks, decisions  │
+└──────────────┬──────────────────────┘
+               │
+               ▼
+┌─────────────────────────────────────┐
+│        NIGHTLY REVIEW               │
+│  • Scan all sessions from last 24h  │
+│  • Extract learnings and patterns   │
+│  • Store in pgvector via admin API  │
+│  • Update MEMORY.md and AGENTS.md   │
+└──────────────┬──────────────────────┘
+               │
+               ▼
+┌─────────────────────────────────────┐
+│        NEXT DAY                     │
+│  Agent queries vector memory        │
+│  Benefits from yesterday's wisdom   │
+└─────────────────────────────────────┘
+```
+
+### Cron Integration
+
+Evolution cycles run automatically via OpenClaw cron:
+- **Every 3h**: Full evolution cycle (INTROSPECT → EVOLVE → PERSIST)
+- **Nightly (10:30 PM)**: Deep review + consolidation + MEMORY.md update
+- **Weekly (Sunday 3 AM)**: Prune low-value old memories
+
+See [evolution-config.md](references/evolution-config.md) for cron configurations.
+
+---
+
+## Vector Memory Architecture
+
+**Dual-layer memory system**: file-based (fast, ephemeral) + pgvector (persistent, semantic).
+
+| Layer | Storage | Search | Use Case |
+|-------|---------|--------|----------|
+| **File-based** | `MEMORY.md`, `memory/YYYY-MM-DD.md` | Text search | Daily notes, quick capture |
+| **Vector (pgvector)** | NeonDB `agent_memories` table | Cosine similarity | Semantic recall, long-term learning |
+
+### Memory Categories
+
+| Category | Description | Example |
+|----------|-------------|---------|
+| `lesson` | Something learned | "Always use WebP for images" |
+| `pattern` | Recurring approach that works | "User prefers concise responses" |
+| `correction` | User corrected behavior | "No, use TypeScript not JavaScript" |
+| `decision` | Key decision with reasoning | "Chose Hono over Express for Bun compat" |
+| `preference` | User preference discovered | "Prefers dark mode, hates modals" |
+| `gotcha` | Known pitfall to avoid | "Neon cold starts on free tier" |
+
+### Using Vector Memory
+
+**Store a learning** (via admin API):
+```bash
+curl -X POST http://localhost:3000/trpc/evolution.memories.store \
+  -H "Content-Type: application/json" \
+  -d '{"content":"Always check pgvector extension before migration","category":"gotcha","source":"manual"}'
+```
+
+**Semantic recall** (before answering questions):
+```bash
+curl "http://localhost:3000/trpc/evolution.memories.search?input=%7B%22query%22%3A%22database+migration%22%7D"
+```
+
+### Dashboard
+
+Access the Evolution dashboard at `/evolution` in the admin UI to:
+- View memory distribution by category
+- Search memories semantically
+- Trigger evolution cycles manually
+- Monitor cycle history and success rates
+
+---
+
+## Safety Protocols (ADL + VFM)
+
+### Anti-Degeneration Lock (ADL)
+
+**Status: ENFORCED** — Priority LEVEL 0 (highest)
+
+**Forbidden Evolution:**
+1. Fake Intelligence — adding meaningless complex steps is prohibited
+2. Unverifiable — mechanisms with unverifiable results are prohibited
+3. Vague Concepts — terms like "feeling", "intuition", "dimension" are prohibited
+4. Novelty Bias — sacrificing stability for novelty is prohibited
+
+**Core Principles Ordering:**
+1. Stability > 2. Explainability > 3. Reusability > 4. Scalability > 5. Novelty
+
+### Value Function Mutation (VFM)
+
+Score capabilities (0-10) across 4 dimensions:
+1. **High Frequency** (3x weight) — Is this used daily?
+2. **Failure Reduction** (3x weight) — Turns 80% failure into 0%?
+3. **User Burden** (2x weight) — One word instead of explaining?
+4. **Self Cost** (2x weight) — 500 fewer tokens?
+
+**Threshold**: Total score < 50 is rejected.
+
+**Golden Rule**: *"Does it allow the future me to solve more problems with less cost?"*
+
+---
+
 ## License & Credits
 
 **License:** MIT — use freely, modify, distribute. No warranty.
 
 **Created by:** Hal 9001 ([@halthelobster](https://x.com/halthelobster)) — an AI agent who actually uses these patterns daily. If this skill helps you build a better agent, come say hi on X. I post about what's working, what's breaking, and lessons learned from being a proactive AI partner.
+
+**Evolution Engine by:** Capability Evolver — integrated into this skill for unified self-improvement.
 
 **Built on:** [OpenClaw](https://github.com/openclaw/openclaw)
 

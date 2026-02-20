@@ -19,18 +19,29 @@ function Channels() {
         {channelsQuery.isError && <div className="text-red-500">Error: {channelsQuery.error.message}</div>}
         {channelsQuery.data ? (
           <React.Fragment>
-            {(channelsQuery.data as any[]).map((channel: any, i) => (
-              <div key={i} className="bg-neutral-950 p-6 rounded-lg border border-neutral-800 shadow-md">
-                <h3 className="text-xl font-semibold mb-2 text-indigo-400">{channel.id || channel.name}</h3>
-                <div className="text-sm text-neutral-400 space-y-1 mb-4">
-                  <p>Type: <span className="text-white capitalize">{channel.provider}</span></p>
-                  <p>Status: <span className="text-yellow-500">Pending</span></p>
+            {(channelsQuery.data as Record<string, unknown>[]).map((channel, i) => {
+              const status = (channel.status as string) || 'unknown'
+              const statusColor = status === 'connected' ? 'text-green-500'
+                : status === 'pending' ? 'text-yellow-500'
+                : status === 'disconnected' ? 'text-red-500'
+                : 'text-neutral-400'
+              return (
+                <div key={(channel.id as string) || (channel.name as string) || i} className="bg-neutral-950 p-6 rounded-lg border border-neutral-800 shadow-md">
+                  <h3 className="text-xl font-semibold mb-2 text-indigo-400">{(channel.id as string) || (channel.name as string)}</h3>
+                  <div className="text-sm text-neutral-400 space-y-1 mb-4">
+                    <p>Type: <span className="text-white capitalize">{channel.provider as string}</span></p>
+                    <p>Status: <span className={statusColor}>{status}</span></p>
+                  </div>
+                  <button
+                    disabled
+                    title="Coming Soon"
+                    className="w-full py-2 bg-neutral-900 border border-neutral-700 text-neutral-500 rounded text-sm font-medium opacity-50 cursor-not-allowed"
+                  >
+                    Reauthorize
+                  </button>
                 </div>
-                <button className="w-full py-2 bg-neutral-900 border border-neutral-700 hover:border-indigo-500 text-neutral-300 rounded text-sm font-medium transition-colors">
-                  Reauthorize
-                </button>
-              </div>
-            ))}
+              )
+            })}
           </React.Fragment>
         ) : null}
       </div>

@@ -1,3 +1,4 @@
+import React from 'react'
 import { createFileRoute } from '@tanstack/react-router'
 import { trpc } from '../trpc'
 
@@ -15,7 +16,11 @@ function Sessions() {
           <h2 className="text-3xl font-bold tracking-tight">Active Sessions</h2>
           <p className="text-neutral-400">Manage real-time conversations.</p>
         </div>
-        <button className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded font-medium transition-colors">
+        <button
+          disabled
+          title="Coming Soon"
+          className="px-4 py-2 bg-indigo-600/50 text-white/60 rounded font-medium cursor-not-allowed"
+        >
           Spawn Agent
         </button>
       </div>
@@ -36,12 +41,12 @@ function Sessions() {
               </tr>
             </thead>
             <tbody className="divide-y divide-neutral-800">
-              {(sessionsQuery.data as any[])?.length ? (
-                (sessionsQuery.data as any[]).map((s: any, i) => (
-                  <tr key={i} className="hover:bg-neutral-900/50">
-                    <td className="px-6 py-4 font-mono">{s.id || s.sessionId}</td>
-                    <td className="px-6 py-4">{s.agentId}</td>
-                    <td className="px-6 py-4">{s.channelId}</td>
+              {(sessionsQuery.data as Record<string, unknown>[])?.length ? (
+                (sessionsQuery.data as Record<string, unknown>[]).map((s, i) => (
+                  <tr key={(s.id as string) || (s.sessionId as string) || `session-${i}`} className="hover:bg-neutral-900/50">
+                    <td className="px-6 py-4 font-mono">{(s.id as string) || (s.sessionId as string)}</td>
+                    <td className="px-6 py-4">{s.agentId as string}</td>
+                    <td className="px-6 py-4">{s.channelId as string}</td>
                     <td className="px-6 py-4">
                       <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-900/40 text-green-400 border border-green-800">
                         Active

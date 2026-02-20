@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as ToolsRouteImport } from './routes/tools'
 import { Route as SessionsRouteImport } from './routes/sessions'
 import { Route as ProvidersRouteImport } from './routes/providers'
+import { Route as EvolutionRouteImport } from './routes/evolution'
 import { Route as CronsRouteImport } from './routes/crons'
 import { Route as ConfigRouteImport } from './routes/config'
 import { Route as ChannelsRouteImport } from './routes/channels'
@@ -31,6 +32,11 @@ const SessionsRoute = SessionsRouteImport.update({
 const ProvidersRoute = ProvidersRouteImport.update({
   id: '/providers',
   path: '/providers',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EvolutionRoute = EvolutionRouteImport.update({
+  id: '/evolution',
+  path: '/evolution',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CronsRoute = CronsRouteImport.update({
@@ -65,6 +71,7 @@ export interface FileRoutesByFullPath {
   '/channels': typeof ChannelsRoute
   '/config': typeof ConfigRoute
   '/crons': typeof CronsRoute
+  '/evolution': typeof EvolutionRoute
   '/providers': typeof ProvidersRoute
   '/sessions': typeof SessionsRoute
   '/tools': typeof ToolsRoute
@@ -75,6 +82,7 @@ export interface FileRoutesByTo {
   '/channels': typeof ChannelsRoute
   '/config': typeof ConfigRoute
   '/crons': typeof CronsRoute
+  '/evolution': typeof EvolutionRoute
   '/providers': typeof ProvidersRoute
   '/sessions': typeof SessionsRoute
   '/tools': typeof ToolsRoute
@@ -86,6 +94,7 @@ export interface FileRoutesById {
   '/channels': typeof ChannelsRoute
   '/config': typeof ConfigRoute
   '/crons': typeof CronsRoute
+  '/evolution': typeof EvolutionRoute
   '/providers': typeof ProvidersRoute
   '/sessions': typeof SessionsRoute
   '/tools': typeof ToolsRoute
@@ -98,6 +107,7 @@ export interface FileRouteTypes {
     | '/channels'
     | '/config'
     | '/crons'
+    | '/evolution'
     | '/providers'
     | '/sessions'
     | '/tools'
@@ -108,6 +118,7 @@ export interface FileRouteTypes {
     | '/channels'
     | '/config'
     | '/crons'
+    | '/evolution'
     | '/providers'
     | '/sessions'
     | '/tools'
@@ -118,6 +129,7 @@ export interface FileRouteTypes {
     | '/channels'
     | '/config'
     | '/crons'
+    | '/evolution'
     | '/providers'
     | '/sessions'
     | '/tools'
@@ -129,6 +141,7 @@ export interface RootRouteChildren {
   ChannelsRoute: typeof ChannelsRoute
   ConfigRoute: typeof ConfigRoute
   CronsRoute: typeof CronsRoute
+  EvolutionRoute: typeof EvolutionRoute
   ProvidersRoute: typeof ProvidersRoute
   SessionsRoute: typeof SessionsRoute
   ToolsRoute: typeof ToolsRoute
@@ -155,6 +168,13 @@ declare module '@tanstack/react-router' {
       path: '/providers'
       fullPath: '/providers'
       preLoaderRoute: typeof ProvidersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/evolution': {
+      id: '/evolution'
+      path: '/evolution'
+      fullPath: '/evolution'
+      preLoaderRoute: typeof EvolutionRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/crons': {
@@ -201,6 +221,7 @@ const rootRouteChildren: RootRouteChildren = {
   ChannelsRoute: ChannelsRoute,
   ConfigRoute: ConfigRoute,
   CronsRoute: CronsRoute,
+  EvolutionRoute: EvolutionRoute,
   ProvidersRoute: ProvidersRoute,
   SessionsRoute: SessionsRoute,
   ToolsRoute: ToolsRoute,

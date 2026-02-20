@@ -2,8 +2,6 @@
   "$schema": "./node_modules/oxlint/configuration_schema.json",
   "plugins": [
     "typescript",
-    "react",
-    "jsx-a11y",
     "import",
     "unicorn",
     "oxc"
@@ -14,20 +12,11 @@
     "perf": "warn"
   },
   "env": {
-    "browser": true,
-    "es2025": true,
-    "node": true
-  },
-  "settings": {
-    "react": {
-      "version": "19"
-    },
-    "jsx": {
-      "runtime": "automatic"
-    }
+    "node": true,
+    "es2025": true
   },
   "rules": {
-    "no-console": "warn",
+    "no-console": "off",
     "no-debugger": "error",
     "no-eval": "error",
     "no-var": "error",
@@ -42,18 +31,6 @@
     "typescript/no-explicit-any": "warn",
     "typescript/no-non-null-assertion": "warn",
 
-    "react/jsx-no-duplicate-props": "error",
-    "react/jsx-key": "error",
-    "react/no-children-prop": "error",
-    "react/no-direct-mutation-state": "error",
-    "react/react-in-jsx-scope": "off",
-    "react/rules-of-hooks": "error",
-    "react/exhaustive-deps": "warn",
-
-    "jsx-a11y/alt-text": "warn",
-    "jsx-a11y/anchor-is-valid": "warn",
-    "jsx-a11y/no-autofocus": "warn",
-
     "import/no-duplicates": "warn",
     "import/no-self-import": "error",
 
@@ -62,15 +39,22 @@
     "unicorn/prefer-includes": "warn",
     "unicorn/throw-new-error": "error",
 
-    "oxc/approx-constant": "warn",
-    "oxc/no-barrel-file": "warn"
+    "oxc/approx-constant": "warn"
   },
   "ignorePatterns": [
     "node_modules",
     "dist",
     "*.gen.ts",
     "*.gen.js",
-    "migrations",
-    ".tanstack"
+    "openclaw-admin",
+    "logs",
+    "media",
+    "data",
+    "memory",
+    "credentials",
+    "completions",
+    ".git",
+    "*.lock",
+    "*.json"
   ]
 }

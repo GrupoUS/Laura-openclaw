@@ -19,14 +19,18 @@ function Agents() {
         {agentsQuery.isError && <div className="text-red-500">Error: {agentsQuery.error.message}</div>}
         {agentsQuery.data ? (
           <React.Fragment>
-            {(agentsQuery.data as any[]).map((agent: any, i) => (
-              <div key={i} className="bg-neutral-950 p-6 rounded-lg border border-neutral-800 shadow-md">
-                <h3 className="text-xl font-semibold mb-2 text-indigo-400">{agent.name || agent.id}</h3>
+            {(agentsQuery.data as Record<string, unknown>[]).map((agent, i) => (
+              <div key={(agent.id as string) || i} className="bg-neutral-950 p-6 rounded-lg border border-neutral-800 shadow-md">
+                <h3 className="text-xl font-semibold mb-2 text-indigo-400">{(agent.name as string) || (agent.id as string)}</h3>
                 <div className="text-sm text-neutral-400 space-y-1 mb-4">
-                  <p>Type: <span className="text-white">{agent.type || 'Standard'}</span></p>
-                  <p>Status: <span className="text-green-500">Online</span></p>
+                  <p>Type: <span className="text-white">{(agent.type as string) || 'Standard'}</span></p>
+                  <p>Status: <span className={`${(agent.status as string) === 'offline' ? 'text-red-500' : 'text-green-500'}`}>{(agent.status as string) || 'Active'}</span></p>
                 </div>
-                <button className="w-full py-2 bg-neutral-900 border border-neutral-700 hover:border-indigo-500 text-neutral-300 rounded text-sm font-medium transition-colors">
+                <button
+                  disabled
+                  title="Coming Soon"
+                  className="w-full py-2 bg-neutral-900 border border-neutral-700 text-neutral-500 rounded text-sm font-medium opacity-50 cursor-not-allowed"
+                >
                   Edit Allowlist
                 </button>
               </div>
