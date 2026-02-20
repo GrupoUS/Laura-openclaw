@@ -22,7 +22,6 @@
         "thinking": "low"
       },
       "state": {
-        "nextRunAtMs": 1771621200000,
         "lastRunAtMs": 1771547461931,
         "lastStatus": "ok",
         "lastDurationMs": 20225,
@@ -56,7 +55,6 @@
         "thinking": "low"
       },
       "state": {
-        "nextRunAtMs": 1771560011150,
         "lastRunAtMs": 1771556400013,
         "lastStatus": "error",
         "lastDurationMs": 11137,
@@ -89,7 +87,6 @@
         "thinking": "low"
       },
       "state": {
-        "nextRunAtMs": 1771560176237,
         "lastRunAtMs": 1771556576251,
         "lastStatus": "error",
         "lastDurationMs": 2362,
@@ -147,7 +144,6 @@
         "model": "google-antigravity/gemini-3-flash"
       },
       "state": {
-        "nextRunAtMs": 1771599600000,
         "lastRunAtMs": 1771513218652,
         "lastStatus": "ok",
         "lastDurationMs": 449067,
@@ -180,7 +176,6 @@
         "kind": "agentTurn"
       },
       "state": {
-        "nextRunAtMs": 1771617600000,
         "lastRunAtMs": 1771531220526,
         "lastStatus": "ok",
         "lastDurationMs": 109839,
@@ -213,7 +208,6 @@
         "thinking": "low"
       },
       "state": {
-        "nextRunAtMs": 1771624800000,
         "lastRunAtMs": 1771547514896,
         "lastStatus": "ok",
         "lastDurationMs": 5228,
@@ -246,7 +240,6 @@
         "model": "google-antigravity/gemini-3-flash"
       },
       "state": {
-        "nextRunAtMs": 1771588800000,
         "lastRunAtMs": 1771502417368,
         "lastStatus": "ok",
         "lastDurationMs": 87424,
@@ -279,7 +272,6 @@
         "thinking": "low"
       },
       "state": {
-        "nextRunAtMs": 1771558680402,
         "lastRunAtMs": 1771551480419,
         "lastStatus": "error",
         "lastDurationMs": 204,
@@ -405,7 +397,6 @@
         "channel": "whatsapp"
       },
       "state": {
-        "nextRunAtMs": 1771585200000,
         "lastRunAtMs": 1771498818816,
         "lastStatus": "ok",
         "lastDurationMs": 112034,
@@ -437,7 +428,6 @@
         "channel": "whatsapp"
       },
       "state": {
-        "nextRunAtMs": 1771621200000,
         "lastRunAtMs": 1771547524696,
         "lastStatus": "error",
         "lastDurationMs": 148404,
@@ -469,7 +459,6 @@
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1771585200000,
         "lastRunAtMs": 1771498930850,
         "lastStatus": "error",
         "lastDurationMs": 64031,

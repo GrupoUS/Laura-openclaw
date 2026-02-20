@@ -5,7 +5,7 @@
       "id": "1c000d49-65a9-40d3-87b8-7441f624a7a1",
       "agentId": "assistant",
       "name": "Daily Zoom Sync (18h BRT)",
-      "enabled": true,
+      "enabled": false,
       "createdAtMs": 1769737766747,
       "updatedAtMs": 1771547482156,
       "schedule": {
@@ -22,7 +22,6 @@
         "thinking": "low"
       },
       "state": {
-        "nextRunAtMs": 1771621200000,
         "lastRunAtMs": 1771547461931,
         "lastStatus": "ok",
         "lastDurationMs": 20225,
@@ -39,7 +38,7 @@
       "id": "648bdc54-d478-4e4a-b66a-79faf71e2b10",
       "agentId": "main",
       "name": "SDR leads watch (30m)",
-      "enabled": true,
+      "enabled": false,
       "createdAtMs": 1769786350017,
       "updatedAtMs": 1771556411150,
       "schedule": {
@@ -56,7 +55,6 @@
         "thinking": "low"
       },
       "state": {
-        "nextRunAtMs": 1771560011150,
         "lastRunAtMs": 1771556400013,
         "lastStatus": "error",
         "lastDurationMs": 11137,
@@ -71,7 +69,7 @@
       "id": "3656b109-eeca-4687-be18-799a8cacb9cb",
       "agentId": "main",
       "name": "Zoom summaries to Slack (hourly)",
-      "enabled": true,
+      "enabled": false,
       "createdAtMs": 1769863967611,
       "updatedAtMs": 1771556578613,
       "schedule": {
@@ -89,7 +87,6 @@
         "thinking": "low"
       },
       "state": {
-        "nextRunAtMs": 1771560176237,
         "lastRunAtMs": 1771556576251,
         "lastStatus": "error",
         "lastDurationMs": 2362,
@@ -130,7 +127,7 @@
       "id": "c5875ed0-c488-432a-beea-bd159eff00de",
       "agentId": "main",
       "name": "Notion Tasks Reminder (Morning)",
-      "enabled": true,
+      "enabled": false,
       "createdAtMs": 1770217654285,
       "updatedAtMs": 1771513667719,
       "schedule": {
@@ -147,7 +144,6 @@
         "model": "google-antigravity/gemini-3-flash"
       },
       "state": {
-        "nextRunAtMs": 1771599600000,
         "lastRunAtMs": 1771513218652,
         "lastStatus": "ok",
         "lastDurationMs": 449067,
@@ -163,7 +159,7 @@
       "id": "25ac0cee-78d0-41bc-9af2-b64bf5e57c93",
       "agentId": "main",
       "name": "Notion Tasks Reminder (Afternoon)",
-      "enabled": true,
+      "enabled": false,
       "createdAtMs": 1770217667372,
       "updatedAtMs": 1771531330365,
       "schedule": {
@@ -180,7 +176,6 @@
         "kind": "agentTurn"
       },
       "state": {
-        "nextRunAtMs": 1771617600000,
         "lastRunAtMs": 1771531220526,
         "lastStatus": "ok",
         "lastDurationMs": 109839,
@@ -196,7 +191,7 @@
       "id": "b8fe81e5-6182-4b92-a412-e97a0c901ac9",
       "agentId": "main",
       "name": "Daily NEON Sync (19h BRT)",
-      "enabled": true,
+      "enabled": false,
       "createdAtMs": 1770234090652,
       "updatedAtMs": 1771547520124,
       "schedule": {
@@ -213,7 +208,6 @@
         "thinking": "low"
       },
       "state": {
-        "nextRunAtMs": 1771624800000,
         "lastRunAtMs": 1771547514896,
         "lastStatus": "ok",
         "lastDurationMs": 5228,
@@ -229,7 +223,7 @@
       "id": "25f6bf22-4a24-4c3c-92db-02515ac508ce",
       "agentId": "main",
       "name": "Mentorship Reminder (1 Day Before)",
-      "enabled": true,
+      "enabled": false,
       "createdAtMs": 1770236596687,
       "updatedAtMs": 1771502504792,
       "schedule": {
@@ -246,7 +240,6 @@
         "model": "google-antigravity/gemini-3-flash"
       },
       "state": {
-        "nextRunAtMs": 1771588800000,
         "lastRunAtMs": 1771502417368,
         "lastStatus": "ok",
         "lastDurationMs": 87424,
@@ -262,7 +255,7 @@
       "id": "11a518b7-d378-438e-a7fb-64020dbec38f",
       "agentId": "main",
       "name": "SDR Re-engagement (Every 2h)",
-      "enabled": true,
+      "enabled": false,
       "createdAtMs": 1770673080402,
       "updatedAtMs": 1771551480623,
       "schedule": {
@@ -279,7 +272,6 @@
         "thinking": "low"
       },
       "state": {
-        "nextRunAtMs": 1771558680402,
         "lastRunAtMs": 1771551480419,
         "lastStatus": "error",
         "lastDurationMs": 204,
@@ -384,7 +376,7 @@
       "id": "466cecdf-5870-4201-acf8-4a020dc6c53d",
       "agentId": "main",
       "name": "Lucas Morning Brief",
-      "enabled": true,
+      "enabled": false,
       "createdAtMs": 1771245110109,
       "updatedAtMs": 1771498930850,
       "schedule": {
@@ -405,7 +397,6 @@
         "channel": "whatsapp"
       },
       "state": {
-        "nextRunAtMs": 1771585200000,
         "lastRunAtMs": 1771498818816,
         "lastStatus": "ok",
         "lastDurationMs": 112034,
@@ -416,7 +407,7 @@
       "id": "f39c929c-066b-47db-aa51-cbb1364d11d3",
       "agentId": "main",
       "name": "Lucas Evening Brief",
-      "enabled": true,
+      "enabled": false,
       "createdAtMs": 1771245118522,
       "updatedAtMs": 1771547673100,
       "schedule": {
@@ -437,7 +428,6 @@
         "channel": "whatsapp"
       },
       "state": {
-        "nextRunAtMs": 1771621200000,
         "lastRunAtMs": 1771547524696,
         "lastStatus": "error",
         "lastDurationMs": 148404,
@@ -450,7 +440,7 @@
       "agentId": "main",
       "sessionKey": "agent:main:main",
       "name": "Daily Sales Follow-up",
-      "enabled": true,
+      "enabled": false,
       "createdAtMs": 1771440702533,
       "updatedAtMs": 1771498994881,
       "schedule": {
@@ -469,7 +459,6 @@
         "mode": "none"
       },
       "state": {
-        "nextRunAtMs": 1771585200000,
         "lastRunAtMs": 1771498930850,
         "lastStatus": "error",
         "lastDurationMs": 64031,
