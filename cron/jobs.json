@@ -412,12 +412,12 @@
     },
     {
       "id": "3a0b29be-63a1-4269-85f3-2a3aeffb01ff",
-      "agentId": "main",
+      "agentId": "sdr",
       "name": "sdr-lead-checker",
       "description": "Check for unresponded leads every hour",
       "enabled": true,
       "createdAtMs": 1771560754062,
-      "updatedAtMs": 1771607653115,
+      "updatedAtMs": 1771610524147,
       "schedule": {
         "kind": "every",
         "everyMs": 3600000,
@@ -429,7 +429,7 @@
         "kind": "agentTurn",
         "message": "Verify unresponded leads in WhatsApp. List any numbers that sent messages and haven't received a reply yet, or leads that we messaged but didn't reply back to us. If you find any, summarize them ONLY for Maurício (+556299776996). If all is clear, say NO_REPLY.",
         "thinking": "low",
-        "model": "google-gemini-cli/gemini-3-flash-preview"
+        "model": "gemini3-flash"
       },
       "delivery": {
         "mode": "announce",
@@ -442,7 +442,33 @@
         "lastStatus": "error",
         "lastDurationMs": 99033,
         "consecutiveErrors": 1,
-        "lastError": "cron announce delivery failed"
+        "runningAtMs": 1771611154076
+      }
+    },
+    {
+      "id": "29086beb-a9e5-407f-af2d-534fd1c82068",
+      "agentId": "sdr",
+      "name": "followup-comercial-diario",
+      "enabled": true,
+      "createdAtMs": 1771610323090,
+      "updatedAtMs": 1771611083047,
+      "schedule": {
+        "kind": "cron",
+        "expr": "0 10 * * 1-5"
+      },
+      "sessionTarget": "isolated",
+      "wakeMode": "now",
+      "payload": {
+        "kind": "agentTurn",
+        "message": "Incentivar o time comercial no grupo US - COMERCIAL (120363361363907454@g.us). Mencione Lucas (@100653246464136) e Erica (@79719592640575). Pergunte sobre o progresso com os leads, objeções encontradas e proponha melhorias no script. Lema: 'Always think: What would make the entire GrupoUS say I didn't even ask for that but it's amazing?'. Registre tudo no NeonDB."
+      },
+      "delivery": {
+        "mode": "announce",
+        "channel": "whatsapp",
+        "to": "120363361363907454@g.us"
+      },
+      "state": {
+        "nextRunAtMs": 1771851600000
       }
     }
   ]
