@@ -3,6 +3,17 @@ import { create } from 'zustand'
 import { immer } from 'zustand/middleware/immer'
 import { subscribeWithSelector } from 'zustand/middleware'
 import type { Task, Subtask, TaskStatus } from '@/types/tasks'
+import type { AgentDetail } from '@/lib/db/queries'
+
+export interface ActivityEntry {
+  id:        string
+  type:      string        // task:created | subtask:updated | etc.
+  taskId:    string
+  taskTitle?: string
+  agent:     string | null
+  payload:   Record<string, unknown>
+  ts:        string
+}
 
 interface TaskStore {
   tasks: Task[]
@@ -21,6 +32,15 @@ interface TaskStore {
   // Derived
   tasksByStatus: () => Record<TaskStatus, Task[]>
   tasksByPhase:  () => Record<number, Task[]>
+
+  // ─── Activity Log ───────────────────────────────────────
+  activityLog: ActivityEntry[]
+  pushActivity: (entry: ActivityEntry) => void
+
+  // ─── Agent Details ──────────────────────────────────────
+  agentDetails: AgentDetail[]
+  setAgentDetails: (agents: AgentDetail[]) => void
+  updateAgentFromEvent: (event: { type: string; taskId: string; agent?: string; payload: any }) => void
 }
 
 export const useTaskStore = create<TaskStore>()(
@@ -28,6 +48,43 @@ export const useTaskStore = create<TaskStore>()(
     immer((set, get) => ({
       tasks: [],
       isConnected: false,
+      activityLog: [],
+      agentDetails: [],
+
+      pushActivity: (entry) => set((s) => {
+        s.activityLog.unshift(entry)
+        if (s.activityLog.length > 50) {
+          s.activityLog = s.activityLog.slice(0, 50)
+        }
+      }),
+
+      setAgentDetails: (agents) => set((s) => { s.agentDetails = agents }),
+
+      updateAgentFromEvent: (event) => set((s) => {
+        const agentName = event.agent ?? 'system'
+        const agent = s.agentDetails.find((a) => a.name === agentName)
+        if (!agent) return
+
+        if (event.type === 'subtask:updated') {
+          const { status, title, subtaskId } = event.payload as any
+          if (status === 'doing') {
+            agent.status = 'doing'
+            agent.currentSubtask = { id: subtaskId, title }
+          } else if (status === 'done') {
+            agent.currentSubtask = null
+            agent.status = agent.currentTask ? 'active' : 'idle'
+          }
+        }
+        if (event.type === 'task:updated') {
+          const { status } = event.payload as any
+          if (status === 'in_progress') agent.status = agent.currentSubtask ? 'doing' : 'active'
+          if (status === 'done' || status === 'backlog') {
+            agent.currentTask = null
+            agent.status = 'idle'
+          }
+          if (status === 'blocked') agent.status = 'blocked'
+        }
+      }),
 
       setTasks: (tasks) => set((s) => { s.tasks = tasks }),
       setConnected: (v) => set((s) => { s.isConnected = v }),

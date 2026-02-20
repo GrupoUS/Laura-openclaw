@@ -1,6 +1,6 @@
 'use client'
 import { useEffect, useRef } from 'react'
-import { useTaskStore } from './useTaskStore'
+import { useTaskStore, type ActivityEntry } from './useTaskStore'
 import type { Task, Subtask } from '@/types/tasks'
 
 const SSE_TOKEN = process.env.NEXT_PUBLIC_SSE_READ_TOKEN ?? ''
@@ -9,7 +9,22 @@ export function useTaskEvents() {
   const upsertTask    = useTaskStore((s) => s.upsertTask)
   const upsertSubtask = useTaskStore((s) => s.upsertSubtask)
   const setConnected  = useTaskStore((s) => s.setConnected)
+  const pushActivity  = useTaskStore((s) => s.pushActivity)
+  const updateAgentFromEvent = useTaskStore((s) => s.updateAgentFromEvent)
   const esRef = useRef<EventSource | null>(null)
+
+  const toActivity = (e: MessageEvent, type: string): ActivityEntry => {
+    const event = JSON.parse(e.data)
+    return {
+      id:       crypto.randomUUID(),
+      type:     event.type,
+      taskId:   event.taskId,
+      taskTitle: event.payload?.title as string | undefined,
+      agent:    event.agent ?? null,
+      payload:  event.payload,
+      ts:       event.ts,
+    }
+  }
 
   useEffect(() => {
     if (!SSE_TOKEN) {
@@ -28,11 +43,15 @@ export function useTaskEvents() {
     es.addEventListener('task:created', (e) => {
       const event = JSON.parse(e.data)
       upsertTask(event.payload as Task)
+      pushActivity(toActivity(e as MessageEvent, 'task:created'))
+      updateAgentFromEvent(event)
     })
 
     es.addEventListener('task:updated', (e) => {
       const event = JSON.parse(e.data)
       upsertTask(event.payload as Task)
+      pushActivity(toActivity(e as MessageEvent, 'task:updated'))
+      updateAgentFromEvent(event)
     })
 
     es.addEventListener('subtask:created', (e) => {
@@ -43,6 +62,8 @@ export function useTaskEvents() {
     es.addEventListener('subtask:updated', (e) => {
       const event = JSON.parse(e.data)
       upsertSubtask(event.taskId, event.payload as Subtask)
+      pushActivity(toActivity(e as MessageEvent, 'subtask:updated'))
+      updateAgentFromEvent(event)
     })
 
     es.addEventListener('heartbeat', () => setConnected(true))
