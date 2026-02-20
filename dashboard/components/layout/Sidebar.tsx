@@ -3,8 +3,9 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
 const NAV = [
-  { href: '/board', label: '🗂️  Kanban' },
-  { href: '/list',  label: '📋  Lista' },
+  { href: '/board',  label: '🗂️  Kanban'  },
+  { href: '/list',   label: '📋  Lista'   },
+  { href: '/agents', label: '🤖  Agentes' },
 ]
 
 export function Sidebar() {
