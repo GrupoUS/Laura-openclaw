@@ -22,3 +22,5 @@ completions/
 update-check.json
 .DS_Store
 *.log
+*.bak.*
+openclaw.json.bak.*
