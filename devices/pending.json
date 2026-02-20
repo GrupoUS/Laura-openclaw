@@ -1,22 +1,20 @@
 {
-  "a047454c-b366-48d1-9d8e-5d636ca98d6c": {
-    "requestId": "a047454c-b366-48d1-9d8e-5d636ca98d6c",
+  "fa97938a-6415-4615-a326-659ad7cbb1df": {
+    "requestId": "fa97938a-6415-4615-a326-659ad7cbb1df",
     "deviceId": "a8ba2f748c2f33ab8e17f426eb0b6e57c28f89dde7f8d86952d9601b026c8c2a",
     "publicKey": "gEd7wz1tpUixwnDRGwSW_awvd0a0_KhYpphYwYcTyEw",
     "platform": "darwin",
     "clientId": "cli",
-    "clientMode": "cli",
+    "clientMode": "probe",
     "role": "operator",
     "roles": [
       "operator"
     ],
     "scopes": [
-      "operator.admin",
-      "operator.approvals",
-      "operator.pairing"
+      "operator.admin"
     ],
     "silent": false,
     "isRepair": true,
-    "ts": 1771559481857
+    "ts": 1771560120610
   }
 }
