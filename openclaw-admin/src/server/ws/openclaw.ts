@@ -5,6 +5,7 @@
 let ws: WebSocket | null = null
 let reconnectTimer: ReturnType<typeof setTimeout> | null = null
 let handshakeComplete = false
+let connectFrameId: string | null = null
 let pendingHandshakeCallbacks: Array<{
   resolve: () => void
   reject: (err: Error) => void
@@ -33,10 +34,11 @@ export function getGatewayUrl(): string {
  * Frame format: { type: "req", method: "connect", id, params: ConnectParams }
  */
 function sendConnectHandshake(socket: WebSocket): void {
+  connectFrameId = crypto.randomUUID()
   const connectFrame = JSON.stringify({
     type: 'req',
     method: 'connect',
-    id: crypto.randomUUID(),
+    id: connectFrameId,
     params: {
       minProtocol: PROTOCOL_VERSION,
       maxProtocol: PROTOCOL_VERSION,
@@ -48,7 +50,6 @@ function sendConnectHandshake(socket: WebSocket): void {
       },
       auth: { token: GATEWAY_TOKEN },
       scopes: ['operator.admin'],
-      permissions: { admin: true },
     },
   })
   log('sending connect handshake')
@@ -63,6 +64,7 @@ export function getGatewayWs(url = GATEWAY_WS_URL): WebSocket {
   ) {
     log(`connecting to ${url}`)
     handshakeComplete = false
+    connectFrameId = null
     pendingHandshakeCallbacks = []
     ws = new WebSocket(url)
 
@@ -71,21 +73,32 @@ export function getGatewayWs(url = GATEWAY_WS_URL): WebSocket {
       sendConnectHandshake(ws!)
     })
 
+    // Global message handler — routes connect response, ignores others
     ws.addEventListener('message', (ev) => {
-      if (handshakeComplete) return // handled by per-call listeners
+      if (handshakeComplete) return // RPC responses handled by per-call listeners
       try {
-        const msg = JSON.parse(
-          typeof ev.data === 'string' ? ev.data : ''
-        ) as { type?: string; error?: { message?: string } | string; result?: unknown }
+        const raw = typeof ev.data === 'string' ? ev.data : ''
+        const msg = JSON.parse(raw) as {
+          type?: string
+          id?: string
+          ok?: boolean
+          error?: { code?: number; message?: string } | string
+          result?: unknown
+        }
 
-        // Gateway responds with type:"res" for connect
-        if (msg.error) {
-          const errMsg =
-            typeof msg.error === 'string'
+        // Only process the connect response (match by frame ID)
+        if (msg.type !== 'res' || msg.id !== connectFrameId) {
+          log('ignoring non-connect message during handshake:', raw.slice(0, 100))
+          return
+        }
+
+        if (msg.ok === false || msg.error) {
+          const errMsg = msg.error
+            ? typeof msg.error === 'string'
               ? msg.error
-              : (msg.error as { message?: string })?.message ?? JSON.stringify(msg.error)
+              : msg.error.message ?? JSON.stringify(msg.error)
+            : 'connect rejected (ok=false)'
           logErr('handshake rejected:', errMsg)
-          handshakeComplete = false
           for (const cb of pendingHandshakeCallbacks) {
             cb.reject(new Error(`Gateway handshake rejected: ${errMsg}`))
           }
@@ -93,7 +106,8 @@ export function getGatewayWs(url = GATEWAY_WS_URL): WebSocket {
           ws?.close()
           return
         }
-        // Handshake accepted
+
+        // Handshake accepted: { type: "res", ok: true, id: connectFrameId }
         log('✓ handshake complete')
         handshakeComplete = true
         for (const cb of pendingHandshakeCallbacks) {
@@ -115,6 +129,7 @@ export function getGatewayWs(url = GATEWAY_WS_URL): WebSocket {
     ws.addEventListener('close', (ev) => {
       logWarn(`closed (code=${ev.code}, reason=${ev.reason || 'none'})`)
       handshakeComplete = false
+      connectFrameId = null
       for (const cb of pendingHandshakeCallbacks) {
         cb.reject(
           new Error(`WebSocket closed (code=${ev.code}) during handshake`)
@@ -184,14 +199,22 @@ export function gatewayCall<T = unknown>(
       try {
         const msg = JSON.parse(
           typeof event.data === 'string' ? event.data : ''
-        ) as { id?: string; type?: string; error?: { message?: string } | string; result: T }
+        ) as {
+          id?: string
+          type?: string
+          ok?: boolean
+          error?: { code?: number; message?: string } | string
+          result: T
+        }
         if (msg.id !== id) return
         cleanup()
-        if (msg.error) {
-          const errMsg =
-            typeof msg.error === 'string'
+        if (msg.ok === false || msg.error) {
+          const errMsg = msg.error
+            ? typeof msg.error === 'string'
               ? msg.error
-              : (msg.error as { message?: string })?.message ?? JSON.stringify(msg.error)
+              : (msg.error as { message?: string })?.message ??
+                JSON.stringify(msg.error)
+            : 'request failed (ok=false)'
           reject(new Error(errMsg))
         } else {
           resolve(msg.result)
