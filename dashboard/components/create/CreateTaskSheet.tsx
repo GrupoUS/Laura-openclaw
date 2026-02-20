@@ -43,8 +43,8 @@ export function CreateTaskSheet({ open, onClose }: Props) {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'x-laura-secret': process.env.NEXT_PUBLIC_LAURA_SECRET ?? '',
         },
+        credentials: 'include',
         body: JSON.stringify({ description, priority, agent }),
         signal: abortRef.current.signal,
       })

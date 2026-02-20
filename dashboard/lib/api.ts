@@ -4,9 +4,19 @@ const BASE = typeof window !== 'undefined'
   ? ''  // client: relative URL
   : (process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000')
 
-const headers = () => ({
-  'Content-Type': 'application/json',
-  'x-laura-secret': process.env.LAURA_API_SECRET ?? '',
+const headers = () => {
+  const h: Record<string, string> = { 'Content-Type': 'application/json' }
+  // Server-side: usar secret diretamente (rotas Next.js)
+  if (typeof window === 'undefined' && process.env.LAURA_API_SECRET) {
+    h['x-laura-secret'] = process.env.LAURA_API_SECRET
+  }
+  return h
+}
+
+const fetchOpts = (body?: string): RequestInit => ({
+  headers:     headers(),
+  credentials: typeof window !== 'undefined' ? 'include' : 'omit',
+  ...(body ? { body } : {}),
 })
 
 // ─── Tasks ────────────────────────────────────────
@@ -18,7 +28,7 @@ export async function fetchTasks(filter?: {
   if (filter?.agent)  params.set('agent',  filter.agent)
   if (filter?.phase)  params.set('phase',  String(filter.phase))
   const qs = params.toString() ? `?${params}` : ''
-  const res = await fetch(`${BASE}/api/tasks${qs}`, { headers: headers(), cache: 'no-store' })
+  const res = await fetch(`${BASE}/api/tasks${qs}`, { ...fetchOpts(), cache: 'no-store' })
   if (!res.ok) throw new Error(`fetchTasks: ${res.status}`)
   return (await res.json()).data
 }
@@ -28,8 +38,7 @@ export async function patchTaskStatus(
 ): Promise<Task> {
   const res = await fetch(`${BASE}/api/tasks/${id}`, {
     method: 'PATCH',
-    headers: headers(),
-    body: JSON.stringify({ status, agent }),
+    ...fetchOpts(JSON.stringify({ status, agent })),
   })
   if (!res.ok) throw new Error(`patchTask: ${res.status}`)
   return (await res.json()).data
@@ -41,8 +50,7 @@ export async function patchSubtaskStatus(
 ): Promise<Subtask | null> {
   const res = await fetch(`${BASE}/api/tasks/${taskId}/subtasks/${sid}`, {
     method: 'PATCH',
-    headers: headers(),
-    body: JSON.stringify({ status }),
+    ...fetchOpts(JSON.stringify({ status })),
   })
   if (res.status === 409) return null  // race condition
   if (!res.ok) throw new Error(`patchSubtask: ${res.status}`)
@@ -53,8 +61,7 @@ export async function patchSubtaskStatus(
 export async function createTask(data: any): Promise<Task> {
   const res = await fetch(`${BASE}/api/tasks`, {
     method: 'POST',
-    headers: headers(),
-    body: JSON.stringify(data),
+    ...fetchOpts(JSON.stringify(data)),
   })
   if (!res.ok) throw new Error(`createTask: ${res.status}`)
   return (await res.json()).data
@@ -63,8 +70,7 @@ export async function createTask(data: any): Promise<Task> {
 export async function createSubtask(data: any): Promise<Subtask> {
   const res = await fetch(`${BASE}/api/tasks/${data.taskId}/subtasks`, {
     method: 'POST',
-    headers: headers(),
-    body: JSON.stringify(data),
+    ...fetchOpts(JSON.stringify(data)),
   })
   if (!res.ok) throw new Error(`createSubtask: ${res.status}`)
   return (await res.json()).data
@@ -72,7 +78,7 @@ export async function createSubtask(data: any): Promise<Subtask> {
 
 // ─── Agents ───────────────────────────────────────
 export async function fetchAgents(): Promise<AgentSummary[]> {
-  const res = await fetch(`${BASE}/api/agents`, { headers: headers(), cache: 'no-store' })
+  const res = await fetch(`${BASE}/api/agents`, { ...fetchOpts(), cache: 'no-store' })
   if (!res.ok) throw new Error(`fetchAgents: ${res.status}`)
   return (await res.json()).data
 }

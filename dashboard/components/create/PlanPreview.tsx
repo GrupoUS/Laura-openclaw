@@ -18,7 +18,7 @@ export function PlanPreview({ plan }: { plan: TaskPlan }) {
         <p className="font-semibold text-slate-800 text-sm">{plan.title}</p>
         <p className="text-xs text-slate-500 mt-1 line-clamp-2">{plan.description}</p>
         <div className="flex items-center gap-2 mt-2">
-          <span className={`w-2 h-2 rounded-full ${PRIORITY_COLORS[plan.priority as any] ?? 'bg-gray-400'}`} />
+          <span className={`w-2 h-2 rounded-full ${PRIORITY_COLORS[plan.priority as keyof typeof PRIORITY_COLORS] ?? 'bg-gray-400'}`} />
           <span className="text-xs text-slate-500 capitalize">{plan.priority}</span>
           <span className="text-xs text-slate-400">\u00b7</span>
           <span className="text-xs text-slate-500">

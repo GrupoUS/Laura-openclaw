@@ -245,3 +245,130 @@ export async function getRecentActivity(limit = 30) {
     with: { task: { columns: { id: true, title: true } } },
   })
 }
+
+// ─── Analytics Dashboard — NOVA ───────────────────────────────────────────────
+export interface AnalyticsData {
+  kpis: {
+    totalTasks:    number
+    doneThisWeek:  number
+    activeNow:     number
+    blockedNow:    number
+  }
+  phaseProgress: Array<{
+    phase:       number
+    backlog:     number
+    in_progress: number
+    done:        number
+    blocked:     number
+    total:       number
+    label:       string
+  }>
+  agentVelocity: Array<{
+    agent:  string
+    done:   number
+    active: number
+  }>
+  statusDist: Array<{
+    status: string
+    count:  number
+    label:  string
+  }>
+  completionTimeline: Array<{
+    date:  string   // 'DD/MM'
+    count: number   // tasks concluídas neste dia
+  }>
+}
+
+export async function getAnalytics(): Promise<AnalyticsData> {
+  const [kpiRows, phaseRows, agentRows, statusRows, timelineRows] = await Promise.all([
+
+    // KPIs
+    getDb().execute(`
+      SELECT
+        COUNT(*)::int                                                           AS total_tasks,
+        COUNT(*) FILTER (
+          WHERE status = 'done'
+          AND   updated_at >= NOW() - INTERVAL '7 days'
+        )::int                                                                  AS done_this_week,
+        COUNT(*) FILTER (WHERE status = 'in_progress')::int                    AS active_now,
+        COUNT(*) FILTER (WHERE status = 'blocked')::int                        AS blocked_now
+      FROM tasks
+    `),
+
+    // Progresso por fase
+    getDb().execute(`
+      SELECT
+        phase,
+        COUNT(*) FILTER (WHERE status = 'backlog')::int     AS backlog,
+        COUNT(*) FILTER (WHERE status = 'in_progress')::int AS in_progress,
+        COUNT(*) FILTER (WHERE status = 'done')::int        AS done,
+        COUNT(*) FILTER (WHERE status = 'blocked')::int     AS blocked,
+        COUNT(*)::int                                        AS total
+      FROM tasks
+      GROUP BY phase
+      ORDER BY phase ASC
+    `),
+
+    // Velocity por agente (tasks done + tasks active)
+    getDb().execute(`
+      SELECT
+        COALESCE(agent, 'system')                            AS agent,
+        COUNT(*) FILTER (WHERE status = 'done')::int        AS done,
+        COUNT(*) FILTER (WHERE status = 'in_progress')::int AS active
+      FROM tasks
+      WHERE agent IS NOT NULL
+      GROUP BY agent
+      ORDER BY done DESC
+    `),
+
+    // Distribuição de status
+    getDb().execute(`
+      SELECT status, COUNT(*)::int AS count
+      FROM tasks
+      GROUP BY status
+    `),
+
+    // Timeline de conclusões: últimos 14 dias (task_events)
+    getDb().execute(`
+      SELECT
+        TO_CHAR(created_at AT TIME ZONE 'America/Sao_Paulo', 'DD/MM') AS date,
+        COUNT(*)::int AS count
+      FROM task_events
+      WHERE event_type  = 'task:updated'
+        AND payload::jsonb->>'status' = 'done'
+        AND created_at >= NOW() - INTERVAL '14 days'
+      GROUP BY date
+      ORDER BY MIN(created_at) ASC
+    `),
+  ])
+
+  const kpi = (kpiRows.rows[0] ?? {}) as any
+  const STATUS_LABELS: Record<string, string> = {
+    backlog: '📋 Backlog', in_progress: '⚡ Em Progresso',
+    done: '✅ Concluído', blocked: '🔴 Bloqueado',
+  }
+
+  return {
+    kpis: {
+      totalTasks:   kpi.total_tasks   ?? 0,
+      doneThisWeek: kpi.done_this_week ?? 0,
+      activeNow:    kpi.active_now    ?? 0,
+      blockedNow:   kpi.blocked_now   ?? 0,
+    },
+    phaseProgress: (phaseRows.rows as any[]).map((r) => ({
+      phase: r.phase, backlog: r.backlog, in_progress: r.in_progress,
+      done: r.done, blocked: r.blocked, total: r.total,
+      label: \`Fase \${r.phase}\`,
+    })),
+    agentVelocity: (agentRows.rows as any[]).map((r) => ({
+      agent: r.agent, done: r.done, active: r.active,
+    })),
+    statusDist: (statusRows.rows as any[]).map((r) => ({
+      status: r.status, count: r.count,
+      label: STATUS_LABELS[r.status] ?? r.status,
+    })),
+    completionTimeline: (timelineRows.rows as any[]).map((r) => ({
+      date: r.date, count: r.count,
+    })),
+  }
+}
