@@ -24,3 +24,5 @@ update-check.json
 *.log
 *.bak.*
 openclaw.json.bak.*
+identity/
+memory/
