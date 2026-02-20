@@ -4,19 +4,22 @@ import { sql } from 'drizzle-orm'
 export const dynamic = 'force-dynamic'
 
 export async function GET() {
+  let dbStatus = 'not_configured'
+
   try {
     const db = getDb()
     await db.execute(sql`SELECT 1`)
-    return Response.json({
-      status: 'ok',
-      service: 'laura-dashboard',
-      db: 'connected',
-      ts: new Date().toISOString(),
-    })
+    dbStatus = 'connected'
   } catch {
-    return Response.json(
-      { status: 'error', service: 'laura-dashboard', db: 'disconnected' },
-      { status: 503 },
-    )
+    dbStatus = process.env.NEON_DATABASE_URL ? 'disconnected' : 'not_configured'
   }
+
+  // Always return 200 — Railway healthcheck needs process liveness,
+  // not DB readiness. DB status is informational only.
+  return Response.json({
+    status: 'ok',
+    service: 'laura-dashboard',
+    db: dbStatus,
+    ts: new Date().toISOString(),
+  })
 }
