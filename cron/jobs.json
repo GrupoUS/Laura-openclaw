@@ -473,7 +473,7 @@
       "description": "Check for unresponded leads every hour",
       "enabled": true,
       "createdAtMs": 1771560754062,
-      "updatedAtMs": 1771593224335,
+      "updatedAtMs": 1771600364553,
       "schedule": {
         "kind": "every",
         "everyMs": 3600000,
@@ -492,11 +492,12 @@
         "to": "+556299776996"
       },
       "state": {
-        "nextRunAtMs": 1771600354062,
-        "lastRunAtMs": 1771593154073,
+        "nextRunAtMs": 1771603954062,
+        "lastRunAtMs": 1771600354076,
         "lastStatus": "error",
-        "lastDurationMs": 70262,
-        "consecutiveErrors": 1
+        "lastDurationMs": 10477,
+        "consecutiveErrors": 2,
+        "lastError": "cron announce delivery failed"
       }
     }
   ]

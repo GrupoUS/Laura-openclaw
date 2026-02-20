@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { gatewayCall } from './ws/openclaw'
+import { gatewayCall, getGatewayUrl } from './ws/openclaw'
 import { router, publicProcedure } from './trpc-init'
 import { evolutionRouter } from './routers/evolution'
 
@@ -10,11 +10,12 @@ export type { Context } from './trpc-init'
 // Routers
 const gatewayRouter = router({
   health: publicProcedure.query(async ({ ctx }) => {
+    const targetUrl = getGatewayUrl()
     try {
-      const result = await gatewayCall('gateway.health', {}, ctx.gatewayToken)
-      return { connected: true, ...result }
+      const result = await gatewayCall<Record<string, unknown>>('gateway.health', {}, ctx.gatewayToken)
+      return { connected: true, targetUrl, ...result }
     } catch (err) {
-      return { connected: false, error: (err as Error).message }
+      return { connected: false, targetUrl, error: (err as Error).message }
     }
   }),
   patch: publicProcedure

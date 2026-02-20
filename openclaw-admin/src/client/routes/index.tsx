@@ -14,7 +14,8 @@ function Dashboard() {
   })
 
   const isConnected = healthQuery.isSuccess && healthQuery.data?.connected === true
-  const errorMessage = healthQuery.data?.error || healthQuery.error?.message || null
+  const errorMessage = (healthQuery.data && 'error' in healthQuery.data ? healthQuery.data.error : null) || healthQuery.error?.message || null
+  const targetUrl = healthQuery.data && 'targetUrl' in healthQuery.data ? healthQuery.data.targetUrl : null
 
   return (
     <div className="flex flex-col gap-6">
@@ -39,6 +40,11 @@ function Dashboard() {
             <div className="text-sm text-neutral-500 mt-0.5">
               {errorMessage || (isConnected ? 'WebSocket Online' : 'Gateway unreachable')}
             </div>
+            {targetUrl && (
+              <div className="text-xs text-neutral-600 mt-0.5 font-mono">
+                Target: {targetUrl as string}
+              </div>
+            )}
           </div>
 
           <div
