@@ -6,6 +6,7 @@ from pydantic import BaseModel
 from src.db import get_session
 from src.services.notion.sync import NotionSyncService
 from src.services.kiwify.sync import KiwifySyncService
+from src.services.asaas.sync import AsaasSyncService
 from src.services.drive.sync import DriveSyncService
 from src.services.drive.auth import DriveAuthService
 from src.utils.logging import get_logger
@@ -41,6 +42,16 @@ async def sync_kiwify() -> SyncResponse:
         result = await service.sync_all()
 
     return SyncResponse(source="kiwify", status="completed", details=result)
+
+
+@router.post("/asaas", response_model=SyncResponse)
+async def sync_asaas() -> SyncResponse:
+    """Trigger full Asaas sync — customers + subscriptions + payments."""
+    async with get_session() as session:
+        service = AsaasSyncService(session)
+        result = await service.sync_all()
+
+    return SyncResponse(source="asaas", status="completed", details=result)
 
 
 @router.post("/drive", response_model=SyncResponse)

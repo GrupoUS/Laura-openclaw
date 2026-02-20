@@ -63,6 +63,9 @@ class Settings(BaseSettings):
     kiwify_client_secret: str = Field(default="", description="Kiwify OAuth client secret")
     kiwify_account_id: str = Field(default="", description="Kiwify account ID")
 
+    # Asaas
+    asaas_api_key: str = Field(default="", description="Asaas API key")
+
 
     # API
     api_host: str = Field(default="0.0.0.0", description="API host")

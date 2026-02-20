@@ -9,9 +9,17 @@ import {
   integer,
   vector,
   index,
+  boolean,
+  bigint,
 } from 'drizzle-orm/pg-core'
 
 // ── Enums ──
+export const sourceTypeEnum = pgEnum('source_type', [
+  'drive',
+  'notion',
+  'kiwify',
+  'asaas',
+])
 export const memoryCategoryEnum = pgEnum('memory_category', [
   'lesson',
   'pattern',
@@ -115,5 +123,83 @@ export const capabilityScores = pgTable(
   (table) => [
     index('capability_name_idx').on(table.capability),
     index('capability_score_idx').on(table.totalScore),
+  ]
+)
+
+// ── Universal Data System (Vector Search) ──
+
+export const driveAccounts = pgTable('drive_accounts', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  userEmail: text('user_email').notNull().unique(),
+  accessToken: text('access_token').notNull(),
+  refreshToken: text('refresh_token').notNull(),
+  tokenExpiry: timestamp('token_expiry', { withTimezone: true }).notNull(),
+  scopes: text('scopes').array().default([]),
+  createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
+  updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow().notNull(),
+})
+
+export const driveChannels = pgTable('drive_channels', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  accountId: uuid('account_id')
+    .notNull()
+    .references(() => driveAccounts.id, { onDelete: 'cascade' }),
+  channelId: text('channel_id').notNull().unique(),
+  resourceId: text('resource_id').notNull(),
+  token: text('token').notNull(),
+  expiration: timestamp('expiration', { withTimezone: true }).notNull(),
+  createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
+})
+
+export const driveState = pgTable('drive_state', {
+  accountId: uuid('account_id')
+    .primaryKey()
+    .references(() => driveAccounts.id, { onDelete: 'cascade' }),
+  startPageToken: text('start_page_token').notNull(),
+  lastPageToken: text('last_page_token').notNull(),
+  lastSyncAt: timestamp('last_sync_at', { withTimezone: true }),
+  createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
+  updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow().notNull(),
+})
+
+export const files = pgTable('files', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  accountId: uuid('account_id').references(() => driveAccounts.id, { onDelete: 'cascade' }),
+  sourceType: sourceTypeEnum('source_type').notNull().default('drive'),
+  sourceId: text('source_id'),
+  fileId: text('file_id').notNull(),
+  name: text('name').notNull(),
+  path: text('path').notNull(),
+  mimeType: text('mime_type').notNull(),
+  modifiedTime: timestamp('modified_time', { withTimezone: true }).notNull(),
+  contentHash: text('content_hash'),
+  owners: text('owners').array().default([]),
+  sizeBytes: bigint('size_bytes', { mode: 'number' }),
+  isOversized: boolean('is_oversized').notNull().default(false),
+  trashed: boolean('trashed').notNull().default(false),
+  extractionError: text('extraction_error'),
+  createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
+  updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow().notNull(),
+})
+
+export const chunks = pgTable(
+  'chunks',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    fileId: uuid('file_id')
+      .notNull()
+      .references(() => files.id, { onDelete: 'cascade' }),
+    chunkIndex: integer('chunk_index').notNull(),
+    content: text('content').notNull(),
+    startOffset: integer('start_offset'),
+    endOffset: integer('end_offset'),
+    heading: text('heading'),
+    contentHash: text('content_hash').notNull(),
+    embedding: vector('embedding', { dimensions: 768 }),
+    createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
+  },
+  (table) => [
+    index('chunks_embedding_idx').using('hnsw', table.embedding.op('vector_cosine_ops')),
+    index('chunks_file_id_idx').on(table.fileId),
   ]
 )

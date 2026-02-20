@@ -64,7 +64,7 @@ async function getRecentDailyNotes(days: number = 3): Promise<string[]> {
     const files = await readdir(MEMORY_DIR)
     const dateFiles = files
       .filter((f) => /^\d{4}-\d{2}-\d{2}\.md$/.test(f))
-      .sort()
+      .toSorted()
       .slice(-days)
 
     for (const file of dateFiles) {

@@ -11,6 +11,7 @@ from src.workers.tasks import (
     renew_channels,
     sync_notion_task,
     sync_kiwify_task,
+    sync_asaas_task,
 )
 
 
@@ -46,6 +47,7 @@ class WorkerSettings:
         renew_channels,
         sync_notion_task,
         sync_kiwify_task,
+        sync_asaas_task,
     ]
 
     redis_settings = get_redis_settings()
@@ -58,6 +60,8 @@ class WorkerSettings:
         cron(sync_notion_task, hour={1, 7, 13, 19}, minute=0),
         # Sync Kiwify every 6 hours (offset by 30 min to avoid overlap)
         cron(sync_kiwify_task, hour={1, 7, 13, 19}, minute=30),
+        # Sync Asaas every 6 hours (offset by 45 min to avoid overlap)
+        cron(sync_asaas_task, hour={1, 7, 13, 19}, minute=45),
     ]
 
     # Worker settings

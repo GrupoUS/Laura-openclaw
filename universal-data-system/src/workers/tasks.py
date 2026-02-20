@@ -278,3 +278,15 @@ async def sync_kiwify_task(ctx: dict[str, Any] = None) -> dict[str, Any]:
 
     logger.info("Kiwify sync task complete", **result)
     return result
+
+
+async def sync_asaas_task(ctx: dict[str, Any] = None) -> dict[str, Any]:
+    """Periodic Asaas sync — index customers, subscriptions, and payments."""
+    from src.services.asaas.sync import AsaasSyncService
+
+    async with get_session() as session:
+        service = AsaasSyncService(session)
+        result = await service.sync_all()
+
+    logger.info("Asaas sync task complete", **result)
+    return result

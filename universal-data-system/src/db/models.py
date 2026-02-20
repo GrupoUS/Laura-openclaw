@@ -115,7 +115,7 @@ class File(Base):
         PG_UUID(as_uuid=True), ForeignKey("drive_accounts.id", ondelete="CASCADE"), nullable=True
     )
     source_type: Mapped[str] = mapped_column(
-        String, nullable=False, server_default="drive"  # drive | notion | kiwify
+        String, nullable=False, server_default="drive"  # drive | notion | kiwify | asaas
     )
     source_id: Mapped[Optional[str]] = mapped_column(
         String, nullable=True  # Notion page ID, Kiwify product/sale ID

@@ -86,5 +86,6 @@ console.log(`🚀 OpenClaw Admin listening on port ${port}`)
 
 export default Bun.serve({
   port,
+  hostname: '0.0.0.0',
   fetch: app.fetch,
 })

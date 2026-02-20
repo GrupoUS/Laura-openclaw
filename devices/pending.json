@@ -1,9 +1,8 @@
 {
-  "c6b33ce1-619c-4b05-b2a7-aa84df65daca": {
-    "requestId": "c6b33ce1-619c-4b05-b2a7-aa84df65daca",
+  "31cbe44d-73f0-4296-b5c3-33ebf3cdb1d5": {
+    "requestId": "31cbe44d-73f0-4296-b5c3-33ebf3cdb1d5",
     "deviceId": "a8ba2f748c2f33ab8e17f426eb0b6e57c28f89dde7f8d86952d9601b026c8c2a",
     "publicKey": "gEd7wz1tpUixwnDRGwSW_awvd0a0_KhYpphYwYcTyEw",
-    "displayName": "agent",
     "platform": "darwin",
     "clientId": "gateway-client",
     "clientMode": "backend",
@@ -12,10 +11,10 @@
       "operator"
     ],
     "scopes": [
-      "operator.write"
+      "operator.read"
     ],
     "silent": false,
     "isRepair": false,
-    "ts": 1771556799315
+    "ts": 1771557622931
   }
 }
