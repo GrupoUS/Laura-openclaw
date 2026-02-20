@@ -473,7 +473,7 @@
       "description": "Check for unresponded leads every hour",
       "enabled": true,
       "createdAtMs": 1771560754062,
-      "updatedAtMs": 1771589600247,
+      "updatedAtMs": 1771590522306,
       "schedule": {
         "kind": "every",
         "everyMs": 3600000,
@@ -483,7 +483,7 @@
       "wakeMode": "now",
       "payload": {
         "kind": "agentTurn",
-        "message": "Verify unresponded leads in WhatsApp. List any numbers that sent messages and haven't received a reply yet, or leads that we messaged but didn't reply back to us. If you find any, summarize them for Maurício. If all is clear, say NO_REPLY.",
+        "message": "Verify unresponded leads in WhatsApp. List any numbers that sent messages and haven't received a reply yet, or leads that we messaged but didn't reply back to us. If you find any, summarize them ONLY for Maurício (+556299776996). If all is clear, say NO_REPLY.",
         "thinking": "low"
       },
       "delivery": {
