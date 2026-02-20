@@ -66,7 +66,10 @@ export function getGatewayWs(url = GATEWAY_WS_URL): WebSocket {
     handshakeComplete = false
     connectFrameId = null
     pendingHandshakeCallbacks = []
-    ws = new WebSocket(url)
+
+    // Extract origin from gateway URL for ControlUI origin check
+    const origin = url.replace('wss://', 'https://').replace('ws://', 'http://').replace(/\/.*$/, '')
+    ws = new WebSocket(url, { headers: { Origin: origin } } as never)
 
     ws.addEventListener('open', () => {
       log(`✓ connected to ${url}`)
