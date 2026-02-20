@@ -1,9 +1,9 @@
 'use client'
-import { useState, FormEvent } from 'react'
+import { useState, FormEvent, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 
-export default function LoginPage() {
+function LoginContent() {
   const router       = useRouter()
   const params       = useSearchParams()
   const from         = params.get('from') ?? '/board'
@@ -83,5 +83,17 @@ export default function LoginPage() {
         </p>
       </div>
     </div>
+  )
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+        <div className="animate-spin text-2xl">⟳</div>
+      </div>
+    }>
+      <LoginContent />
+    </Suspense>
   )
 }

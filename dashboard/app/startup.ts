@@ -2,9 +2,10 @@
 // Registrar o cron de stuck tasks
 
 let started = false
+const isBuildPhase = process.env.npm_lifecycle_event === 'build'
 
 export function initStartup() {
-  if (started) return
+  if (started || isBuildPhase) return
   started = true
 
   const intervalHours = Number(process.env.NOTIFY_STUCK_HOURS ?? '2')
