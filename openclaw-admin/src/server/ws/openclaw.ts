@@ -1,9 +1,11 @@
-import { WebSocket } from 'ws'
+// Uses Bun's native WebSocket — no external `ws` package needed
 
 let ws: WebSocket | null = null
 
-export function getGatewayWs(url = 'ws://127.0.0.1:18789') {
-  if (!ws || ws.readyState > 1) {
+const GATEWAY_WS_URL = process.env.GATEWAY_WS_URL ?? 'ws://127.0.0.1:18789'
+
+export function getGatewayWs(url = GATEWAY_WS_URL): WebSocket {
+  if (!ws || ws.readyState > WebSocket.OPEN) {
     ws = new WebSocket(url)
   }
   return ws
@@ -19,33 +21,32 @@ export function gatewayCall<T = any>(
     const id = crypto.randomUUID()
     const payload = JSON.stringify({ id, tool, params, gatewayToken })
 
-    const handler = (data: Buffer) => {
+    const handler = (event: MessageEvent) => {
       try {
-        const msg = JSON.parse(data.toString())
+        const msg = JSON.parse(typeof event.data === 'string' ? event.data : '')
         if (msg.id !== id) return
-        socket.off('message', handler)
+        socket.removeEventListener('message', handler)
         msg.error ? reject(new Error(msg.error)) : resolve(msg.result)
-      } catch (err) {
-        // Skip non-JSON messages if any, or log them
+      } catch {
+        // Skip non-JSON messages
       }
     }
 
-    socket.on('message', handler)
+    socket.addEventListener('message', handler)
 
-    // Ensure the socket is open before sending
     if (socket.readyState === WebSocket.OPEN) {
       socket.send(payload)
     } else if (socket.readyState === WebSocket.CONNECTING) {
-      socket.once('open', () => socket.send(payload))
+      socket.addEventListener('open', () => socket.send(payload), { once: true })
     } else {
-      socket.off('message', handler)
+      socket.removeEventListener('message', handler)
       return reject(new Error('WebSocket is not open'))
     }
 
     // Timeout
     setTimeout(() => {
-      socket.off('message', handler)
-      reject(new Error('timeout'))
+      socket.removeEventListener('message', handler)
+      reject(new Error('gateway call timeout'))
     }, 10000)
   })
 }

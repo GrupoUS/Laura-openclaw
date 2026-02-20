@@ -1,0 +1,66 @@
+{
+  "plugins": [
+    "typescript",
+    "react",
+    "jsx-a11y",
+    "import",
+    "unicorn"
+  ],
+  "env": {
+    "browser": true,
+    "es2025": true,
+    "node": true
+  },
+  "settings": {
+    "react": {
+      "version": "19"
+    },
+    "jsx": {
+      "runtime": "automatic"
+    }
+  },
+  "rules": {
+    "no-console": "warn",
+    "no-debugger": "error",
+    "no-eval": "error",
+    "no-var": "error",
+    "eqeqeq": "error",
+    "no-unused-vars": "warn",
+    "no-loss-of-precision": "error",
+    "no-self-compare": "error",
+    "no-template-curly-in-string": "warn",
+    "no-unsafe-optional-chaining": "error",
+    "prefer-const": "warn",
+
+    "typescript/no-explicit-any": "warn",
+    "typescript/no-non-null-assertion": "warn",
+
+    "react/jsx-no-duplicate-props": "error",
+    "react/jsx-key": "error",
+    "react/no-children-prop": "error",
+    "react/no-direct-mutation-state": "error",
+    "react/react-in-jsx-scope": "off",
+    "react/rules-of-hooks": "error",
+    "react/exhaustive-deps": "warn",
+
+    "jsx-a11y/alt-text": "warn",
+    "jsx-a11y/anchor-is-valid": "warn",
+    "jsx-a11y/no-autofocus": "warn",
+
+    "import/no-duplicates": "warn",
+    "import/no-self-import": "error",
+
+    "unicorn/no-typeof-undefined": "warn",
+    "unicorn/prefer-array-flat-map": "warn",
+    "unicorn/prefer-includes": "warn",
+    "unicorn/throw-new-error": "error"
+  },
+  "ignorePatterns": [
+    "node_modules",
+    "dist",
+    "*.gen.ts",
+    "*.gen.js",
+    "migrations",
+    ".tanstack"
+  ]
+}
