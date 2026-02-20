@@ -115,8 +115,18 @@ class TaskEventBus {
 }
 
 // ─── Singleton por instância Railway via globalThis ───────────────
-// Previne múltiplas conexões ioredis durante hot-reload em dev
+// Previne múltiplas conexões ioredis durante hot-reload em dev.
+// Usamos Proxy para avaliar de forma LAZY (apenas em runtime).
+// Isso impede falhas no build estático do Next.js (prerender).
 const g = globalThis as unknown as { _lauraEventBus?: TaskEventBus }
 
-export const eventBus: TaskEventBus =
-  g._lauraEventBus ?? (g._lauraEventBus = new TaskEventBus())
+export const eventBus: TaskEventBus = new Proxy({} as TaskEventBus, {
+  get(target, prop) {
+    if (!g._lauraEventBus) {
+      g._lauraEventBus = new TaskEventBus()
+    }
+    const instance = g._lauraEventBus
+    const value = Reflect.get(instance, prop)
+    return typeof value === 'function' ? value.bind(instance) : value
+  }
+})
