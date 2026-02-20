@@ -10,7 +10,12 @@ export type { Context } from './trpc-init'
 // Routers
 const gatewayRouter = router({
   health: publicProcedure.query(async ({ ctx }) => {
-    return gatewayCall('gateway.health', {}, ctx.gatewayToken)
+    try {
+      const result = await gatewayCall('gateway.health', {}, ctx.gatewayToken)
+      return { connected: true, ...result }
+    } catch (err) {
+      return { connected: false, error: (err as Error).message }
+    }
   }),
   patch: publicProcedure
     .input(z.object({ patch: z.record(z.string(), z.unknown()) }))
@@ -21,7 +26,7 @@ const gatewayRouter = router({
 
 const sessionsRouter = router({
   list: publicProcedure.query(async ({ ctx }) => {
-    return gatewayCall('sessions_list', {}, ctx.gatewayToken)
+    return gatewayCall('sessions_list', {}, ctx.gatewayToken).catch(() => [])
   }),
   create: publicProcedure
     .input(z.object({ agentId: z.string(), channelId: z.string() }))
@@ -32,7 +37,7 @@ const sessionsRouter = router({
 
 const agentsRouter = router({
   list: publicProcedure.query(async ({ ctx }) => {
-    return gatewayCall('agents_list', {}, ctx.gatewayToken)
+    return gatewayCall('agents_list', {}, ctx.gatewayToken).catch(() => [])
   })
 })
 
