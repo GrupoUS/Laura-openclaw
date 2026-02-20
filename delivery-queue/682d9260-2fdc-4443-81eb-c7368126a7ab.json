@@ -1,0 +1,27 @@
+{
+  "id": "682d9260-2fdc-4443-81eb-c7368126a7ab",
+  "enqueuedAt": 1771618652222,
+  "channel": "whatsapp",
+  "to": "+5521980938056",
+  "payloads": [
+    {
+      "text": "Oi! Te mandei um áudio rapidinho. 💜",
+      "mediaUrl": "/tmp/followup_1.mp3",
+      "mediaUrls": [
+        "/tmp/followup_1.mp3"
+      ]
+    }
+  ],
+  "threadId": null,
+  "gifPlayback": false,
+  "mirror": {
+    "sessionKey": "agent:main:whatsapp:direct:+5521980938056",
+    "agentId": "main",
+    "text": "Oi! Te mandei um áudio rapidinho. 💜",
+    "mediaUrls": [
+      "/tmp/followup_1.mp3"
+    ]
+  },
+  "retryCount": 1,
+  "lastError": "Local media path is not under an allowed directory: /tmp/followup_1.mp3"
+}

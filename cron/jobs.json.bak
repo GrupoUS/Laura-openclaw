@@ -417,7 +417,7 @@
       "description": "Check for unresponded leads every hour",
       "enabled": true,
       "createdAtMs": 1771560754062,
-      "updatedAtMs": 1771617298982,
+      "updatedAtMs": 1771618565862,
       "schedule": {
         "kind": "every",
         "everyMs": 3600000,
@@ -437,12 +437,11 @@
         "to": "+556299776996"
       },
       "state": {
-        "nextRunAtMs": 1771618354062,
-        "lastRunAtMs": 1771617298966,
-        "lastStatus": "error",
-        "lastDurationMs": 16,
-        "consecutiveErrors": 2,
-        "lastError": "Error: All models failed (1): google-gemini-cli/gemini-3-flash-preview: Provider google-gemini-cli is in cooldown (all profiles unavailable) (rate_limit)"
+        "nextRunAtMs": 1771621954062,
+        "lastRunAtMs": 1771618354080,
+        "lastStatus": "ok",
+        "lastDurationMs": 211782,
+        "consecutiveErrors": 0
       }
     },
     {

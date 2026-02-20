@@ -1,31 +1,4 @@
 {
   "version": 2,
-  "runs": {
-    "140cb666-d6ea-4733-934e-5f1183893cb7": {
-      "runId": "140cb666-d6ea-4733-934e-5f1183893cb7",
-      "childSessionKey": "agent:main:subagent:2b44f3c1-4988-4309-8576-b86c816d58fd",
-      "requesterSessionKey": "agent:main:main",
-      "requesterOrigin": {
-        "channel": "whatsapp",
-        "to": "+556195220319",
-        "accountId": "default"
-      },
-      "requesterDisplayKey": "agent:main:main",
-      "task": "Send a WhatsApp message to +5521980938056: \"Olá! Que ótimo ter você por aqui. 🦞✨\\n\\nEu já quero te adiantar as informações sobre os nossos projetos principais:\\n\\n1. Pós TRINTAE3: É a nossa pós-graduação em Saúde Estética Avançada com 534h de carga horária e muita prática presencial (incluindo cadáveres frescos). É o caminho para se tornar uma referência técnica e de negócios.\\n\\n2. COMU US: Nossa comunidade anual para profissionais que buscam networking, apoio técnico constante e trilhas de capacitação mensal.\\n\\nHoje temos uma condição super especial de 18x no boleto para a Pós! \\n\\nSe você preferir, posso te explicar melhor como funciona cada fase por áudio também. O que você acha? 😉\"",
-      "cleanup": "keep",
-      "expectsCompletionMessage": true,
-      "label": "SDR-New-Lead-Proactive",
-      "model": "google-gemini-cli/gemini-3-flash-preview",
-      "runTimeoutSeconds": 0,
-      "createdAt": 1771614928079,
-      "startedAt": 1771614928181,
-      "archiveAtMs": 1771618528079,
-      "cleanupHandled": true,
-      "endedAt": 1771614969770,
-      "outcome": {
-        "status": "ok"
-      },
-      "cleanupCompletedAt": 1771614971658
-    }
-  }
+  "runs": {}
 }

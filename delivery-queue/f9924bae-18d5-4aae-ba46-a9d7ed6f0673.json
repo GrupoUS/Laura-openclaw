@@ -1,0 +1,27 @@
+{
+  "id": "f9924bae-18d5-4aae-ba46-a9d7ed6f0673",
+  "enqueuedAt": 1771618690594,
+  "channel": "whatsapp",
+  "to": "+5521980938056",
+  "payloads": [
+    {
+      "text": "Oi! Te mandei um áudio rapidinho. 💜",
+      "mediaUrl": "/Users/mauricio/.openclaw/workspace-chat/media/outbound/followup_1.mp3",
+      "mediaUrls": [
+        "/Users/mauricio/.openclaw/workspace-chat/media/outbound/followup_1.mp3"
+      ]
+    }
+  ],
+  "threadId": null,
+  "gifPlayback": false,
+  "mirror": {
+    "sessionKey": "agent:main:whatsapp:direct:+5521980938056",
+    "agentId": "main",
+    "text": "Oi! Te mandei um áudio rapidinho. 💜",
+    "mediaUrls": [
+      "/Users/mauricio/.openclaw/workspace-chat/media/outbound/followup_1.mp3"
+    ]
+  },
+  "retryCount": 1,
+  "lastError": "Local media path is not under an allowed directory: /Users/mauricio/.openclaw/workspace-chat/media/outbound/followup_1.mp3"
+}

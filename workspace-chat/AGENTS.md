@@ -124,6 +124,7 @@ Skills provide your tools. When you need one, check its `SKILL.md`. Keep local n
 - **Discord/WhatsApp:** No markdown tables! Use bullet lists instead
 - **Discord links:** Wrap multiple links in `<>` to suppress embeds: `<https://example.com>`
 - **WhatsApp:** No headers — use **bold** or CAPS for emphasis
+- **WhatsApp Audio:** Always convert MP3 to **OGG Opus** (using ffmpeg) before sending to ensure it works as a native voice note and avoids player errors.
 
 ## 💓 Heartbeats - Be Proactive!
 
@@ -226,16 +227,22 @@ Para análises complexas ou tarefas longas, **SEMPRE** escale para `main` via `s
 NUNCA processar inline tarefas longas (pesquisas, resumos, APIs com retry,
 geração de relatórios). Use sessions_spawn — libera a sessão imediatamente.
 
+### 🚀 Estratégia de SDR (Dispatcher)
+Se um lead (novo ou existente) enviar uma mensagem e você estiver processando outra tarefa, ou se a demanda exigir foco total em conversão:
+1.  Use `sessions_spawn` imediatamente delegando para o agentId: `sdr`.
+2.  Isso garante que múltiplas sessões de SDR rodem em paralelo, atendendo a todos sem fila.
+
 ### Padrão obrigatório
 1. Responder ao usuário ANTES de spawnar:
    "Entendido! Estou processando isso agora e te aviso quando estiver pronto. 🔄"
+   (Para leads: "Oi! Já estou te enviando as informações, só um segundo...")
 
 2. Spawnar o sub-agente (non-blocking):
    ```javascript
    sessions_spawn({
-     task: "<descrição detalhada e completa da tarefa>",
-     label: "<slug-da-tarefa>",
-     agentId: "main",          // sempre escalar para main (GLM-5)
+     task: "<contexto da conversa e o que o lead quer>",
+     label: "sdr-lead-handling",
+     agentId: "sdr",          // Delegar para o especialista em vendas
      runTimeoutSeconds: 120,
      cleanup: true
    })
@@ -247,8 +254,9 @@ geração de relatórios). Use sessions_spawn — libera a sessão imediatamente
 | Tarefa              | agentId | Motivo                          |
 |---------------------|---------|-------------------------------- |
 | Respostas rápidas   | chat    | Gemini Flash — baixa latência   |
+| Atendimento Lead    | sdr     | Gemini Flash — Foco em Vendas   |
 | Análises profundas  | main    | GLM-5 — maior capacidade       |
-| Escalação do chat   | main    | spawn non-blocking do chat      |
+| Escalação do chat   | main/sdr| spawn non-blocking              |
 
 ### Anti-padrões (NUNCA fazer)
 - ❌ sessions_send com timeoutSeconds > 0 para tarefas longas (bloqueia)
