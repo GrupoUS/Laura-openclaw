@@ -1,0 +1,16 @@
+- Maurício Magalhães (MASTER): +556299776996
+- Lucas (Closer): +556195220319
+- Erica (Comercial): +556195747354
+- Sacha Gualberto (CVO): +556299714524
+- Raquel Quintanilha (Coordenadora): +5562981123150
+- Filipe Amorim (Gestor de Tráfego): +556296880920
+- Andressa Lima (Lançamentos): +556282121703
+- Rodrigo (Agência Taux): +556282022020
+- Renata Hoffmann (Operações): [CONFIRMAR NÚMERO]
+- Bruno Paixão (Gestão): +5521990869640
+- Ríller Queiroz (Jurídico): +556281273939
+- Laiane (Jurídico): +556293699369
+- Tânia (Copy): +556291913725
+- Betania Damacena (Financeiro): +556299844848
+- Benício (Assessor Pessoal Maurício): +5564999886688
+- Renata (Suporte Hubla): +555198665703

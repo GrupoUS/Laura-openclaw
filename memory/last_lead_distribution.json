@@ -1,0 +1,7 @@
+{
+  "team": [
+    { "id": "lucas", "name": "Lucas", "email": "lucaswelington1@gmail.com", "phone": "+556195220319" },
+    { "id": "erica", "name": "Erica", "email": "ericaxguirra@gmail.com", "phone": "+556195747354" }
+  ],
+  "last_assigned_index": 1
+}

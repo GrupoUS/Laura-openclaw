@@ -1,0 +1,178 @@
+[
+  {
+    "name": "Samantha Martins de Lima",
+    "phone": "+5511995276927",
+    "closer": "lucas",
+    "status": "Active",
+    "step": 1,
+    "lastInteractionDate": "2026-02-19"
+  },
+  {
+    "name": "Maria de Fátima Tenório",
+    "phone": "+559681235552",
+    "closer": "lucas",
+    "status": "Active",
+    "step": 1,
+    "lastInteractionDate": "2026-02-19"
+  },
+  {
+    "name": "Renata Rose Ferreira",
+    "phone": "+554599510397",
+    "closer": "lucas",
+    "status": "Active",
+    "step": 1,
+    "lastInteractionDate": "2026-02-19"
+  },
+  {
+    "name": "Avelina Alves Sales",
+    "phone": "+556392546858",
+    "closer": "lucas",
+    "status": "Active",
+    "step": 1,
+    "lastInteractionDate": "2026-02-19"
+  },
+  {
+    "name": "Simone da Cruz Oliveira",
+    "phone": "+553891812253",
+    "closer": "lucas",
+    "status": "Active",
+    "step": 1,
+    "lastInteractionDate": "2026-02-19"
+  },
+  {
+    "name": "Taline Cilene Aulicio",
+    "phone": "+556198785757",
+    "closer": "lucas",
+    "status": "Active",
+    "step": 1,
+    "lastInteractionDate": "2026-02-19"
+  },
+  {
+    "name": "Telma Barros de Souza",
+    "phone": "+5521984278901",
+    "closer": "lucas",
+    "status": "Active",
+    "step": 1,
+    "lastInteractionDate": "2026-02-19"
+  },
+  {
+    "name": "Gudiani Amaral de Menezes",
+    "phone": "+556281080553",
+    "closer": "erica",
+    "status": "Negotiating",
+    "step": 1,
+    "lastInteractionDate": "2026-02-19"
+  },
+  {
+    "name": "Veridiana Vieira",
+    "phone": "+555391501722",
+    "closer": "erica",
+    "status": "Negotiating",
+    "step": 1,
+    "lastInteractionDate": "2026-02-19"
+  },
+  {
+    "name": "Ana Lucia Borges da Costa",
+    "phone": "+555197772634",
+    "closer": "erica",
+    "status": "Negotiating",
+    "step": 1,
+    "lastInteractionDate": "2026-02-19"
+  },
+  {
+    "name": "Elisiane",
+    "phone": "+555581489843",
+    "closer": "erica",
+    "status": "Negotiating",
+    "step": 1,
+    "lastInteractionDate": "2026-02-19"
+  },
+  {
+    "name": "Gisele",
+    "phone": "+5518981976416",
+    "closer": "erica",
+    "status": "Negotiating",
+    "step": 1,
+    "lastInteractionDate": "2026-02-19"
+  },
+  {
+    "name": "Lead Sem Nome",
+    "phone": "+5527995802901",
+    "closer": "lucas",
+    "status": "Active",
+    "step": 0,
+    "lastInteractionDate": "2026-02-19"
+  },
+  {
+    "name": "Lead Sem Nome",
+    "phone": "+556298535431",
+    "closer": "erica",
+    "status": "Active",
+    "step": 0,
+    "lastInteractionDate": "2026-02-19"
+  },
+  {
+    "name": "Lead Sem Nome",
+    "phone": "+5522999697989",
+    "closer": "lucas",
+    "status": "Active",
+    "step": 0,
+    "lastInteractionDate": "2026-02-19"
+  },
+  {
+    "name": "Lead Sem Nome",
+    "phone": "+556784783110",
+    "closer": "erica",
+    "status": "Active",
+    "step": 0,
+    "lastInteractionDate": "2026-02-19"
+  },
+  {
+    "name": "Lead Sem Nome",
+    "phone": "+5598920004049",
+    "closer": "lucas",
+    "status": "Active",
+    "step": 0,
+    "lastInteractionDate": "2026-02-19"
+  },
+  {
+    "name": "Lead Sem Nome",
+    "phone": "+554298691502",
+    "closer": "erica",
+    "status": "Active",
+    "step": 0,
+    "lastInteractionDate": "2026-02-19"
+  },
+  {
+    "name": "Lead Sem Nome",
+    "phone": "+5521965954186",
+    "closer": "lucas",
+    "status": "Active",
+    "step": 0,
+    "lastInteractionDate": "2026-02-19"
+  },
+  {
+    "name": "Lead Novo",
+    "phone": "+5522999125857",
+    "closer": "erica",
+    "status": "Active",
+    "step": 0,
+    "lastInteractionDate": "2026-02-19"
+  },
+  {
+    "name": "Lead Novo",
+    "phone": "+553388350667",
+    "closer": "lucas",
+    "status": "Active",
+    "step": 0,
+    "lastInteractionDate": "2026-02-19"
+  },
+  {
+    "name": "Daniel Nunes",
+    "phone": "+556199636875",
+    "closer": "erica",
+    "status": "Active",
+    "step": 0,
+    "lastInteractionDate": "2026-02-19"
+  }
+]

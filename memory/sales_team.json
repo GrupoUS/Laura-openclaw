@@ -1,0 +1,6 @@
+{
+  "team": [
+    { "id": "lucas", "name": "Lucas", "phone": "+556195220319" },
+    { "id": "erica", "name": "Erica", "phone": "+556195747354" }
+  ]
+}

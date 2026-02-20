@@ -1,0 +1,15 @@
+credentials/
+logs/
+node_modules/
+.env
+media/
+data/
+auth.json
+auth-profiles.json
+*token*.json
+openclaw.json
+config/
+sessions/
+extensions/
+scripts/google-services.js
+scripts/*.js

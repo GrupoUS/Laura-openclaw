@@ -1,0 +1,1 @@
+{"ts":1770233863307,"jobId":"42aa1813-3975-4e52-9db3-019d82cfa0ee","action":"finished","status":"ok","summary":"⚠️ 🛠️ Exec: mcporter call google-workspace.drive_search_files query:\"name contains 'Jayne'\" failed: [mcporter] google-workspace appears offline (spawn mcp-server-google-workspace ENOENT).","runAtMs":1770233765365,"durationMs":97941}
