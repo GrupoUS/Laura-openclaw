@@ -2,7 +2,7 @@
 // Implements full device auth with Ed25519 nonce signing
 // Uses Bun's native WebSocket + crypto
 
-import { createSign, createPrivateKey } from 'crypto'
+import { sign, createPrivateKey } from 'node:crypto'
 
 let ws: WebSocket | null = null
 let reconnectTimer: ReturnType<typeof setTimeout> | null = null
@@ -71,9 +71,8 @@ function buildDeviceAuthPayload(params: {
  */
 function signPayload(payload: string): string {
   const key = createPrivateKey(DEVICE_PRIVATE_KEY)
-  const signer = createSign('Ed25519')
-  signer.update(payload)
-  return signer.sign(key, 'base64url')
+  const sig = sign(null, Buffer.from(payload), key)
+  return sig.toString('base64url')
 }
 
 /**
@@ -202,7 +201,12 @@ export function getGatewayWs(url = GATEWAY_WS_URL): WebSocket {
 
           // If device identity is configured, use device auth
           if (DEVICE_ID && DEVICE_PRIVATE_KEY) {
-            sendConnectWithDevice(ws!, challengeNonce)
+            try {
+              sendConnectWithDevice(ws!, challengeNonce)
+            } catch (err) {
+              logErr('device auth failed, falling back to simple auth:', (err as Error).message)
+              sendConnectSimple(ws!)
+            }
           } else {
             sendConnectSimple(ws!)
           }
