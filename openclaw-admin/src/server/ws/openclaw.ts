@@ -1,11 +1,14 @@
 // Resilient WebSocket client for OpenClaw gateway
-// Implements proper OpenClaw protocol (type:"req" frames, connect handshake)
-// Uses Bun's native WebSocket — no external `ws` package needed
+// Implements full device auth with Ed25519 nonce signing
+// Uses Bun's native WebSocket + crypto
+
+import { createSign, createPrivateKey } from 'crypto'
 
 let ws: WebSocket | null = null
 let reconnectTimer: ReturnType<typeof setTimeout> | null = null
 let handshakeComplete = false
 let connectFrameId: string | null = null
+let challengeNonce: string | null = null
 let pendingHandshakeCallbacks: Array<{
   resolve: () => void
   reject: (err: Error) => void
@@ -14,6 +17,13 @@ let pendingHandshakeCallbacks: Array<{
 const GATEWAY_WS_URL = process.env.GATEWAY_WS_URL ?? 'ws://127.0.0.1:18789'
 const GATEWAY_TOKEN = process.env.GATEWAY_TOKEN ?? ''
 const GATEWAY_TIMEOUT_MS = Number(process.env.GATEWAY_TIMEOUT_MS) || 15_000
+
+// Device identity for operator.admin scope (from env vars)
+const DEVICE_ID = process.env.DEVICE_ID ?? ''
+const DEVICE_PUBLIC_KEY =
+  process.env.DEVICE_PUBLIC_KEY?.replace(/\\n/g, '\n') ?? ''
+const DEVICE_PRIVATE_KEY =
+  process.env.DEVICE_PRIVATE_KEY?.replace(/\\n/g, '\n') ?? ''
 
 /* eslint-disable no-console -- intentional server-side logging for gateway diagnostics */
 const log = (...args: unknown[]) => console.log('[gateway-ws]', ...args)
@@ -29,11 +39,105 @@ export function getGatewayUrl(): string {
 }
 
 /**
- * Send the OpenClaw `connect` handshake frame.
- * The gateway requires this as the FIRST frame on every new WS connection.
- * Frame format: { type: "req", method: "connect", id, params: ConnectParams }
+ * Build the device auth payload string for Ed25519 signing.
+ * Format: v2|deviceId|clientId|clientMode|role|scopes|signedAtMs|token|nonce
  */
-function sendConnectHandshake(socket: WebSocket): void {
+function buildDeviceAuthPayload(params: {
+  deviceId: string
+  clientId: string
+  clientMode: string
+  role: string
+  scopes: string[]
+  signedAtMs: number
+  token: string
+  nonce: string
+}): string {
+  return [
+    'v2',
+    params.deviceId,
+    params.clientId,
+    params.clientMode,
+    params.role,
+    params.scopes.join(','),
+    String(params.signedAtMs),
+    params.token,
+    params.nonce,
+  ].join('|')
+}
+
+/**
+ * Sign a payload with the device's Ed25519 private key.
+ * Returns base64url-encoded signature.
+ */
+function signPayload(payload: string): string {
+  const key = createPrivateKey(DEVICE_PRIVATE_KEY)
+  const signer = createSign('Ed25519')
+  signer.update(payload)
+  return signer.sign(key, 'base64url')
+}
+
+/**
+ * Normalize the PEM public key to base64url format (no header/footer).
+ */
+function publicKeyBase64Url(): string {
+  return DEVICE_PUBLIC_KEY.replace(/-----[A-Z ]+-----/g, '')
+    .replace(/\s/g, '')
+}
+
+/**
+ * Send the OpenClaw `connect` handshake frame with device auth.
+ * Must be called after receiving the connect.challenge nonce.
+ */
+function sendConnectWithDevice(socket: WebSocket, nonce: string): void {
+  connectFrameId = crypto.randomUUID()
+  const signedAtMs = Date.now()
+  const scopes = ['operator.admin']
+
+  const payload = buildDeviceAuthPayload({
+    deviceId: DEVICE_ID,
+    clientId: 'gateway-client',
+    clientMode: 'backend',
+    role: 'operator',
+    scopes,
+    signedAtMs,
+    token: GATEWAY_TOKEN,
+    nonce,
+  })
+
+  const signature = signPayload(payload)
+
+  const connectFrame = JSON.stringify({
+    type: 'req',
+    method: 'connect',
+    id: connectFrameId,
+    params: {
+      minProtocol: PROTOCOL_VERSION,
+      maxProtocol: PROTOCOL_VERSION,
+      client: {
+        id: 'gateway-client',
+        version: '1.0.0',
+        platform: 'railway',
+        mode: 'backend',
+      },
+      auth: { token: GATEWAY_TOKEN },
+      scopes,
+      device: {
+        id: DEVICE_ID,
+        publicKey: publicKeyBase64Url(),
+        signature,
+        signedAt: signedAtMs,
+        nonce,
+      },
+    },
+  })
+  log('sending connect handshake with device auth')
+  socket.send(connectFrame)
+}
+
+/**
+ * Send a simple connect handshake without device auth (fallback).
+ */
+function sendConnectSimple(socket: WebSocket): void {
   connectFrameId = crypto.randomUUID()
   const connectFrame = JSON.stringify({
     type: 'req',
@@ -43,16 +147,15 @@ function sendConnectHandshake(socket: WebSocket): void {
       minProtocol: PROTOCOL_VERSION,
       maxProtocol: PROTOCOL_VERSION,
       client: {
-        id: 'openclaw-control-ui',
+        id: 'gateway-client',
         version: '1.0.0',
         platform: 'railway',
-        mode: 'ui',
+        mode: 'backend',
       },
       auth: { password: GATEWAY_TOKEN },
-      scopes: ['operator.admin'],
     },
   })
-  log('sending connect handshake')
+  log('sending connect handshake (simple, no device)')
   socket.send(connectFrame)
 }
 
@@ -65,41 +168,57 @@ export function getGatewayWs(url = GATEWAY_WS_URL): WebSocket {
     log(`connecting to ${url}`)
     handshakeComplete = false
     connectFrameId = null
+    challengeNonce = null
     pendingHandshakeCallbacks = []
-
-    // Extract origin from gateway URL for ControlUI origin check
-    const origin = url.replace('wss://', 'https://').replace('ws://', 'http://').replace(/\/.*$/, '')
-    ws = new WebSocket(url, { headers: { Origin: origin } } as never)
+    ws = new WebSocket(url)
 
     ws.addEventListener('open', () => {
       log(`✓ connected to ${url}`)
-      sendConnectHandshake(ws!)
+      // Don't send connect yet — wait for connect.challenge event
     })
 
-    // Global message handler — routes connect response, ignores others
+    // Global message handler — handles challenge + connect response
     ws.addEventListener('message', (ev) => {
-      if (handshakeComplete) return // RPC responses handled by per-call listeners
       try {
         const raw = typeof ev.data === 'string' ? ev.data : ''
         const msg = JSON.parse(raw) as {
           type?: string
           id?: string
           ok?: boolean
+          event?: string
+          payload?: { nonce?: string }
           error?: { code?: number; message?: string } | string
           result?: unknown
         }
 
-        // Only process the connect response (match by frame ID)
-        if (msg.type !== 'res' || msg.id !== connectFrameId) {
-          log('ignoring non-connect message during handshake:', raw.slice(0, 100))
+        // Handle connect.challenge event
+        if (
+          msg.type === 'event' &&
+          msg.event === 'connect.challenge' &&
+          msg.payload?.nonce
+        ) {
+          challengeNonce = msg.payload.nonce
+          log(`received challenge nonce: ${challengeNonce.slice(0, 8)}...`)
+
+          // If device identity is configured, use device auth
+          if (DEVICE_ID && DEVICE_PRIVATE_KEY) {
+            sendConnectWithDevice(ws!, challengeNonce)
+          } else {
+            sendConnectSimple(ws!)
+          }
           return
         }
+
+        // Only process connect response after handshake init
+        if (handshakeComplete) return // handled by per-call listeners
+        if (msg.type !== 'res' || msg.id !== connectFrameId) return
 
         if (msg.ok === false || msg.error) {
           const errMsg = msg.error
             ? typeof msg.error === 'string'
               ? msg.error
-              : msg.error.message ?? JSON.stringify(msg.error)
+              : (msg.error as { message?: string }).message ??
+                JSON.stringify(msg.error)
             : 'connect rejected (ok=false)'
           logErr('handshake rejected:', errMsg)
           for (const cb of pendingHandshakeCallbacks) {
@@ -110,7 +229,7 @@ export function getGatewayWs(url = GATEWAY_WS_URL): WebSocket {
           return
         }
 
-        // Handshake accepted: { type: "res", ok: true, id: connectFrameId }
+        // Handshake accepted
         log('✓ handshake complete')
         handshakeComplete = true
         for (const cb of pendingHandshakeCallbacks) {
@@ -118,7 +237,7 @@ export function getGatewayWs(url = GATEWAY_WS_URL): WebSocket {
         }
         pendingHandshakeCallbacks = []
       } catch {
-        // Skip non-JSON messages during handshake
+        // Skip non-JSON messages
       }
     })
 
@@ -133,6 +252,7 @@ export function getGatewayWs(url = GATEWAY_WS_URL): WebSocket {
       logWarn(`closed (code=${ev.code}, reason=${ev.reason || 'none'})`)
       handshakeComplete = false
       connectFrameId = null
+      challengeNonce = null
       for (const cb of pendingHandshakeCallbacks) {
         cb.reject(
           new Error(`WebSocket closed (code=${ev.code}) during handshake`)
@@ -154,7 +274,6 @@ export function getGatewayWs(url = GATEWAY_WS_URL): WebSocket {
 
 /**
  * Wait for the connect handshake to complete.
- * Returns immediately if already handshook.
  */
 function waitForHandshake(): Promise<void> {
   if (handshakeComplete) return Promise.resolve()
@@ -182,8 +301,6 @@ export function gatewayCall<T = unknown>(
     }
 
     const id = crypto.randomUUID()
-
-    // OpenClaw request frame: { type: "req", method, params, id }
     const payload = JSON.stringify({
       type: 'req',
       method: tool,
@@ -249,7 +366,6 @@ export function gatewayCall<T = unknown>(
     socket.addEventListener('error', onError)
     socket.addEventListener('close', onClose)
 
-    // Wait for handshake before sending RPC
     const sendPayload = () => {
       if (socket.readyState === WebSocket.OPEN) {
         socket.send(payload)
@@ -267,7 +383,6 @@ export function gatewayCall<T = unknown>(
         })
     }
 
-    // Timeout with diagnostic info
     const timer = setTimeout(() => {
       cleanup()
       reject(
