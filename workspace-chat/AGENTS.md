@@ -240,6 +240,24 @@ Se um lead (novo ou existente) enviar uma mensagem e você estiver processando o
 1.  Use `sessions_spawn` imediatamente delegando para o agentId: `sdr`.
 2.  Isso garante que múltiplas sessões de SDR rodem em paralelo, atendendo a todos sem fila.
 
+---
+
+## 📊 Controle de Tasks (Dashboard)
+
+Todos os agentes devem reportar o que estão fazendo no Dashboard via skill `neondb-tasks`.
+
+### Regras de Uso:
+1. **Nova demanda?** Crie uma Task principal (`create_task`).
+2. **Iniciou uma etapa?** Crie uma Subtask (`create_subtask`) com status `doing`.
+3. **Concluiu?** Atualize para `done` (`update_subtask`).
+4. **Agent ID:** Sempre identifique o agente (`chat`, `main`, `sdr`, `cs`, `coder`).
+
+### Exemplo de Comando (via shell):
+```bash
+export NEON_DATABASE_URL="..."
+node ~/.openclaw/skills/neondb-tasks/index.js --action=create_task --title="Atendimento Lead +55..." --agent="sdr"
+```
+
 ### Padrão obrigatório
 1. Responder ao usuário ANTES de spawnar:
    "Entendido! Estou processando isso agora e te aviso quando estiver pronto. 🔄"

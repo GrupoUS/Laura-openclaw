@@ -20,7 +20,7 @@ export async function checkStuckTasks(): Promise<void> {
     columns: { id: true, title: true, agent: true, phase: true, priority: true, updatedAt: true },
   })
 
-  const notifications = [];
+  const notifications: Promise<void>[] = [];
   for (const task of stuck) {
     if (notifiedThisSession.has(task.id)) continue
     notifiedThisSession.add(task.id)
@@ -28,14 +28,16 @@ export async function checkStuckTasks(): Promise<void> {
     const hours = Math.round((Date.now() - new Date(task.updatedAt).getTime()) / 3600000)
     console.log(`[StuckCron] Task travada: ${task.id} | ${hours}h sem update`)
 
-    await notifyBlocked({
-      event:     'task:stuck',
-      taskId:    task.id,
-      taskTitle: `${task.title} (${hours}h sem atualiza\u00e7\u00e3o)`,
-      agent:     task.agent,
-      phase:     task.phase,
-      priority:  task.priority,
-    })
+    notifications.push(
+      notifyBlocked({
+        event:     'task:stuck',
+        taskId:    task.id,
+        taskTitle: `${task.title} (${hours}h sem atualização)`,
+        agent:     task.agent,
+        phase:     task.phase,
+        priority:  task.priority,
+      })
+    )
   }
 
   await Promise.all(notifications);

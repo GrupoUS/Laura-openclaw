@@ -40,7 +40,7 @@ interface TaskStore {
   // ─── Agent Details ──────────────────────────────────────
   agentDetails: AgentDetail[]
   setAgentDetails: (agents: AgentDetail[]) => void
-  updateAgentFromEvent: (event: { type: string; taskId: string; agent?: string; payload: any }) => void
+  updateAgentFromEvent: (event: { type: string; taskId: string; agent?: string; payload: Record<string, unknown> }) => void
 }
 
 export const useTaskStore = create<TaskStore>()(
@@ -66,7 +66,10 @@ export const useTaskStore = create<TaskStore>()(
         if (!agent) return
 
         if (event.type === 'subtask:updated') {
-          const { status, title, subtaskId } = event.payload as any
+          const payload = event.payload as Record<string, unknown>
+          const status = String(payload.status)
+          const title = String(payload.title)
+          const subtaskId = String(payload.subtaskId)
           if (status === 'doing') {
             agent.status = 'doing'
             agent.currentSubtask = { id: subtaskId, title }
@@ -76,7 +79,8 @@ export const useTaskStore = create<TaskStore>()(
           }
         }
         if (event.type === 'task:updated') {
-          const { status } = event.payload as any
+          const payload = event.payload as Record<string, unknown>
+          const status = String(payload.status)
           if (status === 'in_progress') agent.status = agent.currentSubtask ? 'doing' : 'active'
           if (status === 'done' || status === 'backlog') {
             agent.currentTask = null

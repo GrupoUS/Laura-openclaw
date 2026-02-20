@@ -32,7 +32,7 @@ export function AgentsGrid({ initialAgents, initialTasks, initialActivity }: Pro
   useTaskEvents()
 
   const agents = useTaskStore((s) =>
-    [...s.agentDetails].sort(
+    s.agentDetails.toSorted(
       (a, b) => (STATUS_ORDER[a.status] ?? 4) - (STATUS_ORDER[b.status] ?? 4)
     )
   )
