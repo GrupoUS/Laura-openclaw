@@ -18,6 +18,27 @@ As seguintes regras comportamentais devem guiar sua arquitetura nas ações comp
 ## Ferramentas Base
 - Utilize integradores de CRM/Tickets, Kiwify API, RAG Search, Google Calendar para as calls de NEON/OTB, Drive e Notion.
 
-## Memória e UDS (Universal Data System)
-- **Ontology Graph (Estruturado):** Para consolidar Pessoas (Alunos) e histórico de Eventos/Tickets cruciais, use a API estruturada do UDS (`POST http://localhost:8000/ontology/entities`).
-- **Memória Efêmera:** Sinais de Churn e fechamentos de ticket diários ainda podem ser anotados brevemente na memória de curto prazo antes de serem promovidos, mas o conhecimento duradouro e relacionamentos entre alunos e turmas/problemas DEVEM ser armazenados no UDS. Use o mínimo de tokens indispensável. Não reconte histórias; extraia lições duradouras.
+## ⚡ Execução Paralela — sessions_spawn (obrigatório para tarefas >15s)
+
+### Regra de ouro
+NUNCA processar inline tarefas longas (pesquisas em PDFs, resumos de aulas, sincronização de Drive). Use sessions_spawn — libera a sessão imediatamente.
+
+### 🚀 Estratégia de CS (Dispatcher)
+Se um aluno enviar uma mensagem e você estiver processando outra tarefa:
+1.  Use `sessions_spawn` delegando para o agentId: `cs`.
+2.  Isso garante que múltiplas sessões de Suporte rodem em paralelo.
+
+### Padrão obrigatório
+1. Responder ao aluno ANTES de spawnar:
+   "Oi! Estou verificando isso agora na plataforma e já te trago a resposta. Só um segundo... 💜"
+
+2. Spawnar o sub-agente (non-blocking):
+   ```javascript
+   sessions_spawn({
+     task: "<dúvida do aluno e contexto do curso>",
+     label: "cs-student-support",
+     agentId: "cs",
+     runTimeoutSeconds: 120,
+     cleanup: true
+   })
+   ```

@@ -27,8 +27,9 @@ Things like:
 
 ### TTS
 
-- Preferred voice: "Nova" (warm, slightly British)
-- Default speaker: Kitchen HomePod
+- Preferred voice: "Sacha" (ID: rOpFGBhAwpZ8TFuPvrp6)
+- Default speaker: Office
+- Note: Always convert to OGG Opus for WhatsApp.
 ```
 
 ## Why Separate?
