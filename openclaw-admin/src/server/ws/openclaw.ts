@@ -43,10 +43,10 @@ function sendConnectHandshake(socket: WebSocket): void {
       minProtocol: PROTOCOL_VERSION,
       maxProtocol: PROTOCOL_VERSION,
       client: {
-        id: 'cli',
+        id: 'openclaw-control-ui',
         version: '1.0.0',
         platform: 'railway',
-        mode: 'cli',
+        mode: 'ui',
       },
       auth: { password: GATEWAY_TOKEN },
       scopes: ['operator.admin'],
