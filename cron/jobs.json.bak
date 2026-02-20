@@ -285,62 +285,6 @@
       }
     },
     {
-      "id": "92797825-f41b-4020-9b20-82863de26c1e",
-      "agentId": "main",
-      "name": "SDR Retro Recovery (One-Shot)",
-      "enabled": false,
-      "createdAtMs": 1770673353397,
-      "updatedAtMs": 1770673500003,
-      "schedule": {
-        "kind": "at",
-        "at": "2026-02-09T21:45:00.000Z"
-      },
-      "sessionTarget": "isolated",
-      "wakeMode": "next-heartbeat",
-      "payload": {
-        "model": "gemini-3-pro-high",
-        "message": "Execute o script de recuperação retroativa:\nnode /Users/mauricio/.openclaw/scripts/sdr-retro-recovery.js\n\nPara cada linha de saída começando com \"ACTION_SEND:\", extraia o JSON e envie a mensagem para o telefone indicado via WhatsApp.\nApós enviar, atualize o log local marcando que o follow-up foi feito.\n\nObjetivo: Recuperar leads parados desde 20/01/2026.",
-        "kind": "agentTurn",
-        "thinking": "low"
-      },
-      "state": {
-        "lastRunAtMs": 1770673500003,
-        "lastStatus": "ok",
-        "lastDurationMs": 100590
-      },
-      "delivery": {
-        "mode": "announce",
-        "channel": "whatsapp",
-        "bestEffort": true
-      }
-    },
-    {
-      "id": "80531d4d-2a8a-45d9-8648-c57888ca2f0a",
-      "agentId": "main",
-      "name": "Resumo Tarefas Jurídico",
-      "enabled": false,
-      "createdAtMs": 1770912284490,
-      "updatedAtMs": 1770930000000,
-      "schedule": {
-        "kind": "at",
-        "at": "2026-02-12T21:00:00.000Z"
-      },
-      "sessionTarget": "isolated",
-      "wakeMode": "next-heartbeat",
-      "payload": {
-        "message": "Laura, gere um resumo das tarefas acordadas hoje no grupo Jurídico (120363285625757349@g.us) baseadas no arquivo 'memory/tasks/2026-02-12-juridico.md'. Envie o resumo para o grupo. Se não houver tarefas registradas, pergunte ao grupo quais foram as pendências do dia.",
-        "kind": "agentTurn"
-      },
-      "state": {
-        "lastRunAtMs": 1770930163398,
-        "lastStatus": "ok",
-        "lastDurationMs": 19183
-      },
-      "delivery": {
-        "mode": "announce"
-      }
-    },
-    {
       "id": "4266f390-cb8a-455d-b828-611525a80df5",
       "agentId": "main",
       "name": "Sync com Benício (Diário)",
@@ -473,7 +417,7 @@
       "description": "Check for unresponded leads every hour",
       "enabled": true,
       "createdAtMs": 1771560754062,
-      "updatedAtMs": 1771600364553,
+      "updatedAtMs": 1771607653115,
       "schedule": {
         "kind": "every",
         "everyMs": 3600000,
@@ -492,11 +436,11 @@
         "to": "+556299776996"
       },
       "state": {
-        "nextRunAtMs": 1771603954062,
-        "lastRunAtMs": 1771600354076,
+        "nextRunAtMs": 1771611154062,
+        "lastRunAtMs": 1771607554082,
         "lastStatus": "error",
-        "lastDurationMs": 10477,
-        "consecutiveErrors": 2,
+        "lastDurationMs": 99033,
+        "consecutiveErrors": 1,
         "lastError": "cron announce delivery failed"
       }
     }

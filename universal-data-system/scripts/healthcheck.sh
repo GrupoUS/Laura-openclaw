@@ -5,8 +5,8 @@
 
 set -euo pipefail
 
-UDS_DIR="/home/mauricio/universal-data-system"
-LOG_FILE="/home/mauricio/universal-data-system/logs/healthcheck.log"
+UDS_DIR="/Users/mauricio/.openclaw/universal-data-system"
+LOG_FILE="/Users/mauricio/.openclaw/universal-data-system/logs/healthcheck.log"
 COMPOSE="docker compose -f $UDS_DIR/docker-compose.yml"
 
 mkdir -p "$(dirname "$LOG_FILE")"

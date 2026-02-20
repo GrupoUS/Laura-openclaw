@@ -6,9 +6,9 @@
 
 set -euo pipefail
 
-LOG_DIR="/home/mauricio/openclaw/logs"
+LOG_DIR="/Users/mauricio/.openclaw/logs"
 LOG_FILE="${LOG_DIR}/maintenance-$(date +%Y-%m-%d).log"
-OPENCLAW="/home/linuxbrew/.linuxbrew/bin/openclaw"
+OPENCLAW="$(which openclaw)"
 
 mkdir -p "$LOG_DIR"
 
@@ -22,7 +22,7 @@ log "=========================================="
 
 # ── 1. Update OpenClaw to latest stable ──────────────────────
 log "📦 Step 1: Updating OpenClaw..."
-if npm install -g openclaw@latest >> "$LOG_FILE" 2>&1; then
+if bun install -g openclaw@latest >> "$LOG_FILE" 2>&1; then
   NEW_VER=$($OPENCLAW --version 2>/dev/null || echo "unknown")
   log "✅ Updated to version: ${NEW_VER}"
 else

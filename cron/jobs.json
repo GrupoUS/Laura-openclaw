@@ -18,7 +18,7 @@
       "payload": {
         "kind": "agentTurn",
         "message": "Rodar rotina diária às 18h BRT: 1) Listar reuniões do dia no Zoom (node scripts/zoom.js list-meetings) e filtrar pelo dia atual em BRT. 2) Para cada reunião, buscar resumo AI Companion (node scripts/zoom.js get-summary <id>) e decisões. 3) Reuniões de equipe (Comercial/Marketing/Liderança): criar tarefas no Slack marcando responsáveis. 4) Reuniões de mentorados (Neon/OTB etc.): salvar resumo + tarefas na pasta individual do aluno no Drive. 5) Postar um resumo final para o Maurício.",
-        "model": "google-antigravity/gemini-3-flash",
+        "model": "google-gemini-cli/gemini-3-flash-preview",
         "thinking": "low"
       },
       "state": {
@@ -51,7 +51,7 @@
       "payload": {
         "kind": "agentTurn",
         "message": "Tarefa recorrente SDR (a cada 30 min):\n1) Rodar: node /Users/mauricio/.openclaw/scripts/sdr-leads-watch.js scan --sheet-id 1sxCf2usjhwPWEOYUYvb841iO9hkoL7IKsJl4HIqTexk --out /tmp/sdr_leads.json\n2) Se leads>0, abrir /tmp/sdr_leads.json e, para cada lead:\n   - Extrair primeiro nome.\n   - Enviar WhatsApp (máx 3 linhas, 1 emoji): \"Oi, {Nome}! Sou a Laura, do Grupo US 💜\\nVocê já é aluno(a) ou está conhecendo a gente agora?\"\n   - Notificar Lucas (+556195220319): \"Oi Lucas! Novo lead na área:\\n- Nome: {Nome}\\n- Telefone: {Telefone}\\n- Horário: {HH:MM BRT}\"\n3) Marcar contato no sheet: node /Users/mauricio/.openclaw/scripts/sdr-leads-watch.js mark --sheet-id 1sxCf2usjhwPWEOYUYvb841iO9hkoL7IKsJl4HIqTexk --input /tmp/sdr_leads.json --value \"Contato iniciado (Laura)\"\n4) Seguir SOUL.md e agents/SDR.md (sem preços; fallback humano quando necessário).\nObs: o script cria coluna \"Contato_SDR\" se não existir.",
-        "model": "google-antigravity/gemini-3-flash",
+        "model": "google-gemini-cli/gemini-3-flash-preview",
         "thinking": "low"
       },
       "state": {
@@ -83,7 +83,7 @@
       "payload": {
         "kind": "agentTurn",
         "message": "Rotina Zoom (hora em hora):\n1) Rodar: node /Users/mauricio/.openclaw/scripts/zoom-summary-watch.js --out /tmp/zoom_summaries.json\n2) Ler /tmp/zoom_summaries.json; se count>0, para cada item:\n   - Montar mensagem no Slack #grupous com: Título da reunião, data/hora, resumo e lista de tarefas (actionItems). Use bullets simples.\n   - Enviar via message tool (channel=slack, target=\"#grupous\").\nObs: se não houver actionItems, omitir seção de tarefas. Se summaryText estiver vazio, usar JSON bruto resumido.\n",
-        "model": "google-antigravity/gemini-3-flash",
+        "model": "google-gemini-cli/gemini-3-flash-preview",
         "thinking": "low"
       },
       "state": {
@@ -114,7 +114,7 @@
       "payload": {
         "kind": "systemEvent",
         "text": "Executar script de self-healing para verificar saúde do RAG e Gateway. Recupere logs em memory/self-healing.log se necessário. Execute: node /Users/mauricio/.openclaw/scripts/self-healing.js",
-        "model": "google-antigravity/gemini-3-flash"
+        "model": "google-gemini-cli/gemini-3-flash-preview"
       },
       "state": {
         "lastRunAtMs": 1771528872749,
@@ -141,7 +141,7 @@
         "message": "Execute o script /Users/mauricio/.openclaw/scripts/notion-check-tasks.js para pegar as tarefas pendentes.\nPara cada pessoa com tarefas:\n1. Verifique se temos o contato dela em memory/contatos.md ou pelo nome.\n2. Se tiver contato: Mande uma mensagem amigável no WhatsApp listando as pendências.\n   - IMPORTANTE: No WhatsApp, envie os LINKS LIMPOS (sem markdown [texto](url)). Ex: \"Tarefa: Titulo\\nLink: https://...\"\n3. Se NÃO tiver contato: Agrupe essas mensagens e mande para o Bruno (+5521990869640) pedindo o contato dessas pessoas.\n4. Se tiver tarefas sem responsável, avise o Maurício ou o Bruno.\n5. Sempre envie um relatório consolidado das pendências para a Raquel (+5562981123150), nossa coordenadora.\nUse tom prestativo e de cobrança leve.",
         "thinking": "low",
         "kind": "agentTurn",
-        "model": "google-antigravity/gemini-3-flash"
+        "model": "google-gemini-cli/gemini-3-flash-preview"
       },
       "state": {
         "lastRunAtMs": 1771513218652,
@@ -170,7 +170,7 @@
       "sessionTarget": "isolated",
       "wakeMode": "next-heartbeat",
       "payload": {
-        "model": "google-antigravity/gemini-3-flash",
+        "model": "google-gemini-cli/gemini-3-flash-preview",
         "message": "Execute o script /Users/mauricio/.openclaw/scripts/notion-check-tasks.js para pegar as tarefas pendentes.\nPara cada pessoa com tarefas:\n1. Verifique se temos o contato dela em memory/contatos.md ou pelo nome.\n2. Se tiver contato: Mande uma mensagem amigável no WhatsApp listando as pendências.\n   - IMPORTANTE: No WhatsApp, envie os LINKS LIMPOS (sem markdown [texto](url)). Ex: \"Tarefa: Titulo\\nLink: https://...\"\n3. Se NÃO tiver contato: Agrupe essas mensagens e mande para o Bruno (+5521990869640) pedindo o contato dessas pessoas.\n4. Se tiver tarefas sem responsável, avise o Maurício ou o Bruno.\n5. Sempre envie um relatório consolidado das pendências para a Raquel (+5562981123150), nossa coordenadora.\nUse tom prestativo e de cobrança leve.",
         "thinking": "low",
         "kind": "agentTurn"
@@ -202,7 +202,7 @@
       "sessionTarget": "isolated",
       "wakeMode": "next-heartbeat",
       "payload": {
-        "model": "google-antigravity/gemini-3-flash",
+        "model": "google-gemini-cli/gemini-3-flash-preview",
         "message": "Rodar rotina diária às 19h BRT: \n1) Execute: node /Users/mauricio/.openclaw/scripts/daily-neon-sync.js\n2) Para cada reunião processada com sucesso (resumo obtido + pasta identificada):\n   - Crie um Google Doc na pasta do mentorado (use ferramentas disponíveis ou notifique com o link para criação manual se a automação falhar).\n   - O Doc deve conter: Resumo da Call, Acordos e Próximos Passos (Action Items).\n3) Notifique o Maurício com o resumo das ações realizadas (\"Resumo da Jayne criado em [link]\", \"Resumo da Tássia criado em [link]\").\n4) Se houver reuniões sem pasta mapeada, peça o link para atualizar memory/drive-map.md.",
         "kind": "agentTurn",
         "thinking": "low"
@@ -237,7 +237,7 @@
         "message": "Execute uma verificação no calendário NEON (c15a01eaaf196a178bb081c139c1b533521c0fb67aebd3df87043d7257f65aa1@group.calendar.google.com).\n1. Liste os eventos de AMANHÃ.\n2. Filtre eventos que tenham \"CALL\" e um nome de aluno (ex: \"CALL SACHA - TÁSSIA\").\n3. Para cada evento encontrado:\n   - Identifique o aluno (pelo nome no título).\n   - Busque o contato do aluno em `memory/contatos.md` ou `kiwify.js`.\n   - Se achar o contato, envie um lembrete no WhatsApp: \"Oi [Nome]! Passando pra lembrar da sua call com [Mentor] amanhã às [Horário]. Tudo confirmado? 💜\"\n   - Se não achar o contato, notifique o Maurício/Renata para enviar manualmente.",
         "thinking": "low",
         "kind": "agentTurn",
-        "model": "google-antigravity/gemini-3-flash"
+        "model": "google-gemini-cli/gemini-3-flash-preview"
       },
       "state": {
         "lastRunAtMs": 1771502417368,
@@ -267,7 +267,7 @@
       "wakeMode": "next-heartbeat",
       "payload": {
         "message": "Execute o script de reengajamento de leads:\nnode /Users/mauricio/.openclaw/scripts/sdr-reengage.js\n\nAnalise a saída do script. Se houver ações \"send_followup\", envie as mensagens de WhatsApp sugeridas para os números indicados.\nExemplo de ação: {\"action\": \"send_followup\", \"phone\": \"+55...\", \"message\": \"Oi!...\"}\n\nObjetivo: Reativar leads que pararam de responder há mais de 2 horas.",
-        "model": "google-antigravity/gemini-3-flash",
+        "model": "google-gemini-cli/gemini-3-flash-preview",
         "kind": "agentTurn",
         "thinking": "low"
       },
@@ -285,62 +285,6 @@
       }
     },
     {
-      "id": "92797825-f41b-4020-9b20-82863de26c1e",
-      "agentId": "main",
-      "name": "SDR Retro Recovery (One-Shot)",
-      "enabled": false,
-      "createdAtMs": 1770673353397,
-      "updatedAtMs": 1770673500003,
-      "schedule": {
-        "kind": "at",
-        "at": "2026-02-09T21:45:00.000Z"
-      },
-      "sessionTarget": "isolated",
-      "wakeMode": "next-heartbeat",
-      "payload": {
-        "model": "gemini-3-pro-high",
-        "message": "Execute o script de recuperação retroativa:\nnode /Users/mauricio/.openclaw/scripts/sdr-retro-recovery.js\n\nPara cada linha de saída começando com \"ACTION_SEND:\", extraia o JSON e envie a mensagem para o telefone indicado via WhatsApp.\nApós enviar, atualize o log local marcando que o follow-up foi feito.\n\nObjetivo: Recuperar leads parados desde 20/01/2026.",
-        "kind": "agentTurn",
-        "thinking": "low"
-      },
-      "state": {
-        "lastRunAtMs": 1770673500003,
-        "lastStatus": "ok",
-        "lastDurationMs": 100590
-      },
-      "delivery": {
-        "mode": "announce",
-        "channel": "whatsapp",
-        "bestEffort": true
-      }
-    },
-    {
-      "id": "80531d4d-2a8a-45d9-8648-c57888ca2f0a",
-      "agentId": "main",
-      "name": "Resumo Tarefas Jurídico",
-      "enabled": false,
-      "createdAtMs": 1770912284490,
-      "updatedAtMs": 1770930000000,
-      "schedule": {
-        "kind": "at",
-        "at": "2026-02-12T21:00:00.000Z"
-      },
-      "sessionTarget": "isolated",
-      "wakeMode": "next-heartbeat",
-      "payload": {
-        "message": "Laura, gere um resumo das tarefas acordadas hoje no grupo Jurídico (120363285625757349@g.us) baseadas no arquivo 'memory/tasks/2026-02-12-juridico.md'. Envie o resumo para o grupo. Se não houver tarefas registradas, pergunte ao grupo quais foram as pendências do dia.",
-        "kind": "agentTurn"
-      },
-      "state": {
-        "lastRunAtMs": 1770930163398,
-        "lastStatus": "ok",
-        "lastDurationMs": 19183
-      },
-      "delivery": {
-        "mode": "announce"
-      }
-    },
-    {
       "id": "4266f390-cb8a-455d-b828-611525a80df5",
       "agentId": "main",
       "name": "Sync com Benício (Diário)",
@@ -355,7 +299,7 @@
       "sessionTarget": "isolated",
       "wakeMode": "next-heartbeat",
       "payload": {
-        "model": "google-antigravity/gemini-3-flash",
+        "model": "google-gemini-cli/gemini-3-flash-preview",
         "kind": "agentTurn",
         "thinking": "low",
         "message": "Enviar mensagem para Benício (+5564999886688):\n\"Oi Benício! 🚀\nPassando pra nossa sintonia do dia:\n1. Quais tarefas você está tocando agora?\n2. Algum aprendizado novo pra compartilhar?\n3. Como posso te ajudar a evoluir hoje?\n\nVamos trocar figurinha pra crescermos juntos!\""
@@ -389,7 +333,7 @@
       "payload": {
         "message": "Check Google Calendar for calls assigned to Lucas/Erica for TODAY. For each event, retrieve and send: Lead Name, Phone, Email, and ANY context details available in the event description (Profession, Goal, Pós vs Mentoria). Send this detailed briefing to Lucas (+556195220319).",
         "kind": "agentTurn",
-        "model": "google-antigravity/gemini-3-flash"
+        "model": "google-gemini-cli/gemini-3-flash-preview"
       },
       "delivery": {
         "to": "+556195220319",
@@ -420,7 +364,7 @@
       "payload": {
         "kind": "agentTurn",
         "message": "Check Google Calendar (via mcporter or scripts/schedule-call.js) for any calls/meetings scheduled for TOMORROW assigned to Lucas or related to 'Leads'. Send a summary list to Lucas (+556195220319). If none, say 'Nenhuma call agendada para amanhã.'.",
-        "model": "google-antigravity/gemini-3-flash"
+        "model": "google-gemini-cli/gemini-3-flash-preview"
       },
       "delivery": {
         "to": "+556195220319",
@@ -453,7 +397,7 @@
       "payload": {
         "message": "Run the sales follow-up script:\nnode /Users/mauricio/.openclaw/scripts/sales-followup.js check\n\nIf the output contains lines starting with \"SEND_MESSAGE:\", extract the target phone number and the message content (JSON string), and use the `message` tool to send the WhatsApp message to each recipient.\nExample output line: SEND_MESSAGE:+556199999999:\"Hello world\"\nAction: message(to=\"+556199999999\", message=\"Hello world\")",
         "kind": "agentTurn",
-        "model": "google-antigravity/gemini-3-flash"
+        "model": "google-gemini-cli/gemini-3-flash-preview"
       },
       "delivery": {
         "mode": "none"
@@ -473,7 +417,7 @@
       "description": "Check for unresponded leads every hour",
       "enabled": true,
       "createdAtMs": 1771560754062,
-      "updatedAtMs": 1771600364553,
+      "updatedAtMs": 1771607653115,
       "schedule": {
         "kind": "every",
         "everyMs": 3600000,
@@ -484,7 +428,8 @@
       "payload": {
         "kind": "agentTurn",
         "message": "Verify unresponded leads in WhatsApp. List any numbers that sent messages and haven't received a reply yet, or leads that we messaged but didn't reply back to us. If you find any, summarize them ONLY for Maurício (+556299776996). If all is clear, say NO_REPLY.",
-        "thinking": "low"
+        "thinking": "low",
+        "model": "google-gemini-cli/gemini-3-flash-preview"
       },
       "delivery": {
         "mode": "announce",
@@ -492,11 +437,11 @@
         "to": "+556299776996"
       },
       "state": {
-        "nextRunAtMs": 1771603954062,
-        "lastRunAtMs": 1771600354076,
+        "nextRunAtMs": 1771611154062,
+        "lastRunAtMs": 1771607554082,
         "lastStatus": "error",
-        "lastDurationMs": 10477,
-        "consecutiveErrors": 2,
+        "lastDurationMs": 99033,
+        "consecutiveErrors": 1,
         "lastError": "cron announce delivery failed"
       }
     }
