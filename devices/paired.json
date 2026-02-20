@@ -29,5 +29,32 @@
     },
     "createdAtMs": 1769513686396,
     "approvedAtMs": 1769513686396
+  },
+  "a8ba2f748c2f33ab8e17f426eb0b6e57c28f89dde7f8d86952d9601b026c8c2a": {
+    "deviceId": "a8ba2f748c2f33ab8e17f426eb0b6e57c28f89dde7f8d86952d9601b026c8c2a",
+    "publicKey": "gEd7wz1tpUixwnDRGwSW_awvd0a0_KhYpphYwYcTyEw",
+    "platform": "darwin",
+    "clientId": "gateway-client",
+    "clientMode": "backend",
+    "role": "operator",
+    "roles": [
+      "operator"
+    ],
+    "scopes": [
+      "operator.read"
+    ],
+    "tokens": {
+      "operator": {
+        "token": "cli-bypass-token-1771557849881",
+        "role": "operator",
+        "scopes": [
+          "operator.read"
+        ],
+        "createdAtMs": 1771557849881,
+        "lastUsedAtMs": 1771557849881
+      }
+    },
+    "createdAtMs": 1771557622931,
+    "approvedAtMs": 1771557849881
   }
 }

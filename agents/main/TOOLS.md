@@ -9,7 +9,6 @@
 sessions_spawn(agentId="sdr", task="[contexto completo]")
 sessions_spawn(agentId="suporte", task="[contexto completo]")
 sessions_spawn(agentId="cs", task="[contexto completo]")
-sessions_spawn(agentId="assistant", task="[contexto completo]")
 sessions_spawn(agentId="coder", task="[contexto completo]")
 ```
 
@@ -44,8 +43,8 @@ getMessages(channel="#canal", limit=20)
 |---------|-----|--------------|
 | **WhatsApp** | Receber/enviar msgs | Via OpenClaw gateway |
 | **Slack** | Comunicação interna | Via OpenClaw gateway |
-| **Google Calendar** | Verificar agenda | Via assistant |
-| **Google Drive** | Buscar documentos | Via assistant |
+| **Google Calendar** | Verificar agenda | Via suporte |
+| **Google Drive** | Buscar documentos | Via suporte |
 | **Kiwify** | Verificar se é aluno | Script direto ou via suporte |
 
 ---

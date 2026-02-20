@@ -97,25 +97,25 @@ python3 /Users/mauricio/.openclaw/scripts/kiwify_cli.py search "email@exemplo.co
 python3 /Users/mauricio/.openclaw/scripts/kiwify_cli.py products
 ```
 
-### UDS Search (Drive + Notion + Kiwify — busca unificada)
+### UDS Search (Base de Conhecimento Unificada)
+
+> **REGRA:** SEMPRE comece a busca pelo UDS, integrando Drive, Notion, e bases de conhecimento vetoriais.
 
 ```bash
 # Busca híbrida (BM25 + vector) — USAR COMO PADRÃO
-python3 /Users/mauricio/.openclaw/skills/uds-search/scripts/uds-search.py "termo de busca"
-
-# Busca por keyword exato
-python3 /Users/mauricio/.openclaw/skills/uds-search/scripts/uds-search.py "nome exato" --type bm25
-
-# Busca semântica (conceitual)
-python3 /Users/mauricio/.openclaw/skills/uds-search/scripts/uds-search.py "como funciona MBA" --type vector
-
-# Ver status do índice
-python3 /Users/mauricio/.openclaw/skills/uds-search/scripts/uds-search.py --status
-
-# Via curl (alternativa)
 curl -s -X POST http://localhost:8000/search \
   -H 'Content-Type: application/json' \
-  -d '{"query": "termo", "top_k": 10}' | python3 -m json.tool
+  -d '{"query": "termo de busca", "top_k": 10}' | python3 -m json.tool
+
+# Busca por keyword exata (desativando vector)
+curl -s -X POST http://localhost:8000/search \
+  -H 'Content-Type: application/json' \
+  -d '{"query": "nome exato", "search_type": "bm25"}' | python3 -m json.tool
+
+# Busca semântica (conceitual, buscando apenas com vector)
+curl -s -X POST http://localhost:8000/search \
+  -H 'Content-Type: application/json' \
+  -d '{"query": "como funciona MBA", "search_type": "vector"}' | python3 -m json.tool
 ```
 
 ### Zoom
@@ -131,10 +131,14 @@ python3 /Users/mauricio/.openclaw/scripts/zoom_cli.py create-meeting "Reunião" 
 python3 /Users/mauricio/.openclaw/scripts/zoom_cli.py get-summary <meetingId>
 ```
 
-### Testar Conexão Google
+### Rastreamento de Tarefas e Projetos (Notion & Zoom)
 
 ```bash
-node /Users/mauricio/.openclaw/scripts/test-google.js
+# Verificar tarefas atrasadas (Ideal para acompanhar a equipe diariamente)
+node /Users/mauricio/.openclaw/scripts/notion-check-tasks.js
+
+# Processar "Action Items" de reunião após a call
+node /Users/mauricio/.openclaw/scripts/daily-neon-sync.js
 ```
 
 ---
@@ -198,8 +202,8 @@ node /Users/mauricio/.openclaw/scripts/test-google.js
 **Path:** `/Users/mauricio/.openclaw/skills/notion/SKILL.md`
 
 **Usar para:**
-- Acompanhar tarefas no Notion
-- Extrair status e deadlines
+- Acompanhar tarefas no Notion e cobrar prazos
+- Extrair status e deadlines da equipe
 - Sync databases para outros sistemas
 
 ---
