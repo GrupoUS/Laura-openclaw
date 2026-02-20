@@ -2,6 +2,8 @@ import { NextRequest } from 'next/server'
 import { z } from 'zod'
 import { getTaskById, updateTask } from '@/lib/db/queries'
 
+export const dynamic = 'force-dynamic'
+
 const patchSchema = z.object({
   status:   z.enum(['backlog', 'in_progress', 'done', 'blocked']).optional(),
   priority: z.enum(['low', 'medium', 'high', 'critical']).optional(),

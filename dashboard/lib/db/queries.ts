@@ -1,11 +1,6 @@
-import { db } from '../db'
+import { getDb } from '../db'
 import { tasks, subtasks } from './schema'
 import { eq, and, desc, sql } from 'drizzle-orm'
-
-function getDb(): NonNullable<typeof db> {
-  if (!db) throw new Error('Database not configured — NEON_DATABASE_URL is missing')
-  return db
-}
 
 export type TaskFilter = {
   status?: 'backlog' | 'in_progress' | 'done' | 'blocked'

@@ -2,6 +2,8 @@ import { NextRequest } from 'next/server'
 import { z } from 'zod'
 import { updateSubtask } from '@/lib/db/queries'
 
+export const dynamic = 'force-dynamic'
+
 const schema = z.object({
   status: z.enum(['todo', 'doing', 'done', 'blocked']),
 })

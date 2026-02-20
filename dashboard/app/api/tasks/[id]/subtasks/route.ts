@@ -2,6 +2,8 @@ import { NextRequest } from 'next/server'
 import { z } from 'zod'
 import { createSubtask } from '@/lib/db/queries'
 
+export const dynamic = 'force-dynamic'
+
 const schema = z.object({
   title: z.string().min(3).max(300),
   phase: z.number().int().min(1).default(1),

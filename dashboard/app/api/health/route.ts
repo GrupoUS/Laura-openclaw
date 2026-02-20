@@ -1,15 +1,11 @@
-import { db } from '@/lib/db'
+import { getDb } from '@/lib/db'
 import { sql } from 'drizzle-orm'
 
-export async function GET() {
-  if (!db) {
-    return Response.json(
-      { status: 'ok', service: 'laura-dashboard', db: 'not_configured', ts: new Date().toISOString() },
-      { status: 200 },
-    )
-  }
+export const dynamic = 'force-dynamic'
 
+export async function GET() {
   try {
+    const db = getDb()
     await db.execute(sql`SELECT 1`)
     return Response.json({
       status: 'ok',
@@ -19,7 +15,7 @@ export async function GET() {
     })
   } catch {
     return Response.json(
-      { status: 'error', db: 'disconnected' },
+      { status: 'error', service: 'laura-dashboard', db: 'disconnected' },
       { status: 503 },
     )
   }
