@@ -27,8 +27,7 @@ Things like:
 
 ### TTS
 
-- Preferred voice: "Sacha" (ID: rOpFGBhAwpZ8TFuPvrp6)
-- Default speaker: Office
+- Preferred voice: "Raquel"
 - Note: Always convert to OGG Opus for WhatsApp.
 ```
 
