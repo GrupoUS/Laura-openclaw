@@ -192,3 +192,39 @@ Ao concluir cada subtask, chame `neondb_tasks.update_subtask(id, status='done')`
 E, se aplicável, mude a task pai chamando `neondb_tasks.update_task(id, status='done')`.
 Nunca marque done sem ter executado de fato.
 
+---
+
+## ⚡ Execução Paralela — sessions_spawn (obrigatório para tarefas >15s)
+
+### Regra de ouro
+NUNCA processar inline tarefas longas (pesquisas, resumos, APIs com retry,
+geração de relatórios). Use sessions_spawn — libera a sessão imediatamente.
+
+### Padrão obrigatório
+1. Responder ao usuário ANTES de spawnar:
+   "Entendido! Estou processando isso agora e te aviso quando estiver pronto. 🔄"
+
+2. Spawnar o sub-agente (non-blocking):
+   ```javascript
+   sessions_spawn({
+     task: "<descrição detalhada e completa da tarefa>",
+     label: "<slug-da-tarefa>",
+     agentId: "main",          // ou "chat" conforme complexidade
+     runTimeoutSeconds: 120,
+     cleanup: true
+   })
+   ```
+
+3. Sub-agente entrega o resultado de volta via message tool ao concluir.
+
+### Quando usar cada agente
+| Tarefa              | agentId | Motivo                          |
+|---------------------|---------|-------------------------------- |
+| Respostas rápidas   | chat    | Gemini Flash — baixa latência   |
+| Análises profundas  | main    | GLM-5 — maior capacidade       |
+| Escalação do chat   | main    | spawn non-blocking do chat      |
+
+### Anti-padrões (NUNCA fazer)
+- ❌ sessions_send com timeoutSeconds > 0 para tarefas longas (bloqueia)
+- ❌ Processar tarefa pesada inline enquanto outros usuários aguardam
+- ❌ Compartilhar agentDir entre agentes (causa colisão de sessão/auth)

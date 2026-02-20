@@ -124,7 +124,12 @@
       "createdAt": 1771614928079,
       "startedAt": 1771614928181,
       "archiveAtMs": 1771618528079,
-      "cleanupHandled": false
+      "cleanupHandled": true,
+      "endedAt": 1771614969770,
+      "outcome": {
+        "status": "ok"
+      },
+      "cleanupCompletedAt": 1771614971658
     }
   }
 }

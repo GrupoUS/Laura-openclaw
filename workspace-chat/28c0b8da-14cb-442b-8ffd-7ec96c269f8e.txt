@@ -1,0 +1,13 @@
+Laura, tem duas pastas de skills, uma na pasta principal no root do OpenClaw e outra dentro da pasta workspace.
+Verifica qual pasta de skill que você realmente está utilizando e qual que realmente é o local correto de todas elas ficarem
+para que a gente tenha um controle melhor de todas essas skills e altere também nas tools de todos os seus agentes
+para que eles usem corretamente todas as skills disponíveis.
+E você, como main agent, use mais, com forma mais intensa, as skills dos parallel agents
+e de coordenação de agentes, que é a skill Agent Team Orchestration,
+porque dessa forma você vai conseguir criar mais agentes paralelos e subagentes
+para você não conseguir fazer mais coisas ao mesmo tempo,
+não ficar dependendo de você como main agent, ficar fazendo uma coisa de cada vez
+e às vezes eu te mando uma mensagem, um lead te manda uma mensagem
+e você vai executar de forma sequenciada para você parar de fazer isso.
+Você precisa fazer mais coisas paralelas para que você consiga ter uma melhor performance
+e atender todo mundo.

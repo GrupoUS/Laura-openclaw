@@ -9,7 +9,12 @@ const HEARTBEAT_MS = 25_000
 export async function GET(req: NextRequest) {
   // ─── Auth via query param (EventSource can't send headers) ───
   const token = req.nextUrl.searchParams.get('token')
-  if (token !== process.env.LAURA_API_SECRET) {
+  const validTokens = [
+    process.env.LAURA_API_SECRET,   // agents/server-to-server
+    process.env.SSE_READ_TOKEN,     // browser frontend (read-only)
+  ].filter(Boolean)
+
+  if (!token || !validTokens.includes(token)) {
     return new Response(JSON.stringify({ error: 'Unauthorized' }), {
       status: 401,
       headers: { 'Content-Type': 'application/json' },
