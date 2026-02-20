@@ -1,5 +1,5 @@
 // Resilient WebSocket client for OpenClaw gateway
-// Implements proper OpenClaw JSON-RPC handshake protocol
+// Implements proper OpenClaw protocol (type:"req" frames, connect handshake)
 // Uses Bun's native WebSocket — no external `ws` package needed
 
 let ws: WebSocket | null = null
@@ -20,6 +20,7 @@ const logErr = (...args: unknown[]) => console.error('[gateway-ws]', ...args)
 const logWarn = (...args: unknown[]) => console.warn('[gateway-ws]', ...args)
 /* eslint-enable no-console */
 const RECONNECT_DELAY_MS = 5_000
+const PROTOCOL_VERSION = 3
 
 /** Expose the configured URL for diagnostics */
 export function getGatewayUrl(): string {
@@ -28,17 +29,25 @@ export function getGatewayUrl(): string {
 
 /**
  * Send the OpenClaw `connect` handshake frame.
- * The gateway requires this as the first frame on every new WS connection.
+ * The gateway requires this as the FIRST frame on every new WS connection.
+ * Frame format: { type: "req", method: "connect", id, params: ConnectParams }
  */
 function sendConnectHandshake(socket: WebSocket): void {
   const connectFrame = JSON.stringify({
-    jsonrpc: '2.0',
+    type: 'req',
     method: 'connect',
-    params: {
-      auth: { token: GATEWAY_TOKEN },
-      client: { type: 'admin', name: 'openclaw-admin' },
-    },
     id: crypto.randomUUID(),
+    params: {
+      minProtocol: PROTOCOL_VERSION,
+      maxProtocol: PROTOCOL_VERSION,
+      client: {
+        id: 'gateway-client',
+        version: '1.0.0',
+        platform: 'railway',
+        mode: 'backend',
+      },
+      auth: { token: GATEWAY_TOKEN },
+    },
   })
   log('sending connect handshake')
   socket.send(connectFrame)
@@ -65,16 +74,18 @@ export function getGatewayWs(url = GATEWAY_WS_URL): WebSocket {
       try {
         const msg = JSON.parse(
           typeof ev.data === 'string' ? ev.data : ''
-        ) as { error?: { message?: string }; result?: unknown }
+        ) as { type?: string; error?: { message?: string } | string; result?: unknown }
+
+        // Gateway responds with type:"res" for connect
         if (msg.error) {
-          logErr('handshake rejected:', msg.error.message ?? msg.error)
+          const errMsg =
+            typeof msg.error === 'string'
+              ? msg.error
+              : (msg.error as { message?: string })?.message ?? JSON.stringify(msg.error)
+          logErr('handshake rejected:', errMsg)
           handshakeComplete = false
           for (const cb of pendingHandshakeCallbacks) {
-            cb.reject(
-              new Error(
-                `Gateway handshake rejected: ${msg.error.message ?? JSON.stringify(msg.error)}`
-              )
-            )
+            cb.reject(new Error(`Gateway handshake rejected: ${errMsg}`))
           }
           pendingHandshakeCallbacks = []
           ws?.close()
@@ -135,7 +146,7 @@ function waitForHandshake(): Promise<void> {
 export function gatewayCall<T = unknown>(
   tool: string,
   params: Record<string, unknown>,
-  gatewayToken: string
+  _gatewayToken: string
 ): Promise<T> {
   return new Promise((resolve, reject) => {
     let socket: WebSocket
@@ -152,9 +163,9 @@ export function gatewayCall<T = unknown>(
 
     const id = crypto.randomUUID()
 
-    // Build JSON-RPC 2.0 frame (token is sent via connect handshake, not per-call)
+    // OpenClaw request frame: { type: "req", method, params, id }
     const payload = JSON.stringify({
-      jsonrpc: '2.0',
+      type: 'req',
       method: tool,
       params,
       id,
@@ -171,14 +182,14 @@ export function gatewayCall<T = unknown>(
       try {
         const msg = JSON.parse(
           typeof event.data === 'string' ? event.data : ''
-        ) as { id?: string; error?: { message?: string } | string; result: T }
+        ) as { id?: string; type?: string; error?: { message?: string } | string; result: T }
         if (msg.id !== id) return
         cleanup()
         if (msg.error) {
           const errMsg =
             typeof msg.error === 'string'
               ? msg.error
-              : msg.error?.message ?? JSON.stringify(msg.error)
+              : (msg.error as { message?: string })?.message ?? JSON.stringify(msg.error)
           reject(new Error(errMsg))
         } else {
           resolve(msg.result)
@@ -220,7 +231,6 @@ export function gatewayCall<T = unknown>(
     if (socket.readyState === WebSocket.OPEN && handshakeComplete) {
       sendPayload()
     } else {
-      // Wait for connection + handshake
       waitForHandshake()
         .then(sendPayload)
         .catch((err) => {
