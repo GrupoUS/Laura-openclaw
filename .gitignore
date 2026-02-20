@@ -8,8 +8,17 @@ auth.json
 auth-profiles.json
 *token*.json
 openclaw.json
+openclaw.json.bak
 config/
 sessions/
 extensions/
 scripts/google-services.js
 scripts/*.js
+cron/runs/
+cron/*.bak
+sandboxes/
+devices/
+completions/
+update-check.json
+.DS_Store
+*.log
