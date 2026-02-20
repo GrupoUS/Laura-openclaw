@@ -12,7 +12,7 @@ const gatewayRouter = router({
   health: publicProcedure.query(async ({ ctx }) => {
     const targetUrl = getGatewayUrl()
     try {
-      const result = await gatewayCall<Record<string, unknown>>('gateway.health', {}, ctx.gatewayToken)
+      const result = await gatewayCall<Record<string, unknown>>('health', {}, ctx.gatewayToken)
       return { connected: true, targetUrl, ...result }
     } catch (err) {
       return { connected: false, targetUrl, error: (err as Error).message }
