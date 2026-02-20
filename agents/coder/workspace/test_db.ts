@@ -1,5 +1,5 @@
 import { Client } from "pg";
-const client = new Client("postgresql://neondb_owner:***REMOVED***@ep-falling-morning-acpph9w8-pooler.sa-east-1.aws.neon.tech/neondb?sslmode=require");
+const client = new Client(process.env.DATABASE_URL || "postgresql://localhost:5432/db");
 try {
   await client.connect();
   console.log("✅ DB Connected");

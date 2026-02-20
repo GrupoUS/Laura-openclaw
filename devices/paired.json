@@ -17,7 +17,7 @@
     ],
     "tokens": {
       "operator": {
-        "token": "***REMOVED***",
+        "token": "REDACTED_SECRET",
         "role": "operator",
         "scopes": [
           "operator.read"
