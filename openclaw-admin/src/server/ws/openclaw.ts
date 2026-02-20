@@ -76,11 +76,15 @@ function signPayload(payload: string): string {
 }
 
 /**
- * Normalize the PEM public key to base64url format (no header/footer).
+ * Extract raw Ed25519 public key as base64url (32 bytes only, no SPKI wrapper).
+ * The gateway expects raw key bytes for device ID derivation.
  */
 function publicKeyBase64Url(): string {
-  return DEVICE_PUBLIC_KEY.replace(/-----[A-Z ]+-----/g, '')
-    .replace(/\s/g, '')
+  const { createPublicKey } = require('node:crypto')
+  const pubKey = createPublicKey(DEVICE_PUBLIC_KEY)
+  const jwk = pubKey.export({ format: 'jwk' }) as { x?: string }
+  // JWK 'x' is already base64url for Ed25519
+  return jwk.x ?? ''
 }
 
 /**
