@@ -1,6 +1,7 @@
 import { getDb } from '../db'
 import { tasks, subtasks, taskEvents } from './schema'
 import { eq, and, desc, sql } from 'drizzle-orm'
+import { notifyBlocked } from '@/lib/notifications'
 
 export type TaskFilter = {
   status?: 'backlog' | 'in_progress' | 'done' | 'blocked'
@@ -67,6 +68,17 @@ export async function updateTask(id: string, data: Partial<typeof tasks.$inferIn
     logEvent(task.id, 'task:updated', data.agent ?? task.agent, {
       status: task.status, priority: task.priority
     }).catch((e) => console.error('[queries] logEvent task:updated:', e.message))
+    
+    if (data.status === 'blocked') {
+      notifyBlocked({
+        event:     'task:blocked',
+        taskId:    task.id,
+        taskTitle: task.title,
+        agent:     data.agent ?? task.agent,
+        phase:     task.phase,
+        priority:  task.priority,
+      })
+    }
   }
   return task
 }
@@ -96,6 +108,23 @@ export async function updateSubtask(id: string, status: 'todo' | 'doing' | 'done
     logEvent(subtask.taskId, 'subtask:updated', subtask.agent, {
       subtaskId: subtask.id, title: subtask.title, status
     }).catch((e) => console.error('[queries] logEvent subtask:updated:', e.message))
+
+    if (status === 'blocked') {
+      const parentTask = await getDb().query.tasks.findFirst({
+        where: eq(tasks.id, subtask.taskId),
+        columns: { title: true, phase: true, priority: true },
+      })
+      if (parentTask) {
+        notifyBlocked({
+          event:     'subtask:blocked',
+          taskId:    subtask.taskId,
+          taskTitle: `${parentTask.title} \u2192 ${subtask.title}`,
+          agent:     subtask.agent,
+          phase:     parentTask.phase,
+          priority:  parentTask.priority,
+        })
+      }
+    }
   }
   return subtask ?? null
 }

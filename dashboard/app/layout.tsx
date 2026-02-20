@@ -1,5 +1,8 @@
 import { Inter } from 'next/font/google'
 import './globals.css'
+import { initStartup } from '@/app/startup'
+
+if (typeof window === 'undefined') { initStartup() }
 
 const inter = Inter({ subsets: ['latin'] })
 

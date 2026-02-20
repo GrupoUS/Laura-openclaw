@@ -1,6 +1,7 @@
 'use client'
 import { ConnectionStatus } from '@/components/shared/ConnectionStatus'
 import { useTaskStore } from '@/hooks/useTaskStore'
+import { CreateTaskButton } from '@/components/create/CreateTaskButton'
 
 export function ViewHeader({ title }: { title: string }) {
   const count = useTaskStore((s) => s.tasks.length)
@@ -12,7 +13,10 @@ export function ViewHeader({ title }: { title: string }) {
           {count} tasks
         </span>
       </div>
-      <ConnectionStatus />
+      <div className="flex items-center gap-3">
+        <ConnectionStatus />
+        <CreateTaskButton />
+      </div>
     </header>
   )
 }

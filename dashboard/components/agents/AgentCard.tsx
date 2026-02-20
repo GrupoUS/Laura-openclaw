@@ -29,7 +29,7 @@ export function AgentCard({ agent }: { agent: AgentDetail }) {
     agent.currentTask ? s.tasks.find((t) => t.id === agent.currentTask!.id) : null
   )
 
-  const totalTasks = Object.values(agent.counts).reduce((a, b) => a + (b ?? 0), 0)
+  const totalTasks = Object.values(agent.counts).reduce((a: number, b) => a + (b ?? 0), 0)
 
   return (
     <div className={`rounded-xl border-2 p-4 flex flex-col gap-3 transition-all ${cfg.border} ${cfg.bg} min-h-[180px]`}>

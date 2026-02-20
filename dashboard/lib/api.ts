@@ -50,6 +50,27 @@ export async function patchSubtaskStatus(
 }
 
 // ─── Agents ───────────────────────────────────────
+export async function createTask(data: any): Promise<Task> {
+  const res = await fetch(`${BASE}/api/tasks`, {
+    method: 'POST',
+    headers: headers(),
+    body: JSON.stringify(data),
+  })
+  if (!res.ok) throw new Error(`createTask: ${res.status}`)
+  return (await res.json()).data
+}
+
+export async function createSubtask(data: any): Promise<Subtask> {
+  const res = await fetch(`${BASE}/api/tasks/${data.taskId}/subtasks`, {
+    method: 'POST',
+    headers: headers(),
+    body: JSON.stringify(data),
+  })
+  if (!res.ok) throw new Error(`createSubtask: ${res.status}`)
+  return (await res.json()).data
+}
+
+// ─── Agents ───────────────────────────────────────
 export async function fetchAgents(): Promise<AgentSummary[]> {
   const res = await fetch(`${BASE}/api/agents`, { headers: headers(), cache: 'no-store' })
   if (!res.ok) throw new Error(`fetchAgents: ${res.status}`)
