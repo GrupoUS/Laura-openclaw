@@ -47,6 +47,8 @@ function sendConnectHandshake(socket: WebSocket): void {
         mode: 'backend',
       },
       auth: { token: GATEWAY_TOKEN },
+      scopes: ['operator.admin'],
+      permissions: { admin: true },
     },
   })
   log('sending connect handshake')
