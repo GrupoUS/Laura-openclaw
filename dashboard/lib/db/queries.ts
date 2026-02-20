@@ -43,7 +43,7 @@ export async function getTaskById(id: string) {
     where: eq(tasks.id, id),
     with: {
       subtasks: true,
-      taskEvents: { orderBy: (e, { desc }) => [desc(e.createdAt)], limit: 20 },
+      taskEvents: { orderBy: (e, { desc: descFn }) => [descFn(e.createdAt)], limit: 20 },
     },
   })
 }
@@ -199,22 +199,23 @@ export async function getAgentDetails(): Promise<AgentDetail[]> {
 
   // Agregar por agente
   const agents: Record<string, AgentDetail> = {}
-  for (const row of rows as any[]) {
-    if (!agents[row.agent]) {
-      agents[row.agent] = {
-        name:       row.agent,
+  for (const row of rows as Record<string, unknown>[]) {
+    const agentName = String(row.agent)
+    if (!agents[agentName]) {
+      agents[agentName] = {
+        name:       String(row.agent),
         counts:     {},
         currentTask:    row.current_task_id ? {
-          id: row.current_task_id, title: row.current_task_title, phase: row.current_task_phase
+          id: String(row.current_task_id), title: String(row.current_task_title), phase: Number(row.current_task_phase)
         } : null,
         currentSubtask: row.current_subtask_id ? {
-          id: row.current_subtask_id, title: row.current_subtask_title
+          id: String(row.current_subtask_id), title: String(row.current_subtask_title)
         } : null,
-        lastActive: row.last_active ?? null,
+        lastActive: row.last_active ? String(row.last_active) : null,
         status: 'idle',
       }
     }
-    agents[row.agent].counts[row.status as string] = row.cnt
+    agents[agentName].counts[row.status as string] = Number(row.cnt)
   }
 
   // Derivar status visual do agente
@@ -240,7 +241,7 @@ export interface AgentDetail {
 // ─── Activity Feed — NOVA ─────────────────────────────────────────────────────
 export async function getRecentActivity(limit = 30) {
   return getDb().query.taskEvents.findMany({
-    orderBy: (e, { desc }) => [desc(e.createdAt)],
+    orderBy: (e, { desc: descFn }) => [descFn(e.createdAt)],
     limit,
     with: { task: { columns: { id: true, title: true } } },
   })
@@ -342,7 +343,7 @@ export async function getAnalytics(): Promise<AnalyticsData> {
     `),
   ])
 
-  const kpi = (kpiRows.rows[0] ?? {}) as any
+  const kpi = (kpiRows.rows[0] ?? {}) as Record<string, unknown>
   const STATUS_LABELS: Record<string, string> = {
     backlog: '📋 Backlog', in_progress: '⚡ Em Progresso',
     done: '✅ Concluído', blocked: '🔴 Bloqueado',
@@ -350,25 +351,25 @@ export async function getAnalytics(): Promise<AnalyticsData> {
 
   return {
     kpis: {
-      totalTasks:   kpi.total_tasks   ?? 0,
-      doneThisWeek: kpi.done_this_week ?? 0,
-      activeNow:    kpi.active_now    ?? 0,
-      blockedNow:   kpi.blocked_now   ?? 0,
+      totalTasks:   Number(kpi.total_tasks)   || 0,
+      doneThisWeek: Number(kpi.done_this_week)|| 0,
+      activeNow:    Number(kpi.active_now)    || 0,
+      blockedNow:   Number(kpi.blocked_now)   || 0,
     },
-    phaseProgress: (phaseRows.rows as any[]).map((r) => ({
-      phase: r.phase, backlog: r.backlog, in_progress: r.in_progress,
-      done: r.done, blocked: r.blocked, total: r.total,
-      label: \`Fase \${r.phase}\`,
+    phaseProgress: (phaseRows.rows as Record<string, unknown>[]).map((r) => ({
+      phase: Number(r.phase), backlog: Number(r.backlog), in_progress: Number(r.in_progress),
+      done: Number(r.done), blocked: Number(r.blocked), total: Number(r.total),
+      label: 'Fase ' + r.phase,
     })),
-    agentVelocity: (agentRows.rows as any[]).map((r) => ({
-      agent: r.agent, done: r.done, active: r.active,
+    agentVelocity: (agentRows.rows as Record<string, unknown>[]).map((r) => ({
+      agent: String(r.agent), done: Number(r.done), active: Number(r.active),
     })),
-    statusDist: (statusRows.rows as any[]).map((r) => ({
-      status: r.status, count: r.count,
-      label: STATUS_LABELS[r.status] ?? r.status,
+    statusDist: (statusRows.rows as Record<string, unknown>[]).map((r) => ({
+      status: String(r.status), count: Number(r.count),
+      label: STATUS_LABELS[String(r.status)] ?? String(r.status),
     })),
-    completionTimeline: (timelineRows.rows as any[]).map((r) => ({
-      date: r.date, count: r.count,
+    completionTimeline: (timelineRows.rows as Record<string, unknown>[]).map((r) => ({
+      date: String(r.date), count: Number(r.count),
     })),
   }
 }

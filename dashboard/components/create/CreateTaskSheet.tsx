@@ -55,9 +55,9 @@ export function CreateTaskSheet({ open, onClose }: Props) {
       const { data } = await res.json()
       setPlan(data)
       setStep('preview')
-    } catch (e: any) {
-      if (e.name === 'AbortError') { setStep('form'); return }
-      setError(e.message)
+    } catch (e: unknown) {
+      if (e instanceof Error && e.name === 'AbortError') { setStep('form'); return }
+      setError(e instanceof Error ? e.message : 'Unknown error')
       setStep('form')
     }
   }
@@ -71,22 +71,26 @@ export function CreateTaskSheet({ open, onClose }: Props) {
       const task = await createTask({
         title:       plan.title,
         description: plan.description,
-        priority:    plan.priority as any,
+        priority:    plan.priority as 'low' | 'medium' | 'high' | 'critical',
         agent:       plan.agent,
         phase:       1,
       })
 
       // 2. Criar subtasks de todas as fases em sequ\u00eancia
+      const subtasksToCreate = [];
       for (const phase of plan.phases) {
         for (const st of phase.subtasks) {
-          await createSubtask({
-            taskId: task.id,
-            title:  st.title,
-            agent:  st.agent,
-            phase:  phase.phase,
-          })
+          subtasksToCreate.push(
+            createSubtask({
+              taskId: task.id,
+              title:  st.title,
+              agent:  st.agent,
+              phase:  phase.phase,
+            })
+          )
         }
       }
+      await Promise.all(subtasksToCreate)
 
       setStep('done')
       setTimeout(() => { handleClose() }, 1500)

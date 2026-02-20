@@ -26,7 +26,7 @@ export function AgentCard({ agent }: { agent: AgentDetail }) {
 
   // Pegar subtasks da task atual para o progress bar
   const currentTaskFull = useTaskStore((s) =>
-    agent.currentTask ? s.tasks.find((t) => t.id === agent.currentTask!.id) : null
+    agent.currentTask ? s.tasks.find((t) => t.id === agent.currentTask?.id) : null
   )
 
   const totalTasks = Object.values(agent.counts).reduce((a: number, b) => a + (b ?? 0), 0)

@@ -3,8 +3,7 @@
  * Chamado ao iniciar o servidor via app/startup.ts
  */
 import { getDb } from '@/lib/db'
-import { tasks } from '@/lib/db/schema'
-import { eq, lt, sql } from 'drizzle-orm'
+import { sql } from 'drizzle-orm'
 import { notifyBlocked } from '.'
 
 const STUCK_HOURS = Number(process.env.NOTIFY_STUCK_HOURS ?? '2')
@@ -21,6 +20,7 @@ export async function checkStuckTasks(): Promise<void> {
     columns: { id: true, title: true, agent: true, phase: true, priority: true, updatedAt: true },
   })
 
+  const notifications = [];
   for (const task of stuck) {
     if (notifiedThisSession.has(task.id)) continue
     notifiedThisSession.add(task.id)
@@ -37,6 +37,8 @@ export async function checkStuckTasks(): Promise<void> {
       priority:  task.priority,
     })
   }
+
+  await Promise.all(notifications);
 
   if (stuck.length === 0) {
     console.log('[StuckCron] Nenhuma task travada \u2014 OK')

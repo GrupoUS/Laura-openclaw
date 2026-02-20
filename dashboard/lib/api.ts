@@ -58,7 +58,7 @@ export async function patchSubtaskStatus(
 }
 
 // ─── Agents ───────────────────────────────────────
-export async function createTask(data: any): Promise<Task> {
+export async function createTask(data: Record<string, unknown>): Promise<Task> {
   const res = await fetch(`${BASE}/api/tasks`, {
     method: 'POST',
     ...fetchOpts(JSON.stringify(data)),
@@ -67,7 +67,7 @@ export async function createTask(data: any): Promise<Task> {
   return (await res.json()).data
 }
 
-export async function createSubtask(data: any): Promise<Subtask> {
+export async function createSubtask(data: Record<string, unknown>): Promise<Subtask> {
   const res = await fetch(`${BASE}/api/tasks/${data.taskId}/subtasks`, {
     method: 'POST',
     ...fetchOpts(JSON.stringify(data)),

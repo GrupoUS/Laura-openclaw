@@ -36,7 +36,7 @@ export function PhaseProgressChart({
             width={55}
           />
           <Tooltip
-            formatter={(value, name) => [value, name.toString().replace('_', ' ')]}
+            formatter={(value, name) => [value, name?.toString().replace('_', ' ') ?? '']}
           />
           <Legend wrapperStyle={{ fontSize: 11 }} />
           <Bar dataKey="done"        stackId="a" fill={COLORS.done}        name="Concluído"  radius={[0,0,0,0]} />

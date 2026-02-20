@@ -1,5 +1,4 @@
 'use client'
-import { Badge } from '@/components/ui/badge'
 import { AGENT_EMOJIS, PRIORITY_COLORS } from '@/types/tasks'
 
 interface Subtask  { title: string; agent: string }

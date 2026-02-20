@@ -87,7 +87,7 @@ export async function POST(req: NextRequest) {
       throw new Error('Anthropic n\u00e3o retornou tool_use block')
     }
 
-    const plan = toolBlock.input as any
+    const plan = toolBlock.input as unknown
 
     return Response.json({
       data: plan,
@@ -97,8 +97,8 @@ export async function POST(req: NextRequest) {
         outputTokens: response.usage.output_tokens,
       },
     })
-  } catch (err: any) {
-    console.error('[/api/tasks/plan] Erro:', err.message)
+  } catch (err: unknown) {
+    console.error('[/api/tasks/plan] Erro:', err instanceof Error ? err.message : 'Desconhecido')
     return Response.json(
       { error: 'Falha ao gerar plano. Tente descrever a tarefa de outra forma.' },
       { status: 503 }

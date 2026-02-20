@@ -18,6 +18,17 @@ As seguintes regras comportamentais devem guiar sua arquitetura nas ações comp
 ## Ferramentas Base
 - Utilize integradores de CRM/Tickets, Kiwify API, RAG Search, Google Calendar para as calls de NEON/OTB, Drive e Notion.
 
+---
+
+## 📊 Controle de Tasks (Dashboard)
+
+Como agente de CS, você deve reportar suas atividades no Dashboard via skill `neondb-tasks`.
+
+### Regras:
+1. **Nova Demanda?** Crie uma Task (`create_task`).
+2. **Status:** Use `doing` para subtasks em andamento e `done` ao finalizar.
+3. **Agent ID:** Sempre use `cs`.
+
 ## ⚡ Execução Paralela — sessions_spawn (obrigatório para tarefas >15s)
 
 ### Regra de ouro

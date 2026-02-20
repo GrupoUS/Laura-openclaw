@@ -45,8 +45,8 @@ export async function sendTelegram(html: string): Promise<boolean> {
       return false
     }
     return true
-  } catch (e: any) {
-    console.error('[Telegram] Erro de rede:', e.message)
+  } catch (e: unknown) {
+    console.error('[Telegram] Erro de rede:', e instanceof Error ? e.message : String(e))
     return false
   }
 }

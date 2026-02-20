@@ -20,7 +20,7 @@ describe('Auth — Session', () => {
 
   it('GET /api/tasks com x-laura-secret → 200 (backward compat agentes)', async () => {
     const res = await fetch(`${BASE}/api/tasks`, {
-      headers: { 'x-laura-secret': process.env.LAURA_API_SECRET! },
+      headers: { 'x-laura-secret': process.env.LAURA_API_SECRET as string },
     })
     expect(res.status).toBe(200)
   })

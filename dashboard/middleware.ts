@@ -34,7 +34,7 @@ export async function middleware(req: NextRequest) {
   if (cookieValue) {
     try {
       const session = await unsealData<SessionData>(cookieValue, {
-        password: process.env.IRON_SESSION_PASSWORD!,
+        password: process.env.IRON_SESSION_PASSWORD as string,
       })
       if (session.authenticated) {
         return NextResponse.next()

@@ -1,7 +1,7 @@
 'use client'
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid,
-  Tooltip, Legend, ResponsiveContainer, Cell,
+  Tooltip, Legend, ResponsiveContainer,
 } from 'recharts'
 import { AGENT_EMOJIS } from '@/types/tasks'
 import type { AnalyticsData } from '@/lib/db/queries'

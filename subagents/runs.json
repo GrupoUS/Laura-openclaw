@@ -1,4 +1,29 @@
 {
   "version": 2,
-  "runs": {}
+  "runs": {
+    "61c5fd99-d595-4352-8a00-cfc0ee570471": {
+      "runId": "61c5fd99-d595-4352-8a00-cfc0ee570471",
+      "childSessionKey": "agent:main:subagent:b6b382ca-9194-44ef-99b1-504c71a3d7dc",
+      "requesterSessionKey": "agent:main:main",
+      "requesterOrigin": {
+        "to": "+556195220319"
+      },
+      "requesterDisplayKey": "agent:main:main",
+      "task": "Verify unresponded leads in WhatsApp. List any numbers that sent messages and haven't received a reply yet, or leads that we messaged but didn't reply back to us. If you find any, summarize them ONLY for Maurício (+556299776996). If all is clear, reply HEARTBEAT_OK.",
+      "cleanup": "keep",
+      "expectsCompletionMessage": true,
+      "label": "Manual-Lead-Check-Heartbeat",
+      "model": "google-gemini-cli/gemini-3-flash-preview",
+      "runTimeoutSeconds": 0,
+      "createdAt": 1771625084762,
+      "startedAt": 1771625084885,
+      "archiveAtMs": 1771628684762,
+      "cleanupHandled": true,
+      "endedAt": 1771625202578,
+      "outcome": {
+        "status": "ok"
+      },
+      "cleanupCompletedAt": 1771625217696
+    }
+  }
 }

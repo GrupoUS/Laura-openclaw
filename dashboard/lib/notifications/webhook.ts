@@ -31,8 +31,8 @@ export async function sendWebhook(payload: WebhookPayload): Promise<boolean> {
     }
     console.log(`[Webhook] \u2713 ${payload.event} enviado para ${url}`)
     return true
-  } catch (e: any) {
-    console.error('[Webhook] Erro de rede:', e.message)
+  } catch (e: unknown) {
+    console.error('[Webhook] Erro de rede:', e instanceof Error ? e.message : String(e))
     return false
   }
 }

@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest'
 
 const BASE = process.env.TEST_BASE_URL ?? 'http://localhost:3000'
-const H    = { 'x-laura-secret': process.env.LAURA_API_SECRET! }
+const H    = { 'x-laura-secret': process.env.LAURA_API_SECRET as string }
 
 describe('Activity API', () => {
   it('GET /api/activity → 200 com array', async () => {
@@ -43,7 +43,7 @@ describe('Activity API', () => {
     // Verificar no feed
     const res  = await fetch(`${BASE}/api/activity?limit=5`, { headers: H })
     const json = await res.json()
-    const found = json.data.some((e: any) => e.eventType === 'task:created')
+    const found = json.data.some((e: Record<string, unknown>) => e.eventType === 'task:created')
     expect(found).toBe(true)
   })
 })

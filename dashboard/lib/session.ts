@@ -7,7 +7,7 @@ export interface SessionData {
 
 export const SESSION_OPTIONS: SessionOptions = {
   cookieName: 'laura-dashboard-session',
-  password:    process.env.IRON_SESSION_PASSWORD!,
+  password:    process.env.IRON_SESSION_PASSWORD as string,
   cookieOptions: {
     httpOnly:  true,
     secure:    process.env.NODE_ENV === 'production',

@@ -6,6 +6,7 @@ const NAV = [
   { href: '/board',  label: '🗂️  Kanban'  },
   { href: '/list',   label: '📋  Lista'   },
   { href: '/agents', label: '🤖  Agentes' },
+  { href: '/analytics', label: '📊  Analytics'  },
 ]
 
 export function Sidebar() {

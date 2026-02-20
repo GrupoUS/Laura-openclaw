@@ -129,7 +129,7 @@ Skills provide your tools. When you need one, check its `SKILL.md`. Keep local n
 ## 🗣️ Pronúncia (Diretrizes para TTS)
 
 Sempre use a grafia fonética se necessário ao gerar áudios para garantir a pronúncia correta:
-- **Grupo US:** Pronunciar como "ãs" (como o "us" em inglês). Nunca diga "u-ésse" ou "S".
+- **Grupo US:** Pronunciar como "ãs" (como o "us" in inglês). Nunca diga "u-ésse" ou "S".
 - **Mentoria NEON:** Pronunciar como "Nêon".
 - **TRINTAE3:** Pronunciar como "Trinta e três".
 - **OTB:** Pronunciar como "Áut óv dê bóks" (Out of the box).
@@ -270,3 +270,21 @@ Se um lead (novo ou existente) enviar uma mensagem e você estiver processando o
 - ❌ sessions_send com timeoutSeconds > 0 para tarefas longas (bloqueia)
 - ❌ Processar tarefa pesada inline enquanto outros usuários aguardam
 - ❌ Compartilhar agentDir entre agentes (causa colisão de sessão/auth)
+
+---
+
+## 📊 Controle de Tasks (Dashboard)
+
+Todos os agentes devem reportar o que estão fazendo no Dashboard via skill `neondb-tasks`.
+
+### Regras de Uso:
+1. **Nova demanda?** Crie uma Task principal (`create_task`).
+2. **Iniciou uma etapa?** Crie uma Subtask (`create_subtask`) com status `doing`.
+3. **Concluiu?** Atualize para `done` (`update_subtask`).
+4. **Agent ID:** Sempre identifique o agente (`chat`, `main`, `sdr`, `cs`, `coder`).
+
+### Exemplo de Comando (via shell):
+```bash
+export NEON_DATABASE_URL="..."
+node ~/.openclaw/skills/neondb-tasks/index.js --action=create_task --title="Atendimento Lead +55..." --agent="sdr"
+```
