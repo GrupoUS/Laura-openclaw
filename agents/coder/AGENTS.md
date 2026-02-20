@@ -34,6 +34,24 @@ Desenvolvimento, automação e manutenção de código do Grupo US.
 - Promover padrões de código para AGENTS.md
 - Atualizar KNOWLEDGE_BASE com aprendizados técnicos
 
+### 3. opencode-acp-control
+**Path:** `/Users/mauricio/.openclaw/skills/opencode-acp-control/SKILL.md`
+
+**Usar para:**
+- Delegar tarefas de codificação complexas ao OpenCode via ACP
+- Quando precisar de um agente auxiliar para coding em paralelo
+- Sessões de pair-programming com OpenCode para refactoring pesado
+- Debugging aprofundado que beneficia de contexto autônomo
+- Geração de código em projetos separados sem sair do workspace
+
+**Quando usar OpenCode (vs fazer direto):**
+- ✅ Tarefas complexas em repos externos (fora do workspace OpenClaw)
+- ✅ Refactoring grande que precisa de contexto de projeto completo
+- ✅ Debugging que requer exploração autônoma do codebase
+- ✅ Geração de boilerplate/scaffolding em projetos novos
+- ❌ Edições simples em arquivos do workspace (fazer direto)
+- ❌ Scripts rápidos ou one-liners (usar bash direto)
+
 ---
 
 
@@ -66,6 +84,7 @@ Antes de escrever qualquer código:
 | `python3` | Python 3.x | ✅ Disponível |
 | `docker` | Containers | ✅ VPS |
 | `git` | Version Control | ✅ Configurado |
+| `opencode` | AI Coding Agent (ACP) | ✅ v1.2.9 (`~/.opencode/bin/opencode`) |
 
 ### Skills do OpenClaw
 - **github** - Interagir com GitHub via `gh` CLI

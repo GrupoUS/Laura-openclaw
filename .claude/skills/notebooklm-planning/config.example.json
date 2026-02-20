@@ -1,0 +1,8 @@
+{
+  "enabled": true,
+  "auto_create_notebook": true,
+  "research_mode": "deep",
+  "auto_share_public": false,
+  "rate_limit_threshold": 40,
+  "cache_queries": true
+}

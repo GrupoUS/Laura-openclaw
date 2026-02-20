@@ -2,6 +2,29 @@
 
 ## Quick Reference
 
+### OpenCode (AI Coding Agent via ACP)
+```bash
+# Verificar versão
+opencode --version
+
+# Iniciar sessão ACP (background)
+opencode acp  # → retorna processSessionId
+
+# Listar sessões anteriores
+opencode session list
+```
+
+**Workflow completo:** Ver skill `opencode-acp-control`
+**Path:** `/Users/mauricio/.openclaw/skills/opencode-acp-control/SKILL.md`
+
+**Uso típico:**
+1. `bash(command: "opencode acp", background: true, workdir: "/path/to/project")`
+2. Enviar `initialize` via JSON-RPC
+3. Criar sessão com `session/new`
+4. Enviar prompts com `session/prompt`
+5. Poll a cada 2s até `stopReason`
+6. `process.kill(sessionId)` quando terminar
+
 ### Gemini CLI (geração rápida)
 ```bash
 # One-shot
@@ -236,7 +259,15 @@ agent-browser fill @e2 "texto"
 python scripts/init_skill.py <skill-name> --path ~/.openclaw/skills/
 ```
 
+### opencode-acp-control
+**Path:** `/Users/mauricio/.openclaw/skills/opencode-acp-control/SKILL.md`
+
+**Usar para:** Controlar OpenCode via ACP protocol
+- Delegar tarefas de coding complexas
+- Pair-programming com agente autônomo
+- Refactoring e debugging em repos externos
+
 ---
 
-*Última atualização: 2026-02-03*
+*Última atualização: 2026-02-19*
 
