@@ -492,12 +492,11 @@
         "to": "+556299776996"
       },
       "state": {
-        "nextRunAtMs": 1771596754062,
+        "nextRunAtMs": 1771600354062,
         "lastRunAtMs": 1771593154073,
         "lastStatus": "error",
         "lastDurationMs": 70262,
-        "consecutiveErrors": 1,
-        "lastError": "cron announce delivery failed"
+        "consecutiveErrors": 1
       }
     }
   ]
