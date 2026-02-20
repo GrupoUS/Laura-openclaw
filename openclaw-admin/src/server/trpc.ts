@@ -1,17 +1,11 @@
-import { initTRPC, TRPCError } from '@trpc/server'
 import { z } from 'zod'
 import { gatewayCall } from './ws/openclaw'
+import { router, publicProcedure } from './trpc-init'
 import { evolutionRouter } from './routers/evolution'
 
-// Create context types
-export type Context = {
-  gatewayToken: string
-}
-
-const t = initTRPC.context<Context>().create()
-
-export const router = t.router
-export const publicProcedure = t.procedure
+// Re-export primitives so existing imports from './trpc' still work
+export { router, publicProcedure } from './trpc-init'
+export type { Context } from './trpc-init'
 
 // Routers
 const gatewayRouter = router({
