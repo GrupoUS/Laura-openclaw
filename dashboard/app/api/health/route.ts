@@ -1,5 +1,6 @@
 import { getDb } from '@/lib/db'
 import { sql } from 'drizzle-orm'
+import { eventBus } from '@/lib/events/emitter'
 
 export const dynamic = 'force-dynamic'
 
@@ -20,6 +21,10 @@ export async function GET() {
     status: 'ok',
     service: 'laura-dashboard',
     db: dbStatus,
+    sse: {
+      activeClients: eventBus.getListenerCount(),
+      status: 'ready',
+    },
     ts: new Date().toISOString(),
   })
 }

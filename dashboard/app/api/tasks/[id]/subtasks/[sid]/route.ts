@@ -1,6 +1,7 @@
 import { NextRequest } from 'next/server'
 import { z } from 'zod'
 import { updateSubtask } from '@/lib/db/queries'
+import { eventBus } from '@/lib/events/emitter'
 
 export const dynamic = 'force-dynamic'
 
@@ -11,7 +12,7 @@ const schema = z.object({
 type Params = { params: Promise<{ id: string; sid: string }> }
 
 export async function PATCH(req: NextRequest, { params }: Params) {
-  const { sid } = await params
+  const { id, sid } = await params
   const body = await req.json().catch(() => null)
   const parsed = schema.safeParse(body)
   if (!parsed.success) {
@@ -27,5 +28,15 @@ export async function PATCH(req: NextRequest, { params }: Params) {
       { status: 409 },
     )
   }
+
+  eventBus.publish({
+    type: 'subtask:updated',
+    taskId: id,
+    payload: subtask as unknown as Record<string, unknown>,
+    agent: req.headers.get('x-agent-id') ?? undefined,
+    ts: new Date().toISOString(),
+  })
+
   return Response.json({ data: subtask })
 }
+

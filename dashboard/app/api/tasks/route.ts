@@ -1,6 +1,7 @@
 import { NextRequest } from 'next/server'
 import { z } from 'zod'
 import { getTasks, createTask } from '@/lib/db/queries'
+import { eventBus } from '@/lib/events/emitter'
 
 export const dynamic = 'force-dynamic'
 
@@ -32,5 +33,15 @@ export async function POST(req: NextRequest) {
     )
   }
   const task = await createTask(parsed.data)
+
+  eventBus.publish({
+    type: 'task:created',
+    taskId: task.id,
+    payload: task as unknown as Record<string, unknown>,
+    agent: parsed.data.agent,
+    ts: new Date().toISOString(),
+  })
+
   return Response.json({ data: task }, { status: 201 })
 }
+

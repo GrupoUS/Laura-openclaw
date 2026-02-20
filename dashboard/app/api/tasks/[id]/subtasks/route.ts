@@ -1,6 +1,7 @@
 import { NextRequest } from 'next/server'
 import { z } from 'zod'
 import { createSubtask } from '@/lib/db/queries'
+import { eventBus } from '@/lib/events/emitter'
 
 export const dynamic = 'force-dynamic'
 
@@ -23,5 +24,15 @@ export async function POST(req: NextRequest, { params }: Params) {
     )
   }
   const subtask = await createSubtask({ ...parsed.data, taskId: id })
+
+  eventBus.publish({
+    type: 'subtask:created',
+    taskId: id,
+    payload: subtask as unknown as Record<string, unknown>,
+    agent: parsed.data.agent,
+    ts: new Date().toISOString(),
+  })
+
   return Response.json({ data: subtask }, { status: 201 })
 }
+

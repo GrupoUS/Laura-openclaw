@@ -2,7 +2,11 @@ import { NextRequest, NextResponse } from 'next/server'
 
 export function middleware(request: NextRequest) {
   // Health check is public — Railway healthcheck does not send secret
-  if (request.nextUrl.pathname === '/api/health') {
+  // SSE endpoint uses ?token= query param auth (EventSource can't send headers)
+  if (
+    request.nextUrl.pathname === '/api/health' ||
+    request.nextUrl.pathname === '/api/events'
+  ) {
     return NextResponse.next()
   }
 

@@ -1,6 +1,7 @@
 import { NextRequest } from 'next/server'
 import { z } from 'zod'
 import { getTaskById, updateTask } from '@/lib/db/queries'
+import { eventBus } from '@/lib/events/emitter'
 
 export const dynamic = 'force-dynamic'
 
@@ -31,5 +32,15 @@ export async function PATCH(req: NextRequest, { params }: Params) {
   }
   const task = await updateTask(id, parsed.data)
   if (!task) return Response.json({ error: 'Not found' }, { status: 404 })
+
+  eventBus.publish({
+    type: 'task:updated',
+    taskId: task.id,
+    payload: task as unknown as Record<string, unknown>,
+    agent: parsed.data.agent,
+    ts: new Date().toISOString(),
+  })
+
   return Response.json({ data: task })
 }
+
