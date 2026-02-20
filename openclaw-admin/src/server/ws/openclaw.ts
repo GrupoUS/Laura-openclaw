@@ -48,7 +48,7 @@ function sendConnectHandshake(socket: WebSocket): void {
         platform: 'railway',
         mode: 'cli',
       },
-      auth: { token: GATEWAY_TOKEN },
+      auth: { password: GATEWAY_TOKEN },
       scopes: ['operator.admin'],
     },
   })
