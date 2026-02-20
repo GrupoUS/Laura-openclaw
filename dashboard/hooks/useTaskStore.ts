@@ -70,7 +70,10 @@ export const useTaskStore = create<TaskStore>()(
         const groups: Record<TaskStatus, Task[]> = {
           backlog: [], in_progress: [], done: [], blocked: [],
         }
-        for (const t of get().tasks) groups[t.status].push(t)
+        for (const t of get().tasks) {
+          const col = groups[t.status] ? t.status : 'backlog'
+          groups[col].push(t)
+        }
         return groups
       },
 
