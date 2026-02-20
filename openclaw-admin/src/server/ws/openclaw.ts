@@ -41,10 +41,10 @@ function sendConnectHandshake(socket: WebSocket): void {
       minProtocol: PROTOCOL_VERSION,
       maxProtocol: PROTOCOL_VERSION,
       client: {
-        id: 'gateway-client',
+        id: 'cli',
         version: '1.0.0',
         platform: 'railway',
-        mode: 'backend',
+        mode: 'cli',
       },
       auth: { token: GATEWAY_TOKEN },
       scopes: ['operator.admin'],
