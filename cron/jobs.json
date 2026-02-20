@@ -465,6 +465,39 @@
         "lastError": "cron announce delivery failed",
         "consecutiveErrors": 1
       }
+    },
+    {
+      "id": "3a0b29be-63a1-4269-85f3-2a3aeffb01ff",
+      "agentId": "main",
+      "name": "sdr-lead-checker",
+      "description": "Check for unresponded leads every hour",
+      "enabled": true,
+      "createdAtMs": 1771560754062,
+      "updatedAtMs": 1771589600247,
+      "schedule": {
+        "kind": "every",
+        "everyMs": 3600000,
+        "anchorMs": 1771560754062
+      },
+      "sessionTarget": "isolated",
+      "wakeMode": "now",
+      "payload": {
+        "kind": "agentTurn",
+        "message": "Verify unresponded leads in WhatsApp. List any numbers that sent messages and haven't received a reply yet, or leads that we messaged but didn't reply back to us. If you find any, summarize them for Maurício. If all is clear, say NO_REPLY.",
+        "thinking": "low"
+      },
+      "delivery": {
+        "mode": "announce",
+        "channel": "whatsapp",
+        "to": "+556299776996"
+      },
+      "state": {
+        "nextRunAtMs": 1771593154062,
+        "lastRunAtMs": 1771589554075,
+        "lastStatus": "ok",
+        "lastDurationMs": 46172,
+        "consecutiveErrors": 0
+      }
     }
   ]
 }
