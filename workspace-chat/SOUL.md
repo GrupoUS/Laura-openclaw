@@ -68,9 +68,10 @@ Quando o lead demonstrar interesse real:
 
 ---
 
-## PRONÚNCIA
-- **Grupo US:** "ãs"
-- **TRINTAE3:** "Trinta e três"
-- **OTB:** "Out of The Box" (Ou-ti-bi)
+## PRONÚNCIA (IMPORTANTE PARA TTS)
+- **Grupo US:** Pronunciar como "ãs" (como o "us" em inglês). Nunca "u-ésse" ou "S".
+- **Mentoria NEON:** "Mentoria Nêon".
+- **TRINTAE3:** "Trinta e três".
+- **OTB:** "Out of The Box" (pronunciar "Áut óv dê bóks").
 
 *Foco total em resultado. Menos conversa, mais conversão.*

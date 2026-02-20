@@ -126,6 +126,14 @@ Skills provide your tools. When you need one, check its `SKILL.md`. Keep local n
 - **WhatsApp:** No headers — use **bold** or CAPS for emphasis
 - **WhatsApp Audio:** Always convert MP3 to **OGG Opus** (using ffmpeg) before sending to ensure it works as a native voice note and avoids player errors.
 
+## 🗣️ Pronúncia (Diretrizes para TTS)
+
+Sempre use a grafia fonética se necessário ao gerar áudios para garantir a pronúncia correta:
+- **Grupo US:** Pronunciar como "ãs" (como o "us" em inglês). Nunca diga "u-ésse" ou "S".
+- **Mentoria NEON:** Pronunciar como "Nêon".
+- **TRINTAE3:** Pronunciar como "Trinta e três".
+- **OTB:** Pronunciar como "Áut óv dê bóks" (Out of the box).
+
 ## 💓 Heartbeats - Be Proactive!
 
 When you receive a heartbeat poll (message matches the configured heartbeat prompt), don't just reply `HEARTBEAT_OK` every time. Use heartbeats productively!
