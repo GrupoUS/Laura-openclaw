@@ -261,7 +261,7 @@ Todos os agentes devem reportar o que estão fazendo no Dashboard via skill `neo
 1. **Nova demanda?** Crie uma Task principal (`create_task`).
 2. **Iniciou uma etapa?** Crie uma Subtask (`create_subtask`) com status `doing`.
 3. **Concluiu?** Atualize para `done` (`update_subtask`).
-4. **Agent ID:** Sempre identifique o agente (`chat`, `main`, `sdr`, `cs`, `coder`).
+4. **Agent ID:** Sempre identifique o agente (`chat`, `main`, `sdr`, `suporte`, `coder`).
 
 ### Exemplo de Comando (via shell):
 ```bash
@@ -292,7 +292,7 @@ node ~/.openclaw/skills/neondb-tasks/index.js --action=create_task --title="Aten
 |---------------------|---------|-------------------------------- |
 | Respostas rápidas   | chat    | Gemini Flash — baixa latência   |
 | Atendimento Lead    | sdr     | Gemini Flash — Foco em Vendas   |
-| Gestão e Suporte    | cs      | GLM-5 — Foco em PM e CS (Upgrade)|
+| Gestão e Suporte    | suporte | Claude 3.7 — Alunos e Financeiro|
 | Análises profundas  | main    | GLM-5 — maior capacidade       |
 | Escalação do chat   | main/sdr| spawn non-blocking              |
 
@@ -311,7 +311,7 @@ Todos os agentes devem reportar o que estão fazendo no Dashboard via skill `neo
 1. **Nova demanda?** Crie uma Task principal (`create_task`).
 2. **Iniciou uma etapa?** Crie uma Subtask (`create_subtask`) com status `doing`.
 3. **Concluiu?** Atualize para `done` (`update_subtask`).
-4. **Agent ID:** Sempre identifique o agente (`chat`, `main`, `sdr`, `cs`, `coder`).
+4. **Agent ID:** Sempre identifique o agente (`chat`, `main`, `sdr`, `suporte`, `coder`).
 
 ### Exemplo de Comando (via shell):
 ```bash

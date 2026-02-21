@@ -417,7 +417,7 @@
       "description": "Check for unresponded leads every hour",
       "enabled": true,
       "createdAtMs": 1771560754062,
-      "updatedAtMs": 1771683194652,
+      "updatedAtMs": 1771687354103,
       "schedule": {
         "kind": "every",
         "everyMs": 3600000,
@@ -437,11 +437,12 @@
         "to": "+556299776996"
       },
       "state": {
-        "nextRunAtMs": 1771686754062,
-        "lastRunAtMs": 1771683154074,
-        "lastStatus": "ok",
-        "lastDurationMs": 40578,
-        "consecutiveErrors": 0
+        "nextRunAtMs": 1771690354062,
+        "lastRunAtMs": 1771686754075,
+        "lastStatus": "error",
+        "lastDurationMs": 600028,
+        "consecutiveErrors": 1,
+        "lastError": "Error: cron: job execution timed out"
       }
     },
     {

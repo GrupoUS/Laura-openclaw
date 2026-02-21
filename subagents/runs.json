@@ -1,4 +1,30 @@
 {
   "version": 2,
-  "runs": {}
+  "runs": {
+    "4eff7ffb-d80c-46fb-b6e8-9984069fca42": {
+      "runId": "4eff7ffb-d80c-46fb-b6e8-9984069fca42",
+      "childSessionKey": "agent:main:subagent:33011fbb-b3d1-44e0-b466-a3677d8f1b44",
+      "requesterSessionKey": "agent:main:main",
+      "requesterOrigin": {
+        "to": "+556195220319"
+      },
+      "requesterDisplayKey": "agent:main:main",
+      "task": "Check WhatsApp for unresponded lead messages and perform proactive follow-ups for ghosted leads using different angles (curiosity, value, empathy) as per SOUL.md and SDR_LESSONS.md. Report actions taken to Mauricio. If all is clear, reply HEARTBEAT_OK.",
+      "cleanup": "keep",
+      "expectsCompletionMessage": true,
+      "label": "Heartbeat-Lead-Check-1209PM",
+      "model": "anthropic/claude-sonnet-4-6",
+      "runTimeoutSeconds": 0,
+      "createdAt": 1771686580598,
+      "startedAt": 1771686580659,
+      "archiveAtMs": 1771690180598,
+      "cleanupHandled": true,
+      "endedAt": 1771686580679,
+      "outcome": {
+        "status": "error",
+        "error": "Error: Unknown model: anthropic/claude-4.6-sonnet"
+      },
+      "cleanupCompletedAt": 1771686611257
+    }
+  }
 }

@@ -1,0 +1,14 @@
+{
+  "name": "student-parser",
+  "version": "1.0.0",
+  "description": "Parser inteligente de alunos do Grupo US - TRINTAE3",
+  "type": "module",
+  "scripts": {
+    "dry-run": "node parser.mjs --dry-run",
+    "sync": "node parser.mjs --execute",
+    "report": "node parser.mjs --report-only"
+  },
+  "dependencies": {
+    "@neondatabase/serverless": "^0.10.4"
+  }
+}
