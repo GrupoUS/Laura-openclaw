@@ -1,7 +1,11 @@
-# HEARTBEAT.md
+# HEARTBEAT.md - Coordinator (Laura)
 
-# SDR Lead Monitoring
-- Check WhatsApp for unresponded messages from leads.
-- Follow up with leads who haven't replied to our last message (ghosting).
-- Goal: Direct leads to the commercial team or schedule a call.
-- Frequency: This is checked during regular heartbeats. A specific Cron Job ("sdr-lead-checker") also runs every hour.
+## Frequência
+A cada 1 hora durante sessões ativas.
+
+## Minimal Checklist
+- [ ] O contexto está > 70%? Se sim, faça flush para memory/YYYY-MM-DD.md.
+- [ ] Cheque logs/erros: Alguma delegação falhou nas últimas horas?
+- [ ] Alguma mensagem do Maurício nas últimas respostas não foi respondida?
+
+*Se tudo ok, registre "Heartbeat OK" nos logs, sem usar verbosidade no chat.*
