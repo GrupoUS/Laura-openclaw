@@ -2,6 +2,11 @@ import { z } from 'zod'
 import { gatewayCall, getGatewayUrl } from './ws/openclaw'
 import { router, publicProcedure } from './trpc-init'
 import { evolutionRouter } from './routers/evolution'
+import { tasksRouter } from './routers/tasks'
+import { dashboardAgentsRouter } from './routers/dashboard-agents'
+import { analyticsRouter } from './routers/analytics'
+import { activityRouter } from './routers/activity'
+import { calendarRouter } from './routers/calendar'
 
 // Re-export primitives so existing imports from './trpc' still work
 export { router, publicProcedure } from './trpc-init'
@@ -67,6 +72,7 @@ const channelsRouter = router({
 })
 
 export const appRouter = router({
+  // Gateway admin routers
   gateway: gatewayRouter,
   sessions: sessionsRouter,
   agents: agentsRouter,
@@ -75,6 +81,12 @@ export const appRouter = router({
   crons: cronsRouter,
   channels: channelsRouter,
   evolution: evolutionRouter,
+  // Dashboard routers (migrated from Next.js)
+  tasks: tasksRouter,
+  dashboardAgents: dashboardAgentsRouter,
+  analytics: analyticsRouter,
+  activity: activityRouter,
+  calendar: calendarRouter,
 })
 
 export type AppRouter = typeof appRouter

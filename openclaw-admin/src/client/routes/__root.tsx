@@ -43,6 +43,8 @@ function RootLayout() {
           <Link to="/channels" className="px-3 py-2 rounded hover:bg-neutral-800 [&.active]:bg-indigo-900/50 [&.active]:text-indigo-400">Channels</Link>
           <div className="border-t border-neutral-800 my-2" />
           <Link to="/evolution" className="px-3 py-2 rounded hover:bg-neutral-800 [&.active]:bg-indigo-900/50 [&.active]:text-indigo-400">🧬 Evolution</Link>
+          <div className="border-t border-neutral-800 my-2" />
+          <Link to="/dashboard" className="px-3 py-2 rounded hover:bg-neutral-800 [&.active]:bg-indigo-900/50 [&.active]:text-indigo-400">📊 Task Dashboard</Link>
         </nav>
 
         {/* Logout button */}

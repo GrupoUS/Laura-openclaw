@@ -4,6 +4,10 @@ import { appRouter } from './trpc'
 import { serveStatic } from 'hono/bun'
 import { getCookie, setCookie, deleteCookie } from 'hono/cookie'
 import { runEvolutionCycle } from './services/evolution'
+import { dashboardAuthMiddleware } from './middleware/dashboard-auth'
+import { dashboardAuth } from './routes/dashboard-auth'
+import { sseRoutes } from './routes/events'
+import { dashboardHealth } from './routes/dashboard-health'
 
 const app = new Hono()
 
@@ -76,6 +80,15 @@ app.post('/api/evolution/trigger', async (c) => {
     return c.json({ error: (err as Error).message }, 500)
   }
 })
+
+// ── Dashboard Routes (migrated from Next.js) ──
+app.route('/api/dashboard/auth', dashboardAuth)
+app.route('/api/dashboard/events', sseRoutes)
+app.route('/api/dashboard/health', dashboardHealth)
+
+// Dashboard auth middleware — applies to dashboard API routes
+// (tRPC auth is handled in procedure context)
+app.use('/api/dashboard/*', dashboardAuthMiddleware)
 
 // Static Serving (Production build)
 app.use('/*', serveStatic({ root: './dist/public' }))

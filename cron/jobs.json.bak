@@ -437,12 +437,11 @@
         "to": "+556299776996"
       },
       "state": {
-        "nextRunAtMs": 1771690354062,
+        "nextRunAtMs": 1771693954062,
         "lastRunAtMs": 1771686754075,
         "lastStatus": "error",
         "lastDurationMs": 600028,
-        "consecutiveErrors": 1,
-        "lastError": "Error: cron: job execution timed out"
+        "consecutiveErrors": 1
       }
     },
     {

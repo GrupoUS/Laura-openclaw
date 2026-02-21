@@ -2,6 +2,7 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 import { TanStackRouterVite } from '@tanstack/router-plugin/vite'
+import path from 'path'
 
 export default defineConfig({
   plugins: [
@@ -12,6 +13,11 @@ export default defineConfig({
       generatedRouteTree: './src/client/routeTree.gen.ts'
     })
   ],
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, './src'),
+    }
+  },
   server: {
     proxy: {
       '/trpc': 'http://localhost:3000',
@@ -20,3 +26,4 @@ export default defineConfig({
   },
   build: { outDir: 'dist/public' }
 })
+

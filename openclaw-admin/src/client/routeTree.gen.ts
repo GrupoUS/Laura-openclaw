@@ -13,11 +13,19 @@ import { Route as ToolsRouteImport } from './routes/tools'
 import { Route as SessionsRouteImport } from './routes/sessions'
 import { Route as ProvidersRouteImport } from './routes/providers'
 import { Route as EvolutionRouteImport } from './routes/evolution'
+import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as CronsRouteImport } from './routes/crons'
 import { Route as ConfigRouteImport } from './routes/config'
 import { Route as ChannelsRouteImport } from './routes/channels'
 import { Route as AgentsRouteImport } from './routes/agents'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as DashboardIndexRouteImport } from './routes/dashboard/index'
+import { Route as DashboardLoginRouteImport } from './routes/dashboard/login'
+import { Route as DashboardListRouteImport } from './routes/dashboard/list'
+import { Route as DashboardCalendarRouteImport } from './routes/dashboard/calendar'
+import { Route as DashboardBoardRouteImport } from './routes/dashboard/board'
+import { Route as DashboardAnalyticsRouteImport } from './routes/dashboard/analytics'
+import { Route as DashboardAgentsRouteImport } from './routes/dashboard/agents'
 
 const ToolsRoute = ToolsRouteImport.update({
   id: '/tools',
@@ -37,6 +45,11 @@ const ProvidersRoute = ProvidersRouteImport.update({
 const EvolutionRoute = EvolutionRouteImport.update({
   id: '/evolution',
   path: '/evolution',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DashboardRoute = DashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CronsRoute = CronsRouteImport.update({
@@ -64,6 +77,41 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DashboardIndexRoute = DashboardIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardLoginRoute = DashboardLoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardListRoute = DashboardListRouteImport.update({
+  id: '/list',
+  path: '/list',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardCalendarRoute = DashboardCalendarRouteImport.update({
+  id: '/calendar',
+  path: '/calendar',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardBoardRoute = DashboardBoardRouteImport.update({
+  id: '/board',
+  path: '/board',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardAnalyticsRoute = DashboardAnalyticsRouteImport.update({
+  id: '/analytics',
+  path: '/analytics',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardAgentsRoute = DashboardAgentsRouteImport.update({
+  id: '/agents',
+  path: '/agents',
+  getParentRoute: () => DashboardRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -71,10 +119,18 @@ export interface FileRoutesByFullPath {
   '/channels': typeof ChannelsRoute
   '/config': typeof ConfigRoute
   '/crons': typeof CronsRoute
+  '/dashboard': typeof DashboardRouteWithChildren
   '/evolution': typeof EvolutionRoute
   '/providers': typeof ProvidersRoute
   '/sessions': typeof SessionsRoute
   '/tools': typeof ToolsRoute
+  '/dashboard/agents': typeof DashboardAgentsRoute
+  '/dashboard/analytics': typeof DashboardAnalyticsRoute
+  '/dashboard/board': typeof DashboardBoardRoute
+  '/dashboard/calendar': typeof DashboardCalendarRoute
+  '/dashboard/list': typeof DashboardListRoute
+  '/dashboard/login': typeof DashboardLoginRoute
+  '/dashboard/': typeof DashboardIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -86,6 +142,13 @@ export interface FileRoutesByTo {
   '/providers': typeof ProvidersRoute
   '/sessions': typeof SessionsRoute
   '/tools': typeof ToolsRoute
+  '/dashboard/agents': typeof DashboardAgentsRoute
+  '/dashboard/analytics': typeof DashboardAnalyticsRoute
+  '/dashboard/board': typeof DashboardBoardRoute
+  '/dashboard/calendar': typeof DashboardCalendarRoute
+  '/dashboard/list': typeof DashboardListRoute
+  '/dashboard/login': typeof DashboardLoginRoute
+  '/dashboard': typeof DashboardIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -94,10 +157,18 @@ export interface FileRoutesById {
   '/channels': typeof ChannelsRoute
   '/config': typeof ConfigRoute
   '/crons': typeof CronsRoute
+  '/dashboard': typeof DashboardRouteWithChildren
   '/evolution': typeof EvolutionRoute
   '/providers': typeof ProvidersRoute
   '/sessions': typeof SessionsRoute
   '/tools': typeof ToolsRoute
+  '/dashboard/agents': typeof DashboardAgentsRoute
+  '/dashboard/analytics': typeof DashboardAnalyticsRoute
+  '/dashboard/board': typeof DashboardBoardRoute
+  '/dashboard/calendar': typeof DashboardCalendarRoute
+  '/dashboard/list': typeof DashboardListRoute
+  '/dashboard/login': typeof DashboardLoginRoute
+  '/dashboard/': typeof DashboardIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -107,10 +178,18 @@ export interface FileRouteTypes {
     | '/channels'
     | '/config'
     | '/crons'
+    | '/dashboard'
     | '/evolution'
     | '/providers'
     | '/sessions'
     | '/tools'
+    | '/dashboard/agents'
+    | '/dashboard/analytics'
+    | '/dashboard/board'
+    | '/dashboard/calendar'
+    | '/dashboard/list'
+    | '/dashboard/login'
+    | '/dashboard/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -122,6 +201,13 @@ export interface FileRouteTypes {
     | '/providers'
     | '/sessions'
     | '/tools'
+    | '/dashboard/agents'
+    | '/dashboard/analytics'
+    | '/dashboard/board'
+    | '/dashboard/calendar'
+    | '/dashboard/list'
+    | '/dashboard/login'
+    | '/dashboard'
   id:
     | '__root__'
     | '/'
@@ -129,10 +215,18 @@ export interface FileRouteTypes {
     | '/channels'
     | '/config'
     | '/crons'
+    | '/dashboard'
     | '/evolution'
     | '/providers'
     | '/sessions'
     | '/tools'
+    | '/dashboard/agents'
+    | '/dashboard/analytics'
+    | '/dashboard/board'
+    | '/dashboard/calendar'
+    | '/dashboard/list'
+    | '/dashboard/login'
+    | '/dashboard/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -141,6 +235,7 @@ export interface RootRouteChildren {
   ChannelsRoute: typeof ChannelsRoute
   ConfigRoute: typeof ConfigRoute
   CronsRoute: typeof CronsRoute
+  DashboardRoute: typeof DashboardRouteWithChildren
   EvolutionRoute: typeof EvolutionRoute
   ProvidersRoute: typeof ProvidersRoute
   SessionsRoute: typeof SessionsRoute
@@ -175,6 +270,13 @@ declare module '@tanstack/react-router' {
       path: '/evolution'
       fullPath: '/evolution'
       preLoaderRoute: typeof EvolutionRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dashboard': {
+      id: '/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof DashboardRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/crons': {
@@ -212,8 +314,81 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/dashboard/': {
+      id: '/dashboard/'
+      path: '/'
+      fullPath: '/dashboard/'
+      preLoaderRoute: typeof DashboardIndexRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/login': {
+      id: '/dashboard/login'
+      path: '/login'
+      fullPath: '/dashboard/login'
+      preLoaderRoute: typeof DashboardLoginRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/list': {
+      id: '/dashboard/list'
+      path: '/list'
+      fullPath: '/dashboard/list'
+      preLoaderRoute: typeof DashboardListRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/calendar': {
+      id: '/dashboard/calendar'
+      path: '/calendar'
+      fullPath: '/dashboard/calendar'
+      preLoaderRoute: typeof DashboardCalendarRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/board': {
+      id: '/dashboard/board'
+      path: '/board'
+      fullPath: '/dashboard/board'
+      preLoaderRoute: typeof DashboardBoardRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/analytics': {
+      id: '/dashboard/analytics'
+      path: '/analytics'
+      fullPath: '/dashboard/analytics'
+      preLoaderRoute: typeof DashboardAnalyticsRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/agents': {
+      id: '/dashboard/agents'
+      path: '/agents'
+      fullPath: '/dashboard/agents'
+      preLoaderRoute: typeof DashboardAgentsRouteImport
+      parentRoute: typeof DashboardRoute
+    }
   }
 }
+
+interface DashboardRouteChildren {
+  DashboardAgentsRoute: typeof DashboardAgentsRoute
+  DashboardAnalyticsRoute: typeof DashboardAnalyticsRoute
+  DashboardBoardRoute: typeof DashboardBoardRoute
+  DashboardCalendarRoute: typeof DashboardCalendarRoute
+  DashboardListRoute: typeof DashboardListRoute
+  DashboardLoginRoute: typeof DashboardLoginRoute
+  DashboardIndexRoute: typeof DashboardIndexRoute
+}
+
+const DashboardRouteChildren: DashboardRouteChildren = {
+  DashboardAgentsRoute: DashboardAgentsRoute,
+  DashboardAnalyticsRoute: DashboardAnalyticsRoute,
+  DashboardBoardRoute: DashboardBoardRoute,
+  DashboardCalendarRoute: DashboardCalendarRoute,
+  DashboardListRoute: DashboardListRoute,
+  DashboardLoginRoute: DashboardLoginRoute,
+  DashboardIndexRoute: DashboardIndexRoute,
+}
+
+const DashboardRouteWithChildren = DashboardRoute._addFileChildren(
+  DashboardRouteChildren,
+)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
@@ -221,6 +396,7 @@ const rootRouteChildren: RootRouteChildren = {
   ChannelsRoute: ChannelsRoute,
   ConfigRoute: ConfigRoute,
   CronsRoute: CronsRoute,
+  DashboardRoute: DashboardRouteWithChildren,
   EvolutionRoute: EvolutionRoute,
   ProvidersRoute: ProvidersRoute,
   SessionsRoute: SessionsRoute,
