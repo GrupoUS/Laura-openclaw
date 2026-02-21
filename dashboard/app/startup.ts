@@ -15,7 +15,16 @@ export function initStartup() {
 
   // Rodar imediatamente na primeira vez, depois a cada N horas
   import('@/lib/notifications/stuck-cron').then(({ checkStuckTasks }) => {
-    checkStuckTasks()  // verificação imediata no boot
-    setInterval(checkStuckTasks, intervalMs)
+    const safeCheck = async () => {
+      try {
+        await checkStuckTasks()
+      } catch (err) {
+        console.error('[Startup] StuckCron falhou:', err instanceof Error ? err.message : err)
+      }
+    }
+    safeCheck()  // verificação imediata no boot
+    setInterval(safeCheck, intervalMs)
+  }).catch((err) => {
+    console.error('[Startup] Falha ao carregar stuck-cron:', err instanceof Error ? err.message : err)
   })
 }

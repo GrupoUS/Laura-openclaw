@@ -11,10 +11,17 @@ export function getDb() {
 
   const url = process.env.NEON_DATABASE_URL
   if (!url) {
-    throw new Error(
-      '[dashboard] NEON_DATABASE_URL não configurado.\n' +
-      'Adicione ao .env.local ou nas variáveis do Railway.'
-    )
+    const msg = [
+      '[dashboard] ❌ NEON_DATABASE_URL não configurado.',
+      'Variáveis obrigatórias no Railway:',
+      '  - NEON_DATABASE_URL       (postgres://...)',
+      '  - IRON_SESSION_PASSWORD   (≥ 32 chars)',
+      '  - UPSTASH_REDIS_REST_URL  (https://...upstash.io)',
+      '  - UPSTASH_REDIS_REST_TOKEN',
+      '  - UPSTASH_REDIS_URL       (rediss://...)',
+    ].join('\n')
+    console.error(msg)
+    throw new Error(msg)
   }
 
   const sql = neon(url)
