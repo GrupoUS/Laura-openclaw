@@ -15,6 +15,14 @@ export async function GET() {
     dbStatus = process.env.NEON_DATABASE_URL ? 'disconnected' : 'not_configured'
   }
 
+    let sseStatus = 'ready'
+    let activeClients = 0
+    try {
+      activeClients = eventBus.getListenerCount()
+    } catch (e) {
+      sseStatus = 'disabled'
+    }
+
   // Always return 200 — Railway healthcheck needs process liveness,
   // not DB readiness. DB status is informational only.
   return Response.json({
@@ -22,8 +30,8 @@ export async function GET() {
     service: 'laura-dashboard',
     db: dbStatus,
     sse: {
-      activeClients: eventBus.getListenerCount(),
-      status: 'ready',
+      activeClients,
+      status: sseStatus,
     },
     ts: new Date().toISOString(),
   })

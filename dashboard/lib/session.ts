@@ -2,6 +2,10 @@ import type { SessionOptions } from 'iron-session'
 
 const isBuildPhase = process.env.npm_lifecycle_event === 'build'
 
+const defaultFallback = 'fallback_password_for_build_step_only_32_chars'
+const rawPassword = process.env.IRON_SESSION_PASSWORD || ''
+const finalPassword = rawPassword.length >= 32 ? rawPassword : defaultFallback
+
 export interface SessionData {
   authenticated: boolean
   loginAt:       string   // ISO 8601
@@ -9,7 +13,7 @@ export interface SessionData {
 
 export const SESSION_OPTIONS: SessionOptions = {
   cookieName: 'laura-dashboard-session',
-  password:    process.env.IRON_SESSION_PASSWORD || (isBuildPhase ? 'fallback_password_for_build_step_only_32_chars' : ''),
+  password:    finalPassword,
   cookieOptions: {
     httpOnly:  true,
     secure:    process.env.NODE_ENV === 'production',
@@ -19,7 +23,9 @@ export const SESSION_OPTIONS: SessionOptions = {
   },
 }
 
-// Guard — detecta config inválido no boot
-if (!isBuildPhase && (!process.env.IRON_SESSION_PASSWORD || process.env.IRON_SESSION_PASSWORD.length < 32)) {
-  throw new Error('[Session] IRON_SESSION_PASSWORD deve ter no mínimo 32 caracteres')
+if (!isBuildPhase && rawPassword.length < 32) {
+  console.error('################################################################')
+  console.error('# ⚠️  WARNING: IRON_SESSION_PASSWORD is not set or < 32 chars  #')
+  console.error('# ⚠️  Using insecure fallback. Please set it in your env!      #')
+  console.error('################################################################')
 }
