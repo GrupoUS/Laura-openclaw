@@ -1,42 +1,71 @@
+/**
+ * OpenClaw Admin + Dashboard Server
+ *
+ * Dashboard is the PRIMARY application — auth via iron-session
+ * Gateway admin is secondary — coexists under /api/admin/*
+ */
 import { Hono } from 'hono'
 import { trpcServer } from '@hono/trpc-server'
 import { appRouter } from './trpc'
 import { serveStatic } from 'hono/bun'
 import { getCookie, setCookie, deleteCookie } from 'hono/cookie'
 import { runEvolutionCycle } from './services/evolution'
-import { dashboardAuthMiddleware } from './middleware/dashboard-auth'
 import { dashboardAuth } from './routes/dashboard-auth'
 import { sseRoutes } from './routes/events'
-import { dashboardHealth } from './routes/dashboard-health'
 
 const app = new Hono()
 
-// ── Auth Password (env or hardcoded fallback) ──
+// ── Gateway admin credentials (secondary, for /api/admin routes) ──
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || '947685'
 const GATEWAY_TOKEN = process.env.GATEWAY_TOKEN || ''
 
-// ── Login endpoint ──
-app.post('/api/login', async (c) => {
-  const body = await c.req.json<{ password: string }>()
+// ────────────────────────────────────────────────────────────────────
+// PRIMARY AUTH: Dashboard (iron-session)
+// ────────────────────────────────────────────────────────────────────
+app.route('/api/auth', dashboardAuth)
 
+// ────────────────────────────────────────────────────────────────────
+// SSE + Health (public paths with their own auth)
+// ────────────────────────────────────────────────────────────────────
+app.route('/api/events', sseRoutes)
+app.get('/api/health', async (c) => {
+  // Merged health: basic + dashboard
+  const { db } = await import('./db/client')
+  const { sql } = await import('drizzle-orm')
+  let dbStatus = 'not_configured'
+  try {
+    await db.execute(sql`SELECT 1`)
+    dbStatus = 'connected'
+  } catch {
+    dbStatus = process.env.DATABASE_URL ? 'disconnected' : 'not_configured'
+  }
+  return c.json({
+    status: 'ok',
+    service: 'laura-dashboard',
+    db: dbStatus,
+    ts: new Date().toISOString(),
+  })
+})
+
+// ────────────────────────────────────────────────────────────────────
+// SECONDARY: Gateway Admin endpoints (under /api/admin/*)
+// ────────────────────────────────────────────────────────────────────
+app.post('/api/admin/login', async (c) => {
+  const body = await c.req.json<{ password: string }>()
   if (body.password !== ADMIN_PASSWORD) {
     return c.json({ ok: false, error: 'Invalid password' }, 401)
   }
-
-  // Set httpOnly cookie with the gateway token
   setCookie(c, 'gw_session', ADMIN_PASSWORD, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'Lax',
     path: '/',
-    maxAge: 60 * 60 * 24 * 7 // 7 days
+    maxAge: 60 * 60 * 24 * 7,
   })
-
   return c.json({ ok: true })
 })
 
-// ── Auth check endpoint ──
-app.get('/api/auth/check', (c) => {
+app.get('/api/admin/auth/check', (c) => {
   const session = getCookie(c, 'gw_session')
   if (session === ADMIN_PASSWORD) {
     return c.json({ authenticated: true })
@@ -44,32 +73,12 @@ app.get('/api/auth/check', (c) => {
   return c.json({ authenticated: false }, 401)
 })
 
-// ── Logout endpoint ──
-app.post('/api/logout', (c) => {
+app.post('/api/admin/logout', (c) => {
   deleteCookie(c, 'gw_session', { path: '/' })
   return c.json({ ok: true })
 })
 
-// ── tRPC Provider ──
-app.use(
-  '/trpc/*',
-  trpcServer({
-    router: appRouter,
-    createContext: (_opts, c) => {
-      // Read gateway token from cookie session, or from Authorization header
-      const session = getCookie(c, 'gw_session')
-      const headerToken = c.req.header('Authorization')?.replace('Bearer ', '')
-      return {
-        gatewayToken: headerToken || GATEWAY_TOKEN || session || ''
-      }
-    }
-  })
-)
-
-// Health API (public, no auth)
-app.get('/api/health', (c) => c.json({ ok: true }))
-
-// Evolution cron trigger (called by OpenClaw cron scheduler)
+// Evolution cron trigger
 app.post('/api/evolution/trigger', async (c) => {
   try {
     const body = await c.req.json<{ trigger?: string }>().catch(() => ({ trigger: undefined }))
@@ -81,21 +90,32 @@ app.post('/api/evolution/trigger', async (c) => {
   }
 })
 
-// ── Dashboard Routes (migrated from Next.js) ──
-app.route('/api/dashboard/auth', dashboardAuth)
-app.route('/api/dashboard/events', sseRoutes)
-app.route('/api/dashboard/health', dashboardHealth)
+// ────────────────────────────────────────────────────────────────────
+// tRPC — shared by both dashboard and gateway admin
+// ────────────────────────────────────────────────────────────────────
+app.use(
+  '/trpc/*',
+  trpcServer({
+    router: appRouter,
+    createContext: (_opts, c) => {
+      const session = getCookie(c, 'gw_session')
+      const headerToken = c.req.header('Authorization')?.replace('Bearer ', '')
+      return {
+        gatewayToken: headerToken || GATEWAY_TOKEN || session || ''
+      }
+    }
+  })
+)
 
-// Dashboard auth middleware — applies to dashboard API routes
-// (tRPC auth is handled in procedure context)
-app.use('/api/dashboard/*', dashboardAuthMiddleware)
-
-// Static Serving (Production build)
+// ── Static Serving (Production SPA) ──
 app.use('/*', serveStatic({ root: './dist/public' }))
+
+// SPA fallback: serve index.html for all non-API, non-asset routes
+app.get('*', serveStatic({ root: './dist/public', path: 'index.html' }))
 
 const port = Number(process.env.PORT) || 3000
 
-console.log(`🚀 OpenClaw Admin listening on port ${port}`)
+console.log(`🚀 Laura Dashboard listening on port ${port}`)
 
 export default Bun.serve({
   port,

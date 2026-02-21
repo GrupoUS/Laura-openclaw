@@ -4,7 +4,7 @@ import { KanbanBoard } from '@/client/components/dashboard/board/KanbanBoard'
 import { useTaskStore } from '@/client/hooks/useTaskStore'
 import { trpc } from '@/client/trpc'
 
-export const Route = createFileRoute('/dashboard/board')({
+export const Route = createFileRoute('/board')({
   component: BoardPage,
 })
 

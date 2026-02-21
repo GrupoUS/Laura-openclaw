@@ -10,13 +10,12 @@ import { SESSION_OPTIONS, type SessionData } from '@/server/session'
 
 // Paths that don't require authentication
 const PUBLIC_PATHS = [
-  '/api/dashboard/auth',
-  '/api/dashboard/health',
-  '/api/dashboard/events',  // SSE — auth via query param
+  '/api/auth',
   '/api/health',
+  '/api/events',
+  '/api/admin',
   '/api/login',
   '/api/logout',
-  '/api/auth/check',
 ]
 
 const API_PATTERN = /^\/api\//

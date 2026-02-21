@@ -4,7 +4,7 @@ import { AgentsGrid } from '@/client/components/dashboard/agents/AgentsGrid'
 import { useTaskStore, type ActivityEntry } from '@/client/hooks/useTaskStore'
 import { trpc } from '@/client/trpc'
 
-export const Route = createFileRoute('/dashboard/agents')({
+export const Route = createFileRoute('/dash-agents')({
   component: AgentsPage,
 })
 

@@ -4,7 +4,7 @@ import { TaskList } from '@/client/components/dashboard/list/TaskList'
 import { useTaskStore } from '@/client/hooks/useTaskStore'
 import { trpc } from '@/client/trpc'
 
-export const Route = createFileRoute('/dashboard/list')({
+export const Route = createFileRoute('/list')({
   component: ListPage,
 })
 

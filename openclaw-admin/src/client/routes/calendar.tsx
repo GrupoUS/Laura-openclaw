@@ -16,7 +16,7 @@ import {
 import { ptBR } from 'date-fns/locale'
 import { trpc } from '@/client/trpc'
 
-export const Route = createFileRoute('/dashboard/calendar')({
+export const Route = createFileRoute('/calendar')({
   component: CalendarPage,
 })
 

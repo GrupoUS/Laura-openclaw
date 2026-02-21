@@ -31,7 +31,7 @@ export function useTaskEvents() {
       return
     }
 
-    const es = new EventSource(`/api/dashboard/events?token=${SSE_TOKEN}`)
+    const es = new EventSource(`/api/events?token=${SSE_TOKEN}`)
     esRef.current = es
 
     es.addEventListener('connected', () => {

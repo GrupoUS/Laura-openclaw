@@ -2,7 +2,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import { AnalyticsDashboard } from '@/client/components/dashboard/analytics/AnalyticsDashboard'
 import { trpc } from '@/client/trpc'
 
-export const Route = createFileRoute('/dashboard/analytics')({
+export const Route = createFileRoute('/analytics')({
   component: AnalyticsPage,
 })
 

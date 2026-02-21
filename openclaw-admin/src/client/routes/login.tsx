@@ -1,7 +1,7 @@
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { useState, type FormEvent } from 'react'
 
-export const Route = createFileRoute('/dashboard/login')({
+export const Route = createFileRoute('/login')({
   component: DashboardLoginPage,
 })
 
@@ -16,7 +16,7 @@ function DashboardLoginPage() {
     setLoading(true)
     setError(null)
 
-    const res = await fetch('/api/dashboard/auth/login', {
+    const res = await fetch('/api/api/auth/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include',
@@ -24,7 +24,7 @@ function DashboardLoginPage() {
     })
 
     if (res.ok) {
-      navigate({ to: '/dashboard/board' })
+      navigate({ to: '/board' })
     } else {
       const { error: msg } = await res.json()
       setError(msg)
