@@ -3,7 +3,7 @@
   "jobs": [
     {
       "id": "1c000d49-65a9-40d3-87b8-7441f624a7a1",
-      "agentId": "assistant",
+      "agentId": "suporte",
       "name": "Daily Zoom Sync (18h BRT)",
       "enabled": false,
       "createdAtMs": 1769737766747,

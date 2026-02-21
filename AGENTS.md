@@ -54,8 +54,7 @@ Priority:
 │   ├── sdr/                 # SDR agent (sales)
 │   ├── suporte/             # Internal support agent
 │   ├── cs/                  # Customer Success agent
-│   ├── coder/               # Coding assistant agent
-│   └── assistant/           # General assistant
+│   └── coder/               # Coding assistant agent
 ├── workspace/               # Shared workspace (AGENTS.md, TOOLS.md, etc.)
 ├── dashboard/               # Task Dashboard (Next.js 14 + React 18)
 │   ├── app/                 # Next.js App Router

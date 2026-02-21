@@ -24,7 +24,7 @@ python3 /Users/mauricio/.openclaw/workspace/skills/uds-search/scripts/uds-search
 | Serviço | Uso | Como Acessar |
 |---------|-----|--------------|
 | **Kiwify** | Produtos, verificar se é aluno | Script kiwify.js |
-| **Google Calendar** | Verificar disponibilidade | Via assistant |
+| **Google Calendar** | Verificar disponibilidade | Via suporte |
 | **WhatsApp** | Receber/enviar mensagens | Via OpenClaw gateway |
 
 ---
