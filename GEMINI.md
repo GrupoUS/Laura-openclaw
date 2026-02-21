@@ -11,18 +11,33 @@ trigger: always_on
 
 ## 1. Quick Reference
 
+### openclaw-admin
+
 | Layer    | Technology                                 |
 | -------- | ------------------------------------------ |
 | Runtime  | Bun (package manager + runtime + bundler)  |
 | Frontend | React 19 + Vite 7                          |
 | Backend  | Hono (BFF) + tRPC 11 + Drizzle ORM        |
 | Database | Neon PostgreSQL                            |
-| Platform | OpenClaw (multi-agent AI gateway)          |
 | Linter   | OXLint (Rust-native)                       |
+
+### dashboard
+
+| Layer     | Technology                                  |
+| --------- | ------------------------------------------- |
+| Runtime   | Node.js 22 · npm                            |
+| Framework | Next.js 14 (App Router)                     |
+| Frontend  | React 18 + Tailwind CSS v4 + shadcn/ui      |
+| State     | Zustand (immer) + SSE (Redis Pub/Sub)        |
+| Auth      | iron-session                                 |
+| Database  | Neon PostgreSQL + Drizzle ORM               |
+| Deploy    | Railway (Dockerfile)                        |
 
 ---
 
 ## 2. Commands
+
+### openclaw-admin (bun)
 
 | Task                 | Command                |
 | -------------------- | ---------------------- |
@@ -34,7 +49,17 @@ trigger: always_on
 | Run tests            | `bun run test`         |
 | Push DB schema       | `bun run db:push`      |
 
-> **Package Manager**: This project uses **Bun only**. Never use npm, yarn, or pnpm.
+### dashboard (npm)
+
+| Task                 | Command                |
+| -------------------- | ---------------------- |
+| Install dependencies | `npm install`          |
+| Start development    | `npm run dev`          |
+| Build production     | `npm run build`        |
+| Run tests            | `npm test`             |
+| Push DB schema       | `npm run db:push`      |
+
+> **Package Manager**: `openclaw-admin/` uses **Bun**. `dashboard/` uses **npm**.
 
 ---
 
@@ -43,9 +68,23 @@ trigger: always_on
 Load rules files in this order (lazy loading for context efficiency):
 
 1. **Root AGENTS.md** — Always load first. Contains project-wide rules.
-2. **Subdirectory AGENTS.md** — Load only when editing files in that directory:
+2. **Project-level AGENTS.md** — Load when entering a project directory:
+   - `dashboard/AGENTS.md` — Dashboard project rules (Next.js)
+   - `openclaw-admin/AGENTS.md` — Admin project rules (Vite + Hono)
+3. **Subdirectory AGENTS.md** — Load only when editing files in that directory:
+   - `dashboard/app/AGENTS.md` — Next.js App Router pages
+   - `dashboard/app/api/AGENTS.md` — API routes (REST, SSE)
+   - `dashboard/components/AGENTS.md` — React components
+   - `dashboard/lib/AGENTS.md` — Utilities, DB, events
+   - `dashboard/hooks/AGENTS.md` — Zustand + SSE hooks
+   - `dashboard/types/AGENTS.md` — Type definitions
    - `openclaw-admin/src/server/AGENTS.md` — Backend (Hono, tRPC, Drizzle)
+   - `openclaw-admin/src/server/db/AGENTS.md` — Drizzle schema
+   - `openclaw-admin/src/server/routers/AGENTS.md` — tRPC routers
+   - `openclaw-admin/src/server/services/AGENTS.md` — Business logic
+   - `openclaw-admin/src/server/ws/AGENTS.md` — WebSocket gateway
    - `openclaw-admin/src/client/AGENTS.md` — Frontend (React, TanStack Router)
+   - `openclaw-admin/src/client/routes/AGENTS.md` — Route files
    - `workspace/AGENTS.md` — Agent workspace definitions
    - `agents/*/AGENTS.md` — Per-agent rules (if present)
 

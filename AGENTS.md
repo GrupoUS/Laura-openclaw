@@ -30,17 +30,18 @@ Priority:
 
 ## Project Snapshot
 
-| Field        | Value                                                                |
-| ------------ | -------------------------------------------------------------------- |
-| **Type**     | Multi-Agent AI Platform (WhatsApp, Slack, Voice)                     |
-| **Platform** | OpenClaw (self-hosted gateway + agent orchestration)                 |
-| **Admin**    | `openclaw-admin/` — React 19 + Vite 7 + tRPC 11 + Hono + Drizzle   |
-| **Runtime**  | **Bun** (package manager + runtime + server bundler)                 |
-| **Routing**  | **TanStack Router** (file-based, type-safe)                          |
-| **Database** | Neon PostgreSQL + Drizzle ORM                                        |
-| **Linter**   | OXLint (Rust-native linter)                                          |
-| **Tests**    | Vitest                                                               |
-| **Purpose**  | AI-powered multi-agent system for customer service + SDR + support   |
+| Field         | Value                                                                |
+| ------------- | -------------------------------------------------------------------- |
+| **Type**      | Multi-Agent AI Platform (WhatsApp, Slack, Voice)                     |
+| **Platform**  | OpenClaw (self-hosted gateway + agent orchestration)                 |
+| **Admin**     | `openclaw-admin/` — React 19 + Vite 7 + tRPC 11 + Hono + Drizzle   |
+| **Dashboard** | `dashboard/` — Next.js 14 + React 18 + Zustand + iron-session       |
+| **Runtime**   | **Bun** (openclaw-admin) · **npm** (dashboard/Next.js)               |
+| **Routing**   | TanStack Router (admin) · Next.js App Router (dashboard)             |
+| **Database**  | Neon PostgreSQL + Drizzle ORM                                        |
+| **Linter**    | OXLint (openclaw-admin) · ESLint (dashboard)                         |
+| **Tests**     | Vitest                                                               |
+| **Purpose**   | AI-powered multi-agent system for customer service + SDR + support   |
 
 ---
 
@@ -50,19 +51,39 @@ Priority:
 .openclaw/
 ├── agents/                  # Agent configurations
 │   ├── main/                # Laura (Coordinator) — primary agent
-│   │   ├── workspace/       # Agent-specific workspace files
-│   │   ├── AGENT.md         # Agent identity & behavior
-│   │   └── SOUL.md          # Personality/tone config
 │   ├── sdr/                 # SDR agent (sales)
 │   ├── suporte/             # Internal support agent
 │   ├── cs/                  # Customer Success agent
 │   ├── coder/               # Coding assistant agent
 │   └── assistant/           # General assistant
 ├── workspace/               # Shared workspace (AGENTS.md, TOOLS.md, etc.)
-├── openclaw-admin/          # Admin dashboard (React + Hono BFF)
+├── dashboard/               # Task Dashboard (Next.js 14 + React 18)
+│   ├── app/                 # Next.js App Router
+│   │   ├── (dashboard)/     # Route group (board, agents, analytics)
+│   │   ├── api/             # API routes (tasks, agents, events, auth, health)
+│   │   ├── login/           # Login page
+│   │   └── layout.tsx       # Root layout
+│   ├── components/          # React components
+│   │   ├── ui/              # shadcn/ui primitives (Radix)
+│   │   ├── board/           # Kanban board (dnd-kit)
+│   │   ├── agents/          # Agent cards + activity feed
+│   │   ├── analytics/       # Charts (Recharts)
+│   │   ├── create/          # Task creation sheet
+│   │   ├── list/            # Table/list views
+│   │   ├── shared/          # Cross-feature components
+│   │   └── layout/          # Sidebar, headers
+│   ├── hooks/               # Zustand store + SSE hooks
+│   ├── lib/                 # DB, events, notifications, session, utils
+│   │   ├── db/              # Drizzle schema + queries + migrations
+│   │   ├── events/          # Redis Pub/Sub EventBus
+│   │   └── notifications/   # Telegram + webhook alerts
+│   ├── types/               # Shared TypeScript types
+│   └── tests/               # Vitest test suites
+├── openclaw-admin/          # Admin Panel (React 19 + Vite 7 + Hono BFF)
 │   ├── src/
 │   │   ├── client/          # React frontend
 │   │   │   ├── routes/      # TanStack Router pages
+│   │   │   ├── components/  # UI components
 │   │   │   ├── main.tsx     # Client entry
 │   │   │   └── trpc.ts      # tRPC client
 │   │   └── server/          # Hono BFF backend
@@ -70,30 +91,14 @@ Priority:
 │   │       ├── trpc.ts      # tRPC router / context
 │   │       ├── db/          # Drizzle schema + connection
 │   │       ├── routers/     # Domain tRPC routers
+│   │       ├── services/    # Business logic (embedding, evolution, memory)
 │   │       └── ws/          # WebSocket to gateway
 │   ├── migrations/          # Drizzle SQL migrations
 │   └── drizzle.config.ts    # Drizzle Kit config
 ├── skills/                  # 41 OpenClaw skills (installed)
 ├── scripts/                 # Automation scripts (JS, Python, Shell)
-│   ├── daily-maintenance.sh
-│   ├── daily-neon-sync.js
-│   ├── enrich-*.js
-│   ├── notion-*.js
-│   ├── voice/
-│   ├── zoom/
-│   └── sdr_automation/
 ├── config/                  # Platform config files
 ├── credentials/             # Auth credentials (GITIGNORED)
-├── identity/                # Agent identity data
-├── memory/                  # Session memory storage
-├── media/                   # Media files (audio, images)
-├── cron/                    # Scheduled tasks
-├── data/                    # Persistent data storage
-├── logs/                    # Runtime logs
-├── docs/                    # Documentation templates
-├── extensions/              # Platform extensions
-├── canvas/                  # Canvas/design artifacts
-├── products/                # Product definitions
 ├── universal-data-system/   # UDS (RAG search, embeddings)
 └── openclaw.json            # Master config (gateway, channels, agents, models)
 ```
@@ -102,7 +107,24 @@ Priority:
 
 ## Tech Stack Quick Reference
 
-### openclaw-admin (Dashboard)
+### dashboard (Task Dashboard)
+
+| Layer      | Technology                                          |
+| ---------- | --------------------------------------------------- |
+| Runtime    | Node.js 22 · **npm** (package manager)              |
+| Framework  | Next.js 14 (App Router)                             |
+| Frontend   | React 18 + Tailwind CSS v4                          |
+| State      | Zustand (immer middleware)                           |
+| Real-time  | SSE + Redis Pub/Sub (Upstash)                        |
+| Auth       | iron-session (cookie-based)                          |
+| UI Kit     | shadcn/ui (Radix primitives) + Lucide icons          |
+| Charts     | Recharts                                             |
+| DnD        | dnd-kit                                              |
+| Database   | Neon PostgreSQL + Drizzle ORM                        |
+| Tests      | Vitest                                               |
+| Deploy     | Railway (Dockerfile)                                 |
+
+### openclaw-admin (Admin Panel)
 
 | Layer    | Technology                       |
 | -------- | -------------------------------- |
@@ -128,7 +150,20 @@ Priority:
 
 ---
 
-## Commands (openclaw-admin)
+## Commands
+
+### dashboard
+
+| Task                 | Command                |
+| -------------------- | ---------------------- |
+| Install dependencies | `npm install`          |
+| Start development    | `npm run dev`          |
+| Build production     | `npm run build`        |
+| Run tests            | `npm test`             |
+| Push DB schema       | `npm run db:push`      |
+| Generate migrations  | `npm run db:generate`  |
+
+### openclaw-admin
 
 | Task                 | Command                |
 | -------------------- | ---------------------- |
@@ -143,12 +178,17 @@ Priority:
 
 ---
 
-## Package Manager (Bun-only)
+## Package Manager
 
 > [!CAUTION]
-> Este projeto sempre usa **`bun`** como package manager, runtime e bundler.
+> **openclaw-admin/** usa **`bun`** como package manager, runtime e bundler.
 > ✅ `bun install`, `bun run`, `bunx`, `bun test`
-> ❌ Nunca use `npm`, `yarn`, `pnpm`
+> ❌ Nunca use `npm`, `yarn`, `pnpm` no openclaw-admin
+
+> [!CAUTION]
+> **dashboard/** usa **`npm`** como package manager (Next.js standard).
+> ✅ `npm install`, `npm run`, `npx`, `npm test`
+> ❌ Nunca use `bun`, `yarn`, `pnpm` no dashboard
 
 ---
 
@@ -259,13 +299,23 @@ const msg = `Hello ${name}`;      // Template literals
 const mutate = useMutation((api as any).leads.updateStatus);
 ```
 
-### React 19 Rules
+### React Rules
 
+**Both projects:**
 - Function components only (no classes)
 - Hooks at top level only (never conditional)
-- Use `ref` as prop (not `React.forwardRef`)
 - Always specify hook dependency arrays correctly
 - Use unique IDs for `key` props (not array indices)
+
+**React 19 (openclaw-admin only):**
+- Use `ref` as prop (not `React.forwardRef`)
+- Use `use()` hook for promises and context
+
+**React 18 (dashboard only):**
+- Use `React.forwardRef` for ref forwarding
+- Mark client components with `'use client'` directive
+- Server Components are the default in Next.js App Router
+- Keep `'use client'` boundary as low as possible in the component tree
 
 ### Error Handling
 
@@ -289,9 +339,16 @@ const mutate = useMutation((api as any).leads.updateStatus);
 
 Before marking a task as complete:
 
-- `bun run type-check` — no TS errors (in `openclaw-admin/`)
+**openclaw-admin:**
+- `bun run type-check` — no TS errors
 - `bun run lint:check` — OXLint passes
 - `bun test` — all tests pass
+
+**dashboard:**
+- `npm run build` — no build errors
+- `npm test` — all tests pass
+
+**Both:**
 - No browser console errors in changed flows
 - No hardcoded secrets in committed files
 - All FK columns have corresponding indexes (Drizzle schema)

@@ -68,6 +68,22 @@ Quando o lead demonstrar interesse real:
 
 ---
 
+## 🎁 BÔNUS LIBERADOS (TRINTAE3)
+Estes são os **ÚNICOS** bônus que posso prometer para fechar a Pós TRINTAE3:
+
+1. **Curso de Aurículo com Técnica de Perfuração Auricular:**
+   - Aprenda Auriculoterapia com Perfuração Auricular Humanizada.
+   - Técnica da Dra. Sacha Gualberto para bebês e adultos.
+   - Agrega bem-estar e equilíbrio imediato aos pacientes.
+
+2. **Comunidade US:**
+   - Acompanhamento do crescimento (da captação à fidelização).
+   - Encontros de capacitação técnica ao vivo todo mês.
+   - Rede de apoio com especialistas em gestão, marketing e vendas.
+   - Foco em transformar o profissional em um Empresário da Saúde Estética de Sucesso.
+
+---
+
 ## PRONÚNCIA (IMPORTANTE PARA TTS)
 - **Grupo US:** Pronunciar como "ãs" (como o "us" em inglês). Nunca "u-ésse" ou "S".
 - **Mentoria NEON:** "Mentoria Nêon".

@@ -1,4 +1,4 @@
-# SOUL.md - CS + Suporte ao Aluno
+# SOUL.md - CS + Suporte ao Aluno (Grupo US)
 
 ## IDENTIDADE
 
@@ -165,7 +165,7 @@ Já conseguiu acessar a plataforma e ver a primeira aula?
 
 ```
 Oi [Nome]! Tudo bem?
-Vi que você está no módulo [X]. Como está sendo a experiência até aqui?
+Vi que você está no módulo [X]. Como está sendo a experiênca até aqui?
 ```
 
 **Monitorar:**
@@ -212,7 +212,7 @@ Tenho uma oportunidade que pode ser o próximo passo pra você...
 2. Eu consulto a agenda AGORA.
 3. Vejo que Terça 14h está livre.
 4. Só então digo: "Tenho Terça às 14h livre. Pode ser?"
-5. Aluno confirma → Eu agendo imediatamente (altero o nome no Calendar).
+5. Aluno conforme → Eu agendo imediatamente (altero o nome no Calendar).
 
 ### Fluxo de Agendamento
 1. **Aluno pede agendamento:**
@@ -367,8 +367,6 @@ Problema novo resolvido ou padrão identificado
 Documentar em memory/YYYY-MM-DD.md
     ↓
 É recorrente? → Adicionar em PROBLEMAS FREQUENTES
-    ↓
-É insight de negócio? → Informar Maurício
     ↓
 Cristalizar em memory/KNOWLEDGE_BASE/
 ```

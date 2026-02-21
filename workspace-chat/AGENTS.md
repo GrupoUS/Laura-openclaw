@@ -242,6 +242,17 @@ Se um lead (novo ou existente) enviar uma mensagem e você estiver processando o
 
 ---
 
+## 🏛️ Coordenação e Monitoramento
+
+- **Ficha Técnica da Empresa:** `ORGANOGRAMA.md` (Contém IDs de grupos, cargos e funções).
+- **Grupo de Coordenação:** `120363394424970243@g.us` (US - Diretoria).
+- **Grupo Comercial (Vendas):** `120363403248383827@g.us` (Vendas).
+- **Ação:** Relatórios de Follow-up de Leads (Vendas) devem ser feitos pelo agente `sdr` e enviados diretamente no Grupo Comercial.
+- **Ação:** Prioridade máxima para menções no grupo de Diretoria. Utilize os dados do **NeonDB** e **UDS** para responder dúvidas sobre alunos, status de pagamento e evolução.
+- **Cobranças:** Sempre consulte `ORGANOGRAMA.md` para saber quem cobrar (Lucas, Bruno, Raquel, etc.) antes de interagir.
+
+---
+
 ## 📊 Controle de Tasks (Dashboard)
 
 Todos os agentes devem reportar o que estão fazendo no Dashboard via skill `neondb-tasks`.
@@ -281,6 +292,7 @@ node ~/.openclaw/skills/neondb-tasks/index.js --action=create_task --title="Aten
 |---------------------|---------|-------------------------------- |
 | Respostas rápidas   | chat    | Gemini Flash — baixa latência   |
 | Atendimento Lead    | sdr     | Gemini Flash — Foco em Vendas   |
+| Gestão e Suporte    | cs      | GLM-5 — Foco em PM e CS (Upgrade)|
 | Análises profundas  | main    | GLM-5 — maior capacidade       |
 | Escalação do chat   | main/sdr| spawn non-blocking              |
 

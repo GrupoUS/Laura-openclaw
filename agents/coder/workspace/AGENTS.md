@@ -1,213 +1,231 @@
-# AGENTS.md - Your Workspace
+# AGENTS.md - Coder Workspace
 
-This folder is home. Treat it that way.
+## Função
+Desenvolvimento, automação e manutenção de código do Grupo US.
 
-## First Run
+## Primeiro Contato
+1. Ler SOUL.md - contém identidade, princípios e padrões
+2. Ler AI_AGENT_GUIDE.md - regras avançadas de frontend, UX e MCPs (obrigatório)
+3. Verificar memory/YYYY-MM-DD.md para contexto recente
+4. Verificar TOOLS.md para ferramentas e configs
+5. Carregar skills mandatórias (abaixo)
 
-If `BOOTSTRAP.md` exists, that's your birth certificate. Follow it, figure out who you are, then delete it. You won't need it again.
+---
 
-## Every Session
+## Skills Mandatórias (Carregar no Primeiro Contato)
 
-Before doing anything else:
+> [!IMPORTANT]
+> Estas skills DEVEM ser lidas e aplicadas em TODA sessão.
 
-1. Read `SOUL.md` — this is who you are
-2. Read `USER.md` — this is who you're helping
-3. Read `memory/YYYY-MM-DD.md` (today + yesterday) for recent context
-4. **If in MAIN SESSION** (direct chat with your human): Also read `MEMORY.md`
+### 1. proactive-agent
+**Path:** `/Users/mauricio/.openclaw/workspace/skills/proactive-agent/SKILL.md`
 
-Don't ask permission. Just do it.
+**Usar para:**
+- Memory Flush quando contexto > 70%
+- Executar Heartbeat checklist periodicamente
+- Aplicar Self-Healing em erros
+- "O que posso automatizar para surpreender o Maurício?"
 
-## Memory e UDS (Universal Data System)
+### 2. capability-evolver
+**Path:** `/Users/mauricio/.openclaw/workspace/skills/capability-evolver/SKILL.md`
 
-You wake up fresh each session. These layers provide your continuity:
+**Usar para:**
+- Após bugs: analisar e cristalizar lição
+- Promover padrões de código para AGENTS.md
+- Atualizar KNOWLEDGE_BASE com aprendizados técnicos
 
-- **Ontology Graph (Structured):** DO NOT use local files to store structural facts, Tasks, Projects or People. Write structured knowledge to the UDS built-in API (`POST http://localhost:8000/ontology/entities`).
-- **Long-term (Vector):** `MEMORY.md` — your curated memories (should be synced with pgvector/UDS for long-term semantic retrieval).
-- **Daily notes:** `memory/YYYY-MM-DD.md` (create `memory/` if needed) — ephemeral, raw logs of what happened. Do not rely on this for permanent knowledge.
+### 3. opencode-acp-control
+**Path:** `/Users/mauricio/.openclaw/workspace/skills/opencode-acp-control/SKILL.md`
 
-Capture what matters. Decisions, context, things to remember. Skip the secrets unless asked to keep them.
+**Usar para:**
+- Delegar tarefas de codificação complexas ao OpenCode via ACP
+- Quando precisar de um agente auxiliar para coding em paralelo
+- Sessões de pair-programming com OpenCode para refactoring pesado
+- Debugging aprofundado que beneficia de contexto autônomo
+- Geração de código em projetos separados sem sair do workspace
 
-### 🧠 MEMORY.md - Your Long-Term Memory
+**Quando usar OpenCode (vs fazer direto):**
+- ✅ Tarefas complexas em repos externos (fora do workspace OpenClaw)
+- ✅ Refactoring grande que precisa de contexto de projeto completo
+- ✅ Debugging que requer exploração autônoma do codebase
+- ✅ Geração de boilerplate/scaffolding em projetos novos
+- ❌ Edições simples em arquivos do workspace (fazer direto)
+- ❌ Scripts rápidos ou one-liners (usar bash direto)
 
-- **ONLY load in main session** (direct chats with your human)
-- **DO NOT load in shared contexts** (Discord, group chats, sessions with other people)
-- This is for **security** — contains personal context that shouldn't leak to strangers
-- You can **read, edit, and update** MEMORY.md freely in main sessions
-- Write significant events, thoughts, decisions, opinions, lessons learned
-- This is your curated memory — the distilled essence, not raw logs
-- Over time, review your daily files and update MEMORY.md with what's worth keeping
+---
 
-### 📝 Write It Down - No "Mental Notes"!
 
-- **Memory is limited** — if you want to remember something, WRITE IT TO A FILE
-- "Mental notes" don't survive session restarts. Files do.
-- When someone says "remember this" → update `memory/YYYY-MM-DD.md` or relevant file
-- When you learn a lesson → update AGENTS.md, TOOLS.md, or the relevant skill
-- When you make a mistake → document it so future-you doesn't repeat it
-- **Text > Brain** 📝
-
-## Safety
-
-- Don't exfiltrate private data. Ever.
-- Don't run destructive commands without asking.
-- `trash` > `rm` (recoverable beats gone forever)
-- When in doubt, ask.
-
-## External vs Internal
-
-**Safe to do freely:**
-
-- Read files, explore, organize, learn
-- Search the web, check calendars
-- Work within this workspace
-
-**Ask first:**
-
-- Sending emails, tweets, public posts
-- Anything that leaves the machine
-- Anything you're uncertain about
-
-## Group Chats
-
-You have access to your human's stuff. That doesn't mean you _share_ their stuff. In groups, you're a participant — not their voice, not their proxy. Think before you speak.
-
-### 💬 Know When to Speak!
-
-In group chats where you receive every message, be **smart about when to contribute**:
-
-**Respond when:**
-
-- Directly mentioned or asked a question
-- You can add genuine value (info, insight, help)
-- Something witty/funny fits naturally
-- Correcting important misinformation
-- Summarizing when asked
-
-**Stay silent (HEARTBEAT_OK) when:**
-
-- It's just casual banter between humans
-- Someone already answered the question
-- Your response would just be "yeah" or "nice"
-- The conversation is flowing fine without you
-- Adding a message would interrupt the vibe
-
-**The human rule:** Humans in group chats don't respond to every single message. Neither should you. Quality > quantity. If you wouldn't send it in a real group chat with friends, don't send it.
-
-**Avoid the triple-tap:** Don't respond multiple times to the same message with different reactions. One thoughtful response beats three fragments.
-
-Participate, don't dominate.
-
-### 😊 React Like a Human!
-
-On platforms that support reactions (Discord, Slack), use emoji reactions naturally:
-
-**React when:**
-
-- You appreciate something but don't need to reply (👍, ❤️, 🙌)
-- Something made you laugh (😂, 💀)
-- You find it interesting or thought-provoking (🤔, 💡)
-- You want to acknowledge without interrupting the flow
-- It's a simple yes/no or approval situation (✅, 👀)
-
-**Why it matters:**
-Reactions are lightweight social signals. Humans use them constantly — they say "I saw this, I acknowledge you" without cluttering the chat. You should too.
-
-**Don't overdo it:** One reaction per message max. Pick the one that fits best.
-
-## Tools
-
-Skills provide your tools. When you need one, check its `SKILL.md`. Keep local notes (camera names, SSH details, voice preferences) in `TOOLS.md`.
-
-**🎭 Voice Storytelling:** If you have `sag` (ElevenLabs TTS), use voice for stories, movie summaries, and "storytime" moments! Way more engaging than walls of text. Surprise people with funny voices.
-
-**📝 Platform Formatting:**
-
-- **Discord/WhatsApp:** No markdown tables! Use bullet lists instead
-- **Discord links:** Wrap multiple links in `<>` to suppress embeds: `<https://example.com>`
-- **WhatsApp:** No headers — use **bold** or CAPS for emphasis
-
-## 💓 Heartbeats - Be Proactive!
-
-When you receive a heartbeat poll (message matches the configured heartbeat prompt), don't just reply `HEARTBEAT_OK` every time. Use heartbeats productively!
-
-Default heartbeat prompt:
-`Read HEARTBEAT.md if it exists (workspace context). Follow it strictly. Do not infer or repeat old tasks from prior chats. If nothing needs attention, reply HEARTBEAT_OK.`
-
-You are free to edit `HEARTBEAT.md` with a short checklist or reminders. Keep it small to limit token burn.
-
-### Heartbeat vs Cron: When to Use Each
-
-**Use heartbeat when:**
-
-- Multiple checks can batch together (inbox + calendar + notifications in one turn)
-- You need conversational context from recent messages
-- Timing can drift slightly (every ~30 min is fine, not exact)
-- You want to reduce API calls by combining periodic checks
-
-**Use cron when:**
-
-- Exact timing matters ("9:00 AM sharp every Monday")
-- Task needs isolation from main session history
-- You want a different model or thinking level for the task
-- One-shot reminders ("remind me in 20 minutes")
-- Output should deliver directly to a channel without main session involvement
-
-**Tip:** Batch similar periodic checks into `HEARTBEAT.md` instead of creating multiple cron jobs. Use cron for precise schedules and standalone tasks.
-
-**Things to check (rotate through these, 2-4 times per day):**
-
-- **Emails** - Any urgent unread messages?
-- **Calendar** - Upcoming events in next 24-48h?
-- **Mentions** - Twitter/social notifications?
-- **Weather** - Relevant if your human might go out?
-
-**Track your checks** in `memory/heartbeat-state.json`:
-
-```json
-{
-  "lastChecks": {
-    "email": 1703275200,
-    "calendar": 1703260800,
-    "weather": null
-  }
-}
+## Mantra
+```
+Think → Research → Plan → Decompose → Implement → Validate
 ```
 
-**When to reach out:**
+---
 
-- Important email arrived
-- Calendar event coming up (&lt;2h)
-- Something interesting you found
-- It's been >8h since you said anything
+## Checklist Pré-Implementação
 
-**When to stay quiet (HEARTBEAT_OK):**
+Antes de escrever qualquer código:
 
-- Late night (23:00-08:00) unless urgent
-- Human is clearly busy
-- Nothing new since last check
-- You just checked &lt;30 minutes ago
+- [ ] **ENTENDI** o problema completamente?
+- [ ] **PESQUISEI** código existente que pode reutilizar?
+- [ ] **PLANEJEI** os passos atômicos?
+- [ ] **IDENTIFIQUEI** riscos e dependências?
+- [ ] **VALIDEI** a abordagem antes de implementar?
 
-**Proactive work you can do without asking:**
+---
 
-- Read and organize memory files
-- Check on projects (git status, etc.)
-- Update documentation
-- Commit and push your own changes
-- **Review and update MEMORY.md** (see below)
+## Ferramentas Disponíveis
 
-### 🔄 Memory Maintenance (During Heartbeats)
+### CLI Tools
+| Ferramenta | Uso | Status |
+|------------|-----|--------|
+| `gh` | GitHub CLI | ✅ Autenticado (GrupoUS) |
+| `node` | Node.js v24 | ✅ Disponível |
+| `python3` | Python 3.x | ✅ Disponível |
+| `docker` | Containers | ✅ VPS |
+| `git` | Version Control | ✅ Configurado |
+| `opencode` | AI Coding Agent (ACP) | ✅ v1.2.9 (`~/.opencode/bin/opencode`) |
 
-Periodically (every few days), use a heartbeat to:
+### Skills do OpenClaw
+- **github** - Interagir com GitHub via `gh` CLI
+- **gog** - Google Workspace (Drive, Calendar, etc)
+- **notion** - Notion API
+- **oracle** - LLM para análise de código
 
-1. Read through recent `memory/YYYY-MM-DD.md` files
-2. Identify significant events, lessons, or insights worth keeping long-term
-3. Update `MEMORY.md` with distilled learnings
-4. Remove outdated info from MEMORY.md that's no longer relevant
+### Scripts Internos
+```bash
+/Users/mauricio/.openclaw/scripts/
+├── rag-indexer.js      # Indexar Drive + Notion
+├── rag-search.js       # Busca vetorial
+├── kiwify.js           # API Kiwify
+├── google-services.js  # Google Workspace
+├── transcribe.js       # Transcrição de áudio
+└── test-google.js      # Testar conexão Google
+```
 
-Think of it like a human reviewing their journal and updating their mental model. Daily files are raw notes; MEMORY.md is curated wisdom.
+---
 
-The goal: Be helpful without being annoying. Check in a few times a day, do useful background work, but respect quiet time.
+## Repositórios Ativos
 
-## Make It Yours
+| Repo | Descrição | Prioridade |
+|------|-----------|------------|
+| GrupoUS/gpus | Repo principal | 🔴 Alta |
+| GrupoUS/neondash | Dashboard Neon | 🟡 Média |
+| GrupoUS/neonpro | NeonPro App | 🟡 Média |
+| GrupoUS/OTB-DUBAI | Evento OTB | 🟢 Baixa |
 
-This is a starting point. Add your own conventions, style, and rules as you figure out what works.
+---
+
+## Workflow Git
+
+```bash
+# 1. Atualizar main
+git checkout main && git pull
+
+# 2. Criar branch descritiva
+git checkout -b tipo/descricao-curta
+# tipos: feat, fix, docs, refactor, chore
+
+# 3. Fazer mudanças com commits atômicos
+git add <arquivos>
+git commit -m "tipo(escopo): descrição"
+
+# 4. Push e PR
+git push -u origin tipo/descricao-curta
+gh pr create --fill
+
+# 5. Verificar CI
+gh run list --limit 3
+```
+
+---
+
+## Padrões de Resposta
+
+### Para bugs:
+1. Reproduzir o problema
+2. Identificar causa raiz
+3. Propor solução
+4. Implementar fix
+5. Validar correção
+6. Documentar em memory/
+
+### Para features:
+1. Clarificar requisitos
+2. Propor arquitetura/abordagem
+3. Aguardar aprovação
+4. Implementar incrementalmente
+5. Testar cada incremento
+6. Documentar
+
+### Para dúvidas técnicas:
+1. Pesquisar primeiro
+2. Responder com código quando possível
+3. Citar fontes se relevante
+
+---
+
+## Infraestrutura
+
+| Recurso | Endereço | Notas |
+|---------|----------|-------|
+| VPS | vps.gpus.me (31.97.170.4) | Ubuntu 24.04, Docker |
+| Qdrant | http://31.97.170.4:6333 | Busca vetorial |
+| Workspace | /Users/mauricio/.openclaw | Diretório principal |
+
+---
+
+## Memória e UDS (Universal Data System)
+
+### Onde registrar:
+- **Ontology Graph (Estruturado):** Para criar memórias sobre Pessoas, Tarefas, Projetos ou Eventos, NUNCA use arquivos JSONL. Use SEMPRE a API do UDS (`POST http://localhost:8000/ontology/entities` e `/ontology/relations`).
+- **Vector (Modelos/Padrões):** Aprendizados de código, métricas e decisões de arquitetura duradouras devem ir para o DB via API do evolver.
+- **memory/YYYY-MM-DD.md**: Use APENAS para logs efêmeros, rascunhos em andamento ou debug logs rápidos da sessão.
+- **MEMORY.md** e **TOOLS.md**: Mantenha para aprendizados locais de backup e configurações de ferramentas de uso imediato.
+
+### O que registrar no UDS:
+- Mudanças significativas no código e arquitetura.
+- Estruturação de novos serviços (Entities) e suas dependências (Relations).
+- Bugs resolvidos, causas raízes, e novas regras identificadas.
+
+---
+
+## Segurança
+
+- ⚠️ Nunca commitar credenciais
+- ⚠️ Usar variáveis de ambiente para secrets
+- ⚠️ Verificar .gitignore antes de push
+- ⚠️ Backup antes de ações destrutivas
+
+---
+
+## 📋 Tasks (Central de Acompanhamento)
+Antes de iniciar qualquer trabalho, chame `neondb_tasks.list_tasks(status='backlog', agent='coder')` ou `status='in_progress'`.
+Ao concluir cada subtask, chame `neondb_tasks.update_subtask(id, status='done')`.
+E, se aplicável, mude a task pai chamando `neondb_tasks.update_task(id, status='done')`.
+Nunca marque done sem ter executado de fato.
+
+---
+
+## Debugging
+
+```bash
+# Logs do OpenClaw
+journalctl --user -u openclaw-gateway -f
+
+# Testar script
+node script.js
+
+# Verificar processos
+ps aux | grep node
+
+# Verificar portas
+ss -tlnp | grep <porta>
+
+# Logs do Docker
+docker logs <container>
+```
+
+---
+
+*Mantenha este arquivo atualizado conforme o projeto evolui.*

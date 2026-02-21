@@ -17,6 +17,10 @@ export const priorityEnum = pgEnum('priority', [
   'low', 'medium', 'high', 'critical',
 ])
 
+export const departmentEnum = pgEnum('department', [
+  'Coordenação', 'Comercial', 'Marketing', 'Jurídico', 'Diretoria', 'Outros'
+])
+
 // ── Tables ─────────────────────────────────────────────
 
 export const tasks = pgTable('tasks', {
@@ -26,7 +30,9 @@ export const tasks = pgTable('tasks', {
   status:      taskStatusEnum('status').default('backlog').notNull(),
   phase:       integer('phase').default(1).notNull(),
   priority:    priorityEnum('priority').default('medium').notNull(),
+  department:  departmentEnum('department').default('Outros').notNull(),
   agent:       text('agent'),
+  dueDate:     timestamp('due_date'),
   createdAt:   timestamp('created_at').defaultNow().notNull(),
   updatedAt:   timestamp('updated_at').defaultNow().notNull(),
 })
@@ -38,6 +44,7 @@ export const subtasks = pgTable('subtasks', {
   status:      subtaskStatusEnum('status').default('todo').notNull(),
   phase:       integer('phase').default(1).notNull(),
   agent:       text('agent'),
+  dueDate:     timestamp('due_date'),
   completedAt: timestamp('completed_at'),
   createdAt:   timestamp('created_at').defaultNow().notNull(),
 })

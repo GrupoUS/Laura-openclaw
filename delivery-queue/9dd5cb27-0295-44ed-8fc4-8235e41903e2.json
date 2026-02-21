@@ -22,6 +22,6 @@
       "./media/outbound/followup_1.mp3"
     ]
   },
-  "retryCount": 1,
+  "retryCount": 2,
   "lastError": "Local media path is not under an allowed directory: ./media/outbound/followup_1.mp3"
 }
