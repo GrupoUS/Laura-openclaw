@@ -8,6 +8,7 @@ const PUBLIC_PATHS = [
   '/api/auth/login',
   '/api/auth/logout',
   '/api/health',
+  '/api/env-check',
 ]
 
 // Rotas de API que aceitam x-laura-secret como alternativa ao cookie
