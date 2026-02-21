@@ -12,7 +12,7 @@ export async function GET() {
     await db.execute(sql`SELECT 1`)
     dbStatus = 'connected'
   } catch {
-    dbStatus = process.env.NEON_DATABASE_URL ? 'disconnected' : 'not_configured'
+    dbStatus = (process.env.DATABASE_URL || process.env.NEON_DATABASE_URL) ? 'disconnected' : 'not_configured'
   }
 
     let sseStatus = 'ready'

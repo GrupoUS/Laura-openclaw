@@ -9,16 +9,18 @@ let _db: ReturnType<typeof drizzle<typeof schema>> | null = null
 export function getDb() {
   if (_db) return _db
 
-  const url = process.env.NEON_DATABASE_URL
+  // Accept both DATABASE_URL (standard) and NEON_DATABASE_URL (legacy)
+  const url = process.env.DATABASE_URL ?? process.env.NEON_DATABASE_URL
   if (!url) {
     const msg = [
-      '[dashboard] ❌ NEON_DATABASE_URL não configurado.',
-      'Variáveis obrigatórias no Railway:',
-      '  - NEON_DATABASE_URL       (postgres://...)',
-      '  - IRON_SESSION_PASSWORD   (≥ 32 chars)',
-      '  - UPSTASH_REDIS_REST_URL  (https://...upstash.io)',
+      '[dashboard] ❌ DATABASE_URL não configurado.',
+      'Configure DATABASE_URL (ou NEON_DATABASE_URL) no Railway.',
+      'Variáveis obrigatórias:',
+      '  - DATABASE_URL             (postgres://...neon.tech/...)',
+      '  - IRON_SESSION_PASSWORD    (≥ 32 chars)',
+      '  - UPSTASH_REDIS_REST_URL   (https://...upstash.io)',
       '  - UPSTASH_REDIS_REST_TOKEN',
-      '  - UPSTASH_REDIS_URL       (rediss://...)',
+      '  - UPSTASH_REDIS_URL        (rediss://...)',
     ].join('\n')
     console.error(msg)
     throw new Error(msg)

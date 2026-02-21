@@ -110,7 +110,7 @@ dashboard/
 
 | Variable                 | Required | Purpose                        |
 | ------------------------ | -------- | ------------------------------ |
-| `NEON_DATABASE_URL`      | ✅       | Neon PostgreSQL connection     |
+| `DATABASE_URL`           | ✅       | Neon PostgreSQL (also reads `NEON_DATABASE_URL`) |
 | `IRON_SESSION_PASSWORD`  | ✅       | Session encryption (≥ 32 chars)|
 | `UPSTASH_REDIS_URL`      | ✅       | Redis Pub/Sub for SSE          |
 | `UPSTASH_REDIS_TOKEN`    | ✅       | Redis auth                     |
