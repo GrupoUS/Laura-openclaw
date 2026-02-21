@@ -19,7 +19,7 @@ export async function GET() {
     let activeClients = 0
     try {
       activeClients = eventBus.getListenerCount()
-    } catch (e) {
+    } catch {
       sseStatus = 'disabled'
     }
 
