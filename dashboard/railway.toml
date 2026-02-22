@@ -9,4 +9,4 @@ healthcheckTimeout = 30
 restartPolicyType = "ON_FAILURE"
 
 [[services]]
-name = "openclaw-admin"
+name = "dashboard"

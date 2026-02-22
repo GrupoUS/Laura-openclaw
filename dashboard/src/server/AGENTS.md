@@ -1,6 +1,6 @@
 # server/ — Hono BFF + tRPC Backend Rules
 
-> **Parent**: [`openclaw-admin/AGENTS.md`](../../AGENTS.md) · **Scope**: `src/server/`
+> **Parent**: [`dashboard/AGENTS.md`](../../AGENTS.md) · **Scope**: `src/server/`
 
 ---
 

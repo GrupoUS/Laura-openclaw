@@ -4,7 +4,7 @@
   "scripts": {
     "lint": "oxlint",
     "lint:fix": "oxlint --fix",
-    "lint:admin": "cd openclaw-admin && oxlint --config .oxlintrc.json src/"
+    "lint:admin": "cd dashboard && oxlint --config .oxlintrc.json src/"
   },
   "devDependencies": {
     "oxlint": "^1.49.0"

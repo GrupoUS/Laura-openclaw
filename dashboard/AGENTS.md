@@ -1,6 +1,6 @@
 # OpenClaw Admin — Project Rules
 
-> **Parent**: [`AGENTS.md`](../AGENTS.md) · **Scope**: All files inside `openclaw-admin/`
+> **Parent**: [`AGENTS.md`](../AGENTS.md) · **Scope**: All files inside `dashboard/`
 
 ---
 
@@ -42,7 +42,7 @@
 ## Architecture
 
 ```text
-openclaw-admin/
+dashboard/
 ├── src/
 │   ├── client/              # React 19 frontend (SPA)
 │   │   ├── routes/          # TanStack Router file-based routes

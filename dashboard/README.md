@@ -1,4 +1,4 @@
-# openclaw-admin
+# dashboard
 
 To install dependencies:
 

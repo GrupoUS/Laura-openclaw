@@ -1,6 +1,6 @@
 # client/ — React 19 Frontend Rules
 
-> **Parent**: [`openclaw-admin/AGENTS.md`](../../AGENTS.md) · **Scope**: `src/client/`
+> **Parent**: [`dashboard/AGENTS.md`](../../AGENTS.md) · **Scope**: `src/client/`
 
 ---
 

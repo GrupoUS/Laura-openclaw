@@ -1,5 +1,5 @@
 {
-  "name": "openclaw-admin",
+  "name": "dashboard",
   "module": "index.ts",
   "type": "module",
   "private": true,

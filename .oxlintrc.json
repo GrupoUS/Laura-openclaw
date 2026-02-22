@@ -46,7 +46,7 @@
     "dist",
     "*.gen.ts",
     "*.gen.js",
-    "openclaw-admin",
+    "dashboard",
     "logs",
     "media",
     "data",

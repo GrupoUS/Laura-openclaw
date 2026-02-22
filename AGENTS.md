@@ -34,12 +34,12 @@ Priority:
 | ------------- | -------------------------------------------------------------------- |
 | **Type**      | Multi-Agent AI Platform (WhatsApp, Slack, Voice)                     |
 | **Platform**  | OpenClaw (self-hosted gateway + agent orchestration)                 |
-| **Admin**     | `openclaw-admin/` — React 19 + Vite 7 + tRPC 11 + Hono + Drizzle   |
+| **Admin**     | `dashboard/` — React 19 + Vite 7 + tRPC 11 + Hono + Drizzle   |
 | **Dashboard** | `dashboard/` — Next.js 14 + React 18 + Zustand + iron-session       |
-| **Runtime**   | **Bun** (openclaw-admin) · **npm** (dashboard/Next.js)               |
+| **Runtime**   | **Bun** (dashboard) · **npm** (dashboard/Next.js)               |
 | **Routing**   | TanStack Router (admin) · Next.js App Router (dashboard)             |
 | **Database**  | Neon PostgreSQL + Drizzle ORM                                        |
-| **Linter**    | OXLint (openclaw-admin) · ESLint (dashboard)                         |
+| **Linter**    | OXLint (dashboard) · ESLint (dashboard)                         |
 | **Tests**     | Vitest                                                               |
 | **Purpose**   | AI-powered multi-agent system for customer service + SDR + support   |
 
@@ -78,7 +78,7 @@ Priority:
 │   │   └── notifications/   # Telegram + webhook alerts
 │   ├── types/               # Shared TypeScript types
 │   └── tests/               # Vitest test suites
-├── openclaw-admin/          # Admin Panel (React 19 + Vite 7 + Hono BFF)
+├── dashboard/          # Admin Panel (React 19 + Vite 7 + Hono BFF)
 │   ├── src/
 │   │   ├── client/          # React frontend
 │   │   │   ├── routes/      # TanStack Router pages
@@ -123,7 +123,7 @@ Priority:
 | Tests      | Vitest                                               |
 | Deploy     | Railway (Dockerfile)                                 |
 
-### openclaw-admin (Admin Panel)
+### dashboard (Admin Panel)
 
 | Layer    | Technology                       |
 | -------- | -------------------------------- |
@@ -162,7 +162,7 @@ Priority:
 | Push DB schema       | `npm run db:push`      |
 | Generate migrations  | `npm run db:generate`  |
 
-### openclaw-admin
+### dashboard
 
 | Task                 | Command                |
 | -------------------- | ---------------------- |
@@ -180,9 +180,9 @@ Priority:
 ## Package Manager
 
 > [!CAUTION]
-> **openclaw-admin/** usa **`bun`** como package manager, runtime e bundler.
+> **dashboard/** usa **`bun`** como package manager, runtime e bundler.
 > ✅ `bun install`, `bun run`, `bunx`, `bun test`
-> ❌ Nunca use `npm`, `yarn`, `pnpm` no openclaw-admin
+> ❌ Nunca use `npm`, `yarn`, `pnpm` no dashboard
 
 > [!CAUTION]
 > **dashboard/** usa **`npm`** como package manager (Next.js standard).
@@ -306,7 +306,7 @@ const mutate = useMutation((api as any).leads.updateStatus);
 - Always specify hook dependency arrays correctly
 - Use unique IDs for `key` props (not array indices)
 
-**React 19 (openclaw-admin only):**
+**React 19 (dashboard only):**
 - Use `ref` as prop (not `React.forwardRef`)
 - Use `use()` hook for promises and context
 
@@ -338,7 +338,7 @@ const mutate = useMutation((api as any).leads.updateStatus);
 
 Before marking a task as complete:
 
-**openclaw-admin:**
+**dashboard:**
 - `bun run type-check` — no TS errors
 - `bun run lint:check` — OXLint passes
 - `bun test` — all tests pass
@@ -389,7 +389,7 @@ Use Conventional Commits: `feat:`, `fix:`, `docs:`, `refactor:`, `chore:`.
 
 ---
 
-## 10. Backend Architecture (openclaw-admin)
+## 10. Backend Architecture (dashboard)
 
 ### Canonical Request Lifecycle
 
@@ -511,7 +511,7 @@ catch (error) {
 - Local mode on port 3333
 - Auth via password (`openclaw.json` → `gateway.auth`)
 - Control UI enabled at `localhost:3333`
-- DB admin at `openclaw-admin` dashboard
+- DB admin at `dashboard` dashboard
 
 ---
 

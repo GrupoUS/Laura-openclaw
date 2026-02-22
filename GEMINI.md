@@ -11,7 +11,7 @@ trigger: always_on
 
 ## 1. Quick Reference
 
-### openclaw-admin
+### dashboard
 
 | Layer    | Technology                                 |
 | -------- | ------------------------------------------ |
@@ -37,7 +37,7 @@ trigger: always_on
 
 ## 2. Commands
 
-### openclaw-admin (bun)
+### dashboard (bun)
 
 | Task                 | Command                |
 | -------------------- | ---------------------- |
@@ -59,7 +59,7 @@ trigger: always_on
 | Run tests            | `npm test`             |
 | Push DB schema       | `npm run db:push`      |
 
-> **Package Manager**: `openclaw-admin/` uses **Bun**. `dashboard/` uses **npm**.
+> **Package Manager**: `dashboard/` uses **Bun**. `dashboard/` uses **npm**.
 
 ---
 
@@ -70,7 +70,7 @@ Load rules files in this order (lazy loading for context efficiency):
 1. **Root AGENTS.md** — Always load first. Contains project-wide rules.
 2. **Project-level AGENTS.md** — Load when entering a project directory:
    - `dashboard/AGENTS.md` — Dashboard project rules (Next.js)
-   - `openclaw-admin/AGENTS.md` — Admin project rules (Vite + Hono)
+   - `dashboard/AGENTS.md` — Admin project rules (Vite + Hono)
 3. **Subdirectory AGENTS.md** — Load only when editing files in that directory:
    - `dashboard/app/AGENTS.md` — Next.js App Router pages
    - `dashboard/app/api/AGENTS.md` — API routes (REST, SSE)
@@ -78,13 +78,13 @@ Load rules files in this order (lazy loading for context efficiency):
    - `dashboard/lib/AGENTS.md` — Utilities, DB, events
    - `dashboard/hooks/AGENTS.md` — Zustand + SSE hooks
    - `dashboard/types/AGENTS.md` — Type definitions
-   - `openclaw-admin/src/server/AGENTS.md` — Backend (Hono, tRPC, Drizzle)
-   - `openclaw-admin/src/server/db/AGENTS.md` — Drizzle schema
-   - `openclaw-admin/src/server/routers/AGENTS.md` — tRPC routers
-   - `openclaw-admin/src/server/services/AGENTS.md` — Business logic
-   - `openclaw-admin/src/server/ws/AGENTS.md` — WebSocket gateway
-   - `openclaw-admin/src/client/AGENTS.md` — Frontend (React, TanStack Router)
-   - `openclaw-admin/src/client/routes/AGENTS.md` — Route files
+   - `dashboard/src/server/AGENTS.md` — Backend (Hono, tRPC, Drizzle)
+   - `dashboard/src/server/db/AGENTS.md` — Drizzle schema
+   - `dashboard/src/server/routers/AGENTS.md` — tRPC routers
+   - `dashboard/src/server/services/AGENTS.md` — Business logic
+   - `dashboard/src/server/ws/AGENTS.md` — WebSocket gateway
+   - `dashboard/src/client/AGENTS.md` — Frontend (React, TanStack Router)
+   - `dashboard/src/client/routes/AGENTS.md` — Route files
    - `workspace/AGENTS.md` — Agent workspace definitions
    - `agents/*/AGENTS.md` — Per-agent rules (if present)
 
