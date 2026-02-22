@@ -234,17 +234,17 @@ This is a starting point. Add your own conventions, style, and rules as you figu
 
 ---
 
-## ⚡ Execução Paralela — sessions_spawn (obrigatório para tarefas >15s)
+## ⚡ Execução Paralela — sessions_spawn (apenas para tarefas internas >15s)
 
 ### Regra de ouro
 NUNCA processar inline tarefas longas (pesquisas, resumos, APIs com retry,
 geração de relatórios). Use sessions_spawn — libera a sessão imediatamente.
 
-### 🚀 Estratégia de SDR (Atendimento Direto)
-⚠️ O agente `sdr` NÃO está configurado no sistema. Apenas `chat` existe.
-- **Atender leads DIRETAMENTE** como Laura SDR. Não spawnar sub-agente.
-- Nunca tentar sessions_spawn com agentId `sdr` — causará erro que vaza para o lead.
-- Eu SOU a Laura SDR. Respondo diretamente, com qualidade, seguindo o SOUL.md.
+### 🚀 Atendimento de Lead = DIRETO, SEM SUB-AGENTE (REGRA 16)
+- **EU atendo leads DIRETAMENTE.** Nunca sessions_spawn para lead.
+- O agente `sdr` existe mas é usado APENAS para crons de varredura/relatórios.
+- Lead no WhatsApp aguardando → EU respondo. Agora. Sem spawnar nada.
+- Metodologia: ver SOUL.md + SDR_PLAYBOOK.md.
 
 ---
 

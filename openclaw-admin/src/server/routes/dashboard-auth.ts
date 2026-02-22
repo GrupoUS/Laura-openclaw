@@ -1,60 +1,67 @@
 /**
- * Dashboard auth routes (login/logout) using iron-session
+ * Dashboard auth routes (login/logout/check) using iron-session sealData/unsealData
+ * Compatible with Hono — does NOT rely on getIronSession(req, res)
  */
 import { Hono } from 'hono'
-import { getIronSession } from 'iron-session'
+import { setCookie, getCookie, deleteCookie } from 'hono/cookie'
+import { sealData, unsealData } from 'iron-session'
 import { SESSION_OPTIONS, type SessionData } from '@/server/session'
 
 const dashboardAuth = new Hono()
 
-// POST /api/dashboard/auth/login
+const COOKIE_NAME = SESSION_OPTIONS.cookieName
+const SEAL_PASSWORD = SESSION_OPTIONS.password
+
+// POST /api/auth/login
 dashboardAuth.post('/login', async (c) => {
   const { password } = await c.req.json<{ password: string }>()
 
   if (!password || password !== process.env.DASHBOARD_PASSWORD) {
-    // Artificial delay to mitigate brute-force
     await new Promise(r => setTimeout(r, 500))
-    return c.json({ error: 'Senha incorreta' }, 401)
+    return c.json({ ok: false, error: 'Senha incorreta' }, 401)
   }
 
-  const session = await getIronSession<SessionData>(c.req.raw, c.res as unknown as Response, SESSION_OPTIONS)
-  session.authenticated = true
-  session.loginAt       = new Date().toISOString()
-  await session.save()
+  const sessionData: SessionData = {
+    authenticated: true,
+    loginAt: new Date().toISOString(),
+  }
+
+  const sealed = await sealData(sessionData, { password: SEAL_PASSWORD })
+
+  setCookie(c, COOKIE_NAME, sealed, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'Lax',
+    maxAge: 60 * 60 * 24, // 24h
+    path: '/',
+  })
 
   return c.json({ ok: true })
 })
 
-// POST /api/dashboard/auth/logout
+// POST /api/auth/logout
 dashboardAuth.post('/logout', async (c) => {
-  const session = await getIronSession<SessionData>(c.req.raw, c.res as unknown as Response, SESSION_OPTIONS)
-  session.destroy()
+  deleteCookie(c, COOKIE_NAME, { path: '/' })
   return c.json({ ok: true })
 })
 
-// GET /api/dashboard/auth/check
+// GET /api/auth/check
 dashboardAuth.get('/check', async (c) => {
-  const cookieName = 'laura-dashboard-session'
-  const cookieValue = c.req.header('cookie')
-    ?.split(';')
-    .find(ck => ck.trim().startsWith(`${cookieName}=`))
-    ?.split('=')[1]
-    ?.trim()
+  const sealed = getCookie(c, COOKIE_NAME)
 
-  if (!cookieValue) {
+  if (!sealed) {
     return c.json({ authenticated: false }, 401)
   }
 
   try {
-    const { unsealData } = await import('iron-session')
-    const session = await unsealData<SessionData>(cookieValue, {
-      password: SESSION_OPTIONS.password,
+    const session = await unsealData<SessionData>(sealed, {
+      password: SEAL_PASSWORD,
     })
     if (session.authenticated) {
       return c.json({ authenticated: true })
     }
   } catch {
-    // Invalid cookie
+    // Invalid or expired cookie
   }
 
   return c.json({ authenticated: false }, 401)

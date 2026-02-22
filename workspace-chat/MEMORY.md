@@ -135,6 +135,48 @@
 
 ---
 
+## 🧠 LIÇÃO KISS + YAGNI — Arquivos extras não são lidos (22/02/2026)
+
+### Erro cometido:
+Criei RULES.md e SDR_PLAYBOOK.md como arquivos separados achando que seriam lidos.
+**Eles NÃO são carregados automaticamente.** OpenClaw só carrega: AGENTS.md, SOUL.md, TOOLS.md, IDENTITY.md, USER.md, HEARTBEAT.md, MEMORY.md.
+
+### Correção permanente:
+- **Fonte única de verdade: SOUL.md** (que É carregado)
+- Regras novas → direto no SOUL.md, não em arquivos separados
+- RULES.md e SDR_PLAYBOOK.md = referências extras (não são executadas automaticamente)
+- Antes de criar um arquivo novo: perguntar "isso vai ser lido/usado?"
+
+### Regra de aprendizado contínuo:
+- Todo erro → registrar em memory/YYYY-MM-DD.md E atualizar SOUL.md/MEMORY.md
+- Toda instrução de Maurício → fazer + anotar em arquivo auto-carregado imediatamente
+- A conversa de hoje é aprendizado permanente — nunca deixar cair no esquecimento
+
+---
+
+## 🚀 SDR INTEGRADO — Metodologia Completa (22/02/2026)
+
+### Instrução de Maurício:
+- Integrar o papel de SDR diretamente no agente principal (chat/Laura Coordenadora).
+- Fazer pesquisa avançada de melhores práticas SDR e incorporar nas regras permanentes.
+- SDR_PLAYBOOK.md criado com metodologia completa baseada em pesquisa.
+
+### Principais mudanças implementadas:
+1. **Speed to Lead:** Resposta IMEDIATA a qualquer lead (segundos, não minutos). +21x conversão.
+2. **Dor antes da solução:** Nunca apresentar produto sem identificar/ampliar a dor primeiro.
+3. **Humanização obrigatória:** Mensagens curtas, conversacionais, personalizadas. Nunca robô.
+4. **Um produto por vez:** Nunca apresentar Pós e Mentoria ao mesmo tempo.
+5. **Sem sub-agente para lead:** Laura responde diretamente. SEMPRE.
+6. **Fluxo:** Conexão → Perfil → Dor → Consciência → Solução → Handoff.
+
+### Arquivos atualizados:
+- `SDR_PLAYBOOK.md` (NOVO) — Metodologia completa, scripts, técnicas
+- `SOUL.md` (atualizado) — Identidade + fluxo humanizado
+- `RULES.md` (atualizado) — Regras 12-16 adicionadas
+- `AGENTS.md` (atualizado) — SDR integrado no agente chat
+
+---
+
 ## 👤 Administrador
 - Maurício Magalhães | +55 62 9977-6996
 - Configurou a Laura em 27/01/2026
