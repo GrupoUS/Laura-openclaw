@@ -13,14 +13,14 @@ export function KanbanColumn({ status, tasks }: Props) {
 
   return (
     <div className={`flex flex-col w-72 shrink-0 rounded-xl border-2 transition-colors ${
-      isOver ? 'border-blue-400 bg-blue-50/50' : `${colors.border} ${colors.bg}`
+      isOver ? 'border-blue-400 bg-blue-50 dark:bg-blue-950/30' : `${colors.border} ${colors.bg} dark:border-slate-700 dark:bg-slate-800/50`
     }`}>
       {/* Column header */}
-      <div className={`flex items-center justify-between px-3 py-2.5 border-b ${colors.border}`}>
-        <span className={`text-sm font-semibold ${colors.text}`}>
+      <div className={`flex items-center justify-between px-3 py-2.5 border-b ${colors.border} dark:border-slate-700`}>
+        <span className={`text-sm font-semibold ${colors.text} dark:text-slate-100`}>
           {STATUS_LABELS[status]}
         </span>
-        <span className={`text-xs font-mono px-2 py-0.5 rounded-full ${colors.bg} ${colors.text} border ${colors.border}`}>
+        <span className={`text-xs font-mono px-2 py-0.5 rounded-full ${colors.bg} ${colors.text} border ${colors.border} dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300`}>
           {tasks.length}
         </span>
       </div>
@@ -36,7 +36,7 @@ export function KanbanColumn({ status, tasks }: Props) {
           ))}
         </SortableContext>
         {tasks.length === 0 && (
-          <p className="text-xs text-slate-400 text-center py-4">
+          <p className="text-xs text-slate-400 dark:text-slate-600 text-center py-4">
             Nenhuma task aqui
           </p>
         )}

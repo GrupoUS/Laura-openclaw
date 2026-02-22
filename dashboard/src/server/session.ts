@@ -4,9 +4,22 @@ const rawPassword = process.env.IRON_SESSION_PASSWORD || ''
 const defaultFallback = 'fallback_password_for_build_step_only_32_chars'
 const finalPassword = rawPassword.length >= 32 ? rawPassword : defaultFallback
 
+export interface UserPreferences {
+  defaultView:      'board' | 'list' | 'agents' | 'analytics'
+  sidebarCollapsed: boolean
+  compactMode:      boolean
+}
+
+export const DEFAULT_PREFS: UserPreferences = {
+  defaultView:      'board',
+  sidebarCollapsed: false,
+  compactMode:      false,
+}
+
 export interface SessionData {
   authenticated: boolean
   loginAt:       string   // ISO 8601
+  preferences?:  UserPreferences
 }
 
 export const SESSION_OPTIONS: SessionOptions = {

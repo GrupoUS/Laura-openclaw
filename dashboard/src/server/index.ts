@@ -11,6 +11,7 @@ import { serveStatic } from 'hono/bun'
 import { getCookie, setCookie, deleteCookie } from 'hono/cookie'
 import { runEvolutionCycle } from './services/evolution'
 import { dashboardAuth } from './routes/dashboard-auth'
+import { preferencesRouter } from './routes/preferences'
 import { sseRoutes } from './routes/events'
 
 const app = new Hono()
@@ -23,6 +24,7 @@ const GATEWAY_TOKEN = process.env.GATEWAY_TOKEN || ''
 // PRIMARY AUTH: Dashboard (iron-session)
 // ────────────────────────────────────────────────────────────────────
 app.route('/api/auth', dashboardAuth)
+app.route('/api/preferences', preferencesRouter)
 
 // ────────────────────────────────────────────────────────────────────
 // SSE + Health (public paths with their own auth)
