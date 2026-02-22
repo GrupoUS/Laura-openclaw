@@ -9,6 +9,10 @@ RUN bun install --frozen-lockfile
 # Copy the rest of the source code
 COPY . .
 
+# Pass VITE_* env vars as build args (Vite embeds them at build time)
+ARG VITE_SSE_READ_TOKEN
+ENV VITE_SSE_READ_TOKEN=${VITE_SSE_READ_TOKEN}
+
 # Build Vite frontend and Bun backend
 RUN bun vite build
 # Build the hono backend into a single executable file or just transpile.

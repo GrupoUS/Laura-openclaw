@@ -12,6 +12,12 @@ const dashboardAuth = new Hono()
 const COOKIE_NAME = SESSION_OPTIONS.cookieName
 const SEAL_PASSWORD = SESSION_OPTIONS.password
 
+if (!process.env.DASHBOARD_PASSWORD) {
+  console.error('################################################################')
+  console.error('# ⚠️  DASHBOARD_PASSWORD env var is NOT SET — login will FAIL  #')
+  console.error('################################################################')
+}
+
 // POST /api/auth/login
 dashboardAuth.post('/login', async (c) => {
   const { password } = await c.req.json<{ password: string }>()
