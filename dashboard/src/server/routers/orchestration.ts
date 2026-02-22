@@ -13,6 +13,32 @@ import type {
 } from '@/shared/types/orchestration'
 
 // ---------------------------------------------------------------------------
+// Snapshot fallback (used when filesystem is unavailable, e.g. Railway)
+// ---------------------------------------------------------------------------
+
+interface SnapshotAgent {
+  id: string; name: string; role: string; level: number
+  reportsTo: string | null; skills: string[]
+}
+interface Snapshot {
+  generatedAt: string
+  agents: SnapshotAgent[]
+  workspaceSkills: string[]
+}
+
+let _snapshot: Snapshot | null = null
+async function loadSnapshot(): Promise<Snapshot | null> {
+  if (_snapshot) return _snapshot
+  try {
+    const raw = await readFile(join(import.meta.dir, '../data/openclaw-snapshot.json'), 'utf-8')
+    _snapshot = JSON.parse(raw) as Snapshot
+    return _snapshot
+  } catch {
+    return null
+  }
+}
+
+// ---------------------------------------------------------------------------
 // Paths
 // ---------------------------------------------------------------------------
 
@@ -50,10 +76,22 @@ async function readOpenClawAgents(): Promise<OpenClawAgent[]> {
     try {
       const raw = await readFile(OPENCLAW_JSON, 'utf-8')
       const config = JSON.parse(raw) as { agents?: { list?: OpenClawAgent[] } }
-      return config.agents?.list ?? []
+      const list = config.agents?.list ?? []
+      if (list.length > 0) return list
     } catch {
-      return []
+      // Filesystem unavailable — fall through to snapshot
     }
+    // Fallback: derive from snapshot
+    const snap = await loadSnapshot()
+    if (!snap) return []
+    return snap.agents
+      .filter((a) => a.id !== 'mauricio')
+      .map((a) => ({
+        id: a.id === 'laura' ? 'main' : a.id,
+        name: a.name,
+        workspace: '',
+        agentDir: '',
+      }))
   })
 }
 
@@ -128,35 +166,52 @@ async function buildHierarchy(): Promise<AgentMeta[]> {
       level: 0, reportsTo: null, manages: [],
     }]
 
-    // Parse each agent from openclaw.json
-    for (const agent of agents) {
-      // eslint-disable-next-line no-await-in-loop -- sequential: each agent parses its own directory files
-      const meta = await parseAgentMeta(agent.agentDir, agent.id)
+    // Check if we have real filesystem access (agentDir non-empty)
+    const hasFilesystem = agents.length > 0 && agents[0].agentDir !== ''
 
-      // Determine display name
-      const displayName = meta.name ?? agent.name.split('(')[0].trim()
-      const displayRole = meta.role ?? agent.name.match(/\((.+)\)/)?.[1] ?? agent.id
+    if (hasFilesystem) {
+      // LIVE: Parse each agent from filesystem
+      for (const agent of agents) {
+        // eslint-disable-next-line no-await-in-loop -- sequential: each agent parses its own directory files
+        const meta = await parseAgentMeta(agent.agentDir, agent.id)
 
-      // Determine hierarchy level from reportsTo
-      let level: 0 | 1 | 2 | 3 = 2
-      const reportsTo = meta.reportsTo ?? 'main'
+        const displayName = meta.name ?? agent.name.split('(')[0].trim()
+        const displayRole = meta.role ?? agent.name.match(/\((.+)\)/)?.[1] ?? agent.id
+        let level: 0 | 1 | 2 | 3 = 2
+        const reportsTo = meta.reportsTo ?? 'main'
 
-      if (reportsTo === 'mauricio' || agent.id === 'main') level = 1
-      else if (reportsTo === 'main') level = 2
-      else level = 3
+        if (reportsTo === 'mauricio' || agent.id === 'main') level = 1
+        else if (reportsTo === 'main') level = 2
+        else level = 3
 
-      // Special case: main reports to mauricio
-      const finalReportsTo = agent.id === 'main' ? 'mauricio' : reportsTo
+        const finalReportsTo = agent.id === 'main' ? 'mauricio' : reportsTo
 
-      hierarchy.push({
-        id: agent.id === 'main' ? 'laura' : agent.id,
-        name: agent.id === 'main' ? 'Laura' : displayName,
-        role: agent.id === 'main' ? 'CEO — Orquestradora & SDR' : displayRole,
-        level,
-        reportsTo: finalReportsTo === 'main' ? 'laura' : finalReportsTo,
-        manages: [],
-        requiredSkill: meta.requiredSkill,
-      })
+        hierarchy.push({
+          id: agent.id === 'main' ? 'laura' : agent.id,
+          name: agent.id === 'main' ? 'Laura' : displayName,
+          role: agent.id === 'main' ? 'CEO — Orquestradora & SDR' : displayRole,
+          level,
+          reportsTo: finalReportsTo === 'main' ? 'laura' : finalReportsTo,
+          manages: [],
+          requiredSkill: meta.requiredSkill,
+        })
+      }
+    } else {
+      // SNAPSHOT FALLBACK: Use pre-generated data
+      const snap = await loadSnapshot()
+      if (snap) {
+        for (const a of snap.agents) {
+          if (a.id === 'mauricio') continue
+          hierarchy.push({
+            id: a.id,
+            name: a.name,
+            role: a.role,
+            level: (a.level as 0 | 1 | 2 | 3),
+            reportsTo: a.reportsTo,
+            manages: [],
+          })
+        }
+      }
     }
 
     // Build manages[] from inverse reportsTo
@@ -201,12 +256,23 @@ async function extractAgentSkills(agentDir: string): Promise<string[]> {
 async function buildAgentSkillsMap(): Promise<Record<string, string[]>> {
   return cached('agent-skills', async () => {
     const agents = await readOpenClawAgents()
+    const hasFilesystem = agents.length > 0 && agents[0].agentDir !== ''
     const map: Record<string, string[]> = {}
 
-    for (const agent of agents) {
-      const hierarchyId = agent.id === 'main' ? 'laura' : agent.id
-      // eslint-disable-next-line no-await-in-loop -- sequential: each agent reads its own filesystem
-      map[hierarchyId] = await extractAgentSkills(agent.agentDir)
+    if (hasFilesystem) {
+      for (const agent of agents) {
+        const hierarchyId = agent.id === 'main' ? 'laura' : agent.id
+        // eslint-disable-next-line no-await-in-loop -- sequential: each agent reads its own filesystem
+        map[hierarchyId] = await extractAgentSkills(agent.agentDir)
+      }
+    } else {
+      // SNAPSHOT FALLBACK
+      const snap = await loadSnapshot()
+      if (snap) {
+        for (const a of snap.agents) {
+          if (a.id !== 'mauricio') map[a.id] = a.skills
+        }
+      }
     }
 
     return map
@@ -232,12 +298,16 @@ async function buildGatewayMapping(): Promise<Record<string, string>> {
 async function scanWorkspaceSkills(): Promise<string[]> {
   try {
     const entries = await readdir(WORKSPACE_SKILLS_DIR, { withFileTypes: true })
-    return entries
+    const skills = entries
       .filter((e) => e.isDirectory() && !e.name.startsWith('.') && e.name !== 'node_modules')
       .map((e) => e.name)
+    if (skills.length > 0) return skills
   } catch {
-    return []
+    // Filesystem unavailable — fall through to snapshot
   }
+  // SNAPSHOT FALLBACK
+  const snap = await loadSnapshot()
+  return snap?.workspaceSkills ?? []
 }
 
 // ---------------------------------------------------------------------------

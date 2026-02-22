@@ -1,0 +1,304 @@
+{
+  "generatedAt": "2026-02-22T17:24:15.029Z",
+  "agents": [
+    {
+      "id": "mauricio",
+      "name": "Maurício",
+      "role": "Fundador",
+      "level": 0,
+      "reportsTo": null,
+      "skills": []
+    },
+    {
+      "id": "laura",
+      "name": "Laura",
+      "role": "CEO — Orquestradora & SDR",
+      "level": 1,
+      "reportsTo": "mauricio",
+      "skills": [
+        "proactive-agent",
+        "agent-team-orchestration",
+        "find-skills"
+      ]
+    },
+    {
+      "id": "suporte",
+      "name": "Suporte Gestor",
+      "role": "suporte",
+      "level": 3,
+      "reportsTo": "otto",
+      "skills": [
+        "uds-search",
+        "linear-planner",
+        "proactive-agent",
+        "neondb-tasks",
+        "planning",
+        "find-skills"
+      ]
+    },
+    {
+      "id": "cs",
+      "name": "CS",
+      "role": "cs",
+      "level": 3,
+      "reportsTo": "mila",
+      "skills": [
+        "proactive-agent",
+        "client-flow",
+        "uds-search",
+        "find-skills"
+      ]
+    },
+    {
+      "id": "coder",
+      "name": "Coder",
+      "role": "coder",
+      "level": 3,
+      "reportsTo": "flora",
+      "skills": [
+        "proactive-agent",
+        "systematic-debugging",
+        "typescript-expert",
+        "architecture",
+        "find-skills",
+        "opencode-acp-control"
+      ]
+    },
+    {
+      "id": "claudete",
+      "name": "Claudete",
+      "role": "Diretora de RH & Onboarding de Agentes",
+      "level": 2,
+      "reportsTo": "laura",
+      "skills": [
+        "agent-builder",
+        "proactive-agent",
+        "find-skills"
+      ]
+    },
+    {
+      "id": "celso",
+      "name": "Celso",
+      "role": "Diretor de Marketing",
+      "level": 2,
+      "reportsTo": "laura",
+      "skills": [
+        "proactive-agent",
+        "agent-team-orchestration",
+        "find-skills"
+      ]
+    },
+    {
+      "id": "flora",
+      "name": "Flora",
+      "role": "Diretora de Produto & Tecnologia",
+      "level": 2,
+      "reportsTo": "laura",
+      "skills": [
+        "proactive-agent",
+        "agent-team-orchestration",
+        "find-skills"
+      ]
+    },
+    {
+      "id": "otto",
+      "name": "Otto",
+      "role": "Diretor de Operações",
+      "level": 2,
+      "reportsTo": "laura",
+      "skills": [
+        "proactive-agent",
+        "agent-team-orchestration",
+        "find-skills"
+      ]
+    },
+    {
+      "id": "cris",
+      "name": "Cris",
+      "role": "Diretora Financeiro & IBI",
+      "level": 2,
+      "reportsTo": "laura",
+      "skills": [
+        "proactive-agent",
+        "find-skills"
+      ]
+    },
+    {
+      "id": "mila",
+      "name": "Mila",
+      "role": "Diretora de Comunidade",
+      "level": 2,
+      "reportsTo": "laura",
+      "skills": [
+        "proactive-agent",
+        "agent-team-orchestration",
+        "find-skills"
+      ]
+    },
+    {
+      "id": "rafa",
+      "name": "Rafa",
+      "role": "Copywriter",
+      "level": 3,
+      "reportsTo": "celso",
+      "skills": [
+        "proactive-agent",
+        "canvas-design",
+        "seo-fundamentals",
+        "brainstorming",
+        "find-skills"
+      ]
+    },
+    {
+      "id": "duda",
+      "name": "Duda",
+      "role": "Social Media",
+      "level": 3,
+      "reportsTo": "celso",
+      "skills": [
+        "proactive-agent",
+        "canvas-design",
+        "nano-banana-pro",
+        "find-skills"
+      ]
+    },
+    {
+      "id": "maia",
+      "name": "Maia",
+      "role": "Roteirista",
+      "level": 3,
+      "reportsTo": "celso",
+      "skills": [
+        "proactive-agent",
+        "brainstorming",
+        "find-skills"
+      ]
+    },
+    {
+      "id": "luca-t",
+      "name": "Luca T.",
+      "role": "Diretor de Tráfego Pago",
+      "level": 3,
+      "reportsTo": "celso",
+      "skills": [
+        "proactive-agent",
+        "ai-data-analyst",
+        "tavily-search",
+        "find-skills"
+      ]
+    },
+    {
+      "id": "luca-p",
+      "name": "Luca P.",
+      "role": "Pesquisador de Tendências",
+      "level": 3,
+      "reportsTo": "celso",
+      "skills": [
+        "proactive-agent",
+        "tavily-search",
+        "find-skills"
+      ]
+    },
+    {
+      "id": "sara",
+      "name": "Sara",
+      "role": "Pré-Venda",
+      "level": 3,
+      "reportsTo": "celso",
+      "skills": [
+        "proactive-agent",
+        "client-flow",
+        "uds-search",
+        "find-skills"
+      ]
+    },
+    {
+      "id": "malu",
+      "name": "Malu",
+      "role": "Afiliados & Parcerias",
+      "level": 3,
+      "reportsTo": "celso",
+      "skills": [
+        "proactive-agent",
+        "tavily-search",
+        "find-skills"
+      ]
+    },
+    {
+      "id": "luca-i",
+      "name": "Luca I.",
+      "role": "Inteligência Competitiva",
+      "level": 3,
+      "reportsTo": "celso",
+      "skills": [
+        "proactive-agent",
+        "tavily-search",
+        "ai-data-analyst",
+        "find-skills"
+      ]
+    },
+    {
+      "id": "dora",
+      "name": "Dora",
+      "role": "Arquitetura de Lançamentos",
+      "level": 3,
+      "reportsTo": "flora",
+      "skills": [
+        "proactive-agent",
+        "planning",
+        "canvas-design",
+        "find-skills"
+      ]
+    }
+  ],
+  "workspaceSkills": [
+    "react-patterns",
+    "ui-ux-pro-max",
+    "seo-fundamentals",
+    "linear-planner",
+    "agent-browser",
+    "vulnerability-scanner",
+    "server-management",
+    "tavily-search",
+    "database-design",
+    "systematic-debugging",
+    "opencode-acp-control",
+    "typescript-expert",
+    "agent-team-orchestration",
+    "agent-builder",
+    "xlsx",
+    "planning",
+    "find-skills",
+    "asaas",
+    "documentation-templates",
+    "ontology",
+    "testing-patterns",
+    "gog",
+    "plan-writing",
+    "notion",
+    "performance-profiling",
+    "gpus-theme",
+    "docker-expert",
+    "architecture",
+    "canvas-design",
+    "neondb-tasks",
+    "client-flow",
+    "brainstorming",
+    "product-management",
+    "proactive-agent",
+    "zoom",
+    "webapp-testing",
+    "gog-workspace",
+    "voice-calling",
+    "frontend-design",
+    "tailwind-patterns",
+    "task-planning",
+    "ai-data-analyst",
+    "api-patterns",
+    "uds-search",
+    "nano-banana-pro",
+    "python-patterns",
+    "parallel-agents",
+    "app-builder"
+  ]
+}
