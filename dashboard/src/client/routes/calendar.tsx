@@ -32,7 +32,6 @@ function CalendarPage() {
   const { data: tasks = [], isLoading } = trpc.calendar.list.useQuery({
     start: start.toISOString(),
     end: end.toISOString(),
-    department: selectedDepartment,
   })
 
   const getDeptColor = (dept: string) => {

@@ -12,7 +12,6 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as ToolsRouteImport } from './routes/tools'
 import { Route as SessionsRouteImport } from './routes/sessions'
 import { Route as ProvidersRouteImport } from './routes/providers'
-import { Route as LoginRouteImport } from './routes/login'
 import { Route as ListRouteImport } from './routes/list'
 import { Route as EvolutionRouteImport } from './routes/evolution'
 import { Route as DashAgentsRouteImport } from './routes/dash-agents'
@@ -38,11 +37,6 @@ const SessionsRoute = SessionsRouteImport.update({
 const ProvidersRoute = ProvidersRouteImport.update({
   id: '/providers',
   path: '/providers',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const LoginRoute = LoginRouteImport.update({
-  id: '/login',
-  path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ListRoute = ListRouteImport.update({
@@ -113,7 +107,6 @@ export interface FileRoutesByFullPath {
   '/dash-agents': typeof DashAgentsRoute
   '/evolution': typeof EvolutionRoute
   '/list': typeof ListRoute
-  '/login': typeof LoginRoute
   '/providers': typeof ProvidersRoute
   '/sessions': typeof SessionsRoute
   '/tools': typeof ToolsRoute
@@ -130,7 +123,6 @@ export interface FileRoutesByTo {
   '/dash-agents': typeof DashAgentsRoute
   '/evolution': typeof EvolutionRoute
   '/list': typeof ListRoute
-  '/login': typeof LoginRoute
   '/providers': typeof ProvidersRoute
   '/sessions': typeof SessionsRoute
   '/tools': typeof ToolsRoute
@@ -148,7 +140,6 @@ export interface FileRoutesById {
   '/dash-agents': typeof DashAgentsRoute
   '/evolution': typeof EvolutionRoute
   '/list': typeof ListRoute
-  '/login': typeof LoginRoute
   '/providers': typeof ProvidersRoute
   '/sessions': typeof SessionsRoute
   '/tools': typeof ToolsRoute
@@ -167,7 +158,6 @@ export interface FileRouteTypes {
     | '/dash-agents'
     | '/evolution'
     | '/list'
-    | '/login'
     | '/providers'
     | '/sessions'
     | '/tools'
@@ -184,7 +174,6 @@ export interface FileRouteTypes {
     | '/dash-agents'
     | '/evolution'
     | '/list'
-    | '/login'
     | '/providers'
     | '/sessions'
     | '/tools'
@@ -201,7 +190,6 @@ export interface FileRouteTypes {
     | '/dash-agents'
     | '/evolution'
     | '/list'
-    | '/login'
     | '/providers'
     | '/sessions'
     | '/tools'
@@ -219,7 +207,6 @@ export interface RootRouteChildren {
   DashAgentsRoute: typeof DashAgentsRoute
   EvolutionRoute: typeof EvolutionRoute
   ListRoute: typeof ListRoute
-  LoginRoute: typeof LoginRoute
   ProvidersRoute: typeof ProvidersRoute
   SessionsRoute: typeof SessionsRoute
   ToolsRoute: typeof ToolsRoute
@@ -246,13 +233,6 @@ declare module '@tanstack/react-router' {
       path: '/providers'
       fullPath: '/providers'
       preLoaderRoute: typeof ProvidersRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/login': {
-      id: '/login'
-      path: '/login'
-      fullPath: '/login'
-      preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/list': {
@@ -347,7 +327,6 @@ const rootRouteChildren: RootRouteChildren = {
   DashAgentsRoute: DashAgentsRoute,
   EvolutionRoute: EvolutionRoute,
   ListRoute: ListRoute,
-  LoginRoute: LoginRoute,
   ProvidersRoute: ProvidersRoute,
   SessionsRoute: SessionsRoute,
   ToolsRoute: ToolsRoute,

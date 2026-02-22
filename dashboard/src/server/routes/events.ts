@@ -39,7 +39,7 @@ events.get('/', async (c) => {
     // Event handler with optional filtering
     const handler = async (event: TaskEvent) => {
       if (filterAgent && event.agent !== filterAgent) return
-      if (filterTaskId && event.taskId !== filterTaskId) return
+      if (filterTaskId && String(event.taskId) !== filterTaskId) return
       try {
         await stream.writeSSE({
           event: event.type,

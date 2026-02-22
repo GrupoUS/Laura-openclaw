@@ -44,8 +44,10 @@ function LoginPage() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••••••"
+              autoFocus
+              autoComplete="current-password"
               className="w-full border border-slate-200 rounded-lg px-3 py-2.5
-                         text-sm focus:outline-none focus:ring-2 focus:ring-blue-500
+                         text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500
                          focus:border-transparent transition-all"
             />
           </div>
@@ -77,30 +79,13 @@ function LoginPage() {
   )
 }
 
-function RootLayout() {
-  const { authenticated, loading } = useAuth()
+/** Authenticated layout — hooks called unconditionally */
+function AuthenticatedLayout() {
   const { location } = useRouterState()
   const isAdminRoute = location.pathname.startsWith('/admin')
 
-  // SSE connection — only when authenticated
+  // SSE connection — always runs (hook must be unconditional)
   useTaskEvents()
-
-  // Loading spinner
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center h-screen bg-slate-50">
-        <div className="flex flex-col items-center gap-3">
-          <div className="w-8 h-8 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin" />
-          <span className="text-slate-500 text-sm">Carregando...</span>
-        </div>
-      </div>
-    )
-  }
-
-  // Not authenticated → show login
-  if (!authenticated) {
-    return <LoginPage />
-  }
 
   // Admin routes — minimal layout
   if (isAdminRoute) {
@@ -122,4 +107,28 @@ function RootLayout() {
       </main>
     </div>
   )
+}
+
+function RootLayout() {
+  const { authenticated, loading } = useAuth()
+
+  // Loading spinner
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-screen bg-slate-50">
+        <div className="flex flex-col items-center gap-3">
+          <div className="w-8 h-8 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin" />
+          <span className="text-slate-500 text-sm">Carregando...</span>
+        </div>
+      </div>
+    )
+  }
+
+  // Not authenticated → show login
+  if (!authenticated) {
+    return <LoginPage />
+  }
+
+  // Authenticated → delegate to layout with SSE hook
+  return <AuthenticatedLayout />
 }
