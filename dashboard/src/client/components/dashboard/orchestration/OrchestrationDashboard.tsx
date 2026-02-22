@@ -12,6 +12,7 @@ import { ToolsMap } from './ToolsMap'
 import { TokenCosts } from './TokenCosts'
 import { WorkflowCycles } from './WorkflowCycles'
 import { AlertsPanel } from './AlertsPanel'
+import type { LiveAgentState } from '@/client/hooks/useOrchestrationEvents'
 
 interface Props {
   hierarchy: AgentNode[]
@@ -21,6 +22,7 @@ interface Props {
   budget: number
   workflowCycles: WorkflowCycle[]
   alerts: AlertItem[]
+  liveAgentMap?: Map<string, LiveAgentState>
 }
 
 export function OrchestrationDashboard({
@@ -31,6 +33,7 @@ export function OrchestrationDashboard({
   budget,
   workflowCycles,
   alerts,
+  liveAgentMap,
 }: Props) {
   const activeCount = hierarchy.filter((n) => n.status === 'active' || n.status === 'in_workflow').length
   const totalCost = tokenCosts.reduce((sum, c) => sum + c.cost, 0)
@@ -65,7 +68,7 @@ export function OrchestrationDashboard({
             <h2 className="text-sm font-semibold text-slate-700 mb-4 flex items-center gap-2">
               <span className="text-base">🌳</span> Árvore Hierárquica
             </h2>
-            <HierarchyTree nodes={hierarchy} />
+            <HierarchyTree nodes={hierarchy} liveEvents={new Map(Array.from(liveAgentMap?.entries() ?? []).map(([k, v]) => [k, v.currentAction]))} />
           </section>
 
           {/* Panel 2 — Skills Map */}

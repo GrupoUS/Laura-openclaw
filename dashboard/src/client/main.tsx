@@ -55,3 +55,14 @@ ReactDOM.createRoot(rootEl).render(
     <App />
   </React.StrictMode>
 )
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker
+      .register('/sw.js', { scope: '/', updateViaCache: 'none' })
+      // eslint-disable-next-line no-console
+      .then((reg) => console.log('[SW] registered:', reg.scope))
+      // eslint-disable-next-line no-console
+      .catch((err) => console.warn('[SW] register failed:', err))
+  })
+}

@@ -16,6 +16,7 @@ function AgentsPage() {
   const { data: agentsData } = trpc.dashboardAgents.list.useQuery()
   const { data: tasksData } = trpc.tasks.list.useQuery()
   const { data: activityData } = trpc.activity.list.useQuery({ limit: 30 })
+  const { data: hierarchy } = trpc.orchestration.hierarchy.useQuery(undefined, { refetchInterval: 10000, staleTime: 0 })
 
   useEffect(() => {
     if (agentsData?.data) setAgentDetails(agentsData.data)
@@ -40,6 +41,7 @@ function AgentsPage() {
       initialAgents={agentsData?.data ?? []}
       initialTasks={tasksData?.data as unknown as Task[] ?? []}
       initialActivity={initialActivity}
+      hierarchy={hierarchy ?? []}
     />
   )
 }

@@ -12,7 +12,7 @@ export function KanbanColumn({ status, tasks }: Props) {
   const colors = STATUS_COLORS[status]
 
   return (
-    <div className={`flex flex-col w-72 shrink-0 rounded-xl border-2 transition-colors ${
+    <div className={`flex flex-col w-[85vw] md:w-72 snap-center shrink-0 rounded-xl border-2 transition-colors ${
       isOver ? 'border-blue-400 bg-blue-50 dark:bg-blue-950/30' : `${colors.border} ${colors.bg} dark:border-slate-700 dark:bg-slate-800/50`
     }`}>
       {/* Column header */}

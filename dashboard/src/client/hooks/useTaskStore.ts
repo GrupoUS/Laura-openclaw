@@ -14,6 +14,15 @@ export interface ActivityEntry {
   ts:        string
 }
 
+export type AppEventType = 'subtask:updated' | 'task:updated' | 'agent:status' | 'agent:skill_used' | string;
+
+export interface AppEvent {
+  type: AppEventType
+  taskId?: string
+  agent?: string
+  payload: Record<string, unknown>
+}
+
 interface TaskStore {
   tasks: Task[]
   isConnected: boolean
@@ -34,7 +43,7 @@ interface TaskStore {
 
   agentDetails: AgentDetail[]
   setAgentDetails: (agents: AgentDetail[]) => void
-  updateAgentFromEvent: (event: { type: string; taskId: string; agent?: string; payload: Record<string, unknown> }) => void
+  updateAgentFromEvent: (event: AppEvent) => void
 }
 
 export const useTaskStore = create<TaskStore>()(

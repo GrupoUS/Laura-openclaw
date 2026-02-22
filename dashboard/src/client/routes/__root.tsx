@@ -4,6 +4,10 @@ import { ThemeProvider } from 'next-themes'
 import { useAuth } from '../auth'
 import { Sidebar } from '../components/dashboard/layout/Sidebar'
 import { useTaskEvents } from '../hooks/useTaskEvents'
+import { useIsMobile } from '../hooks/useMediaQuery'
+import { MobileHeader } from '../components/dashboard/layout/MobileHeader'
+import { BottomNav } from '../components/dashboard/layout/BottomNav'
+import { InstallBanner } from '../components/dashboard/pwa/InstallBanner'
 import type { UserPreferences } from '@/server/session'
 
 export const Route = createRootRoute({
@@ -99,6 +103,7 @@ function LoginPage() {
 function AuthenticatedLayout({ prefs }: { prefs: UserPreferences }) {
   const { location } = useRouterState()
   const isAdminRoute = location.pathname.startsWith('/admin')
+  const isMobile = useIsMobile()
 
   // SSE connection — always runs (hook must be unconditional)
   useTaskEvents()
@@ -116,18 +121,25 @@ function AuthenticatedLayout({ prefs }: { prefs: UserPreferences }) {
 
   // Dashboard — primary layout with sidebar
   return (
-    <div className="flex h-screen bg-background overflow-hidden">
-      <Sidebar
-        initialCollapsed={prefs.sidebarCollapsed}
-        initialCompact={prefs.compactMode}
-        initialDefaultView={prefs.defaultView}
-      />
+    <div className="flex h-[100dvh] bg-background overflow-hidden relative">
+      {!isMobile && (
+        <Sidebar
+          initialCollapsed={prefs.sidebarCollapsed}
+          initialCompact={prefs.compactMode}
+          initialDefaultView={prefs.defaultView}
+        />
+      )}
       <main 
-        className="flex-1 flex flex-col overflow-hidden"
+        className="flex-1 flex flex-col overflow-hidden min-w-0"
         data-compact={prefs.compactMode ? 'true' : 'false'}
       >
-        <Outlet />
+        {isMobile && <MobileHeader />}
+        <div className={`flex-1 overflow-x-hidden overflow-y-auto ${isMobile ? 'pb-24' : ''}`}>
+          <Outlet />
+        </div>
       </main>
+      {isMobile && <BottomNav />}
+      {isMobile && <InstallBanner />}
     </div>
   )
 }

@@ -65,14 +65,14 @@ export function KanbanBoard({ initialTasks }: { initialTasks: Task[] }) {
   return (
     <>
       <ViewHeader title="🗂️ Kanban Board" />
-      <div className="flex-1 overflow-x-auto">
+      <div className="flex-1 overflow-x-auto snap-x snap-mandatory">
         <DndContext
           sensors={sensors}
           collisionDetection={closestCorners}
           onDragStart={handleDragStart}
           onDragEnd={handleDragEnd}
         >
-          <div className="flex gap-4 p-6 h-full">
+          <div className="flex gap-4 p-4 md:p-6 h-full">
             {COLUMNS.map((status) => (
               <KanbanColumn key={status} status={status} tasks={groups[status]} />
             ))}

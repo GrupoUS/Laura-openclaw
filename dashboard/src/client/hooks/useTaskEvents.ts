@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react'
 import { useTaskStore, type ActivityEntry } from './useTaskStore'
+import { useOrchestrationEvents } from './useOrchestrationEvents'
 import type { Task, Subtask } from '@/shared/types/tasks'
 
 const SSE_TOKEN = import.meta.env.VITE_SSE_READ_TOKEN ?? ''
@@ -24,6 +25,10 @@ export function useTaskEvents() {
   const setConnected  = useTaskStore((s) => s.setConnected)
   const pushActivity  = useTaskStore((s) => s.pushActivity)
   const updateAgentFromEvent = useTaskStore((s) => s.updateAgentFromEvent)
+  
+  const pushAgentStatus = useOrchestrationEvents((s) => s.pushAgentStatus)
+  const pushAgentSkill = useOrchestrationEvents((s) => s.pushAgentSkill)
+  
   const esRef = useRef<EventSource | null>(null)
 
   useEffect(() => {
@@ -64,6 +69,24 @@ export function useTaskEvents() {
       updateAgentFromEvent(event)
     })
 
+    es.addEventListener('agent:status', (e) => {
+      try {
+        const event = JSON.parse(e.data)
+        const payload = event.payload ?? event
+        pushAgentStatus(payload.agentId, payload.status, payload.currentAction)
+        updateAgentFromEvent({ type: 'agent:status', agent: payload.agentId, payload })
+      } catch { /* ignore parsing errors */ }
+    })
+
+    es.addEventListener('agent:skill_used', (e) => {
+      try {
+        const event = JSON.parse(e.data)
+        const payload = event.payload ?? event
+        pushAgentSkill(payload.agentId, payload.skill, event.ts || payload.ts)
+        pushActivity(toActivity(e as MessageEvent))
+      } catch { /* ignore parsing errors */ }
+    })
+
     es.addEventListener('heartbeat', () => setConnected(true))
 
     es.addEventListener('message', (e) => {
@@ -82,5 +105,5 @@ export function useTaskEvents() {
       es.close()
       setConnected(false)
     }
-  }, [upsertTask, upsertSubtask, setConnected, pushActivity, updateAgentFromEvent])
+  }, [upsertTask, upsertSubtask, setConnected, pushActivity, updateAgentFromEvent, pushAgentStatus, pushAgentSkill])
 }
