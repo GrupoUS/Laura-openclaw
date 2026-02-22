@@ -1,3 +1,4 @@
+import { Link } from '@tanstack/react-router'
 import type { AgentNode, AgentStatus } from '@/shared/types/orchestration'
 
 const STATUS_COLORS: Record<AgentStatus, { bg: string; dot: string; border: string }> = {
@@ -14,8 +15,17 @@ const LEVEL_LABELS: Record<number, string> = {
   3: 'Operacional',
 }
 
+// Map hierarchy IDs to gateway agent IDs for board linking
+const HIERARCHY_TO_GATEWAY: Record<string, string> = {
+  laura: 'main',
+  coder: 'coder',
+  cs: 'cs',
+  suporte: 'suporte',
+}
+
 function AgentNodeCard({ node }: { node: AgentNode }) {
   const colors = STATUS_COLORS[node.status]
+  const gatewayId = HIERARCHY_TO_GATEWAY[node.id]
 
   return (
     <div
@@ -36,6 +46,15 @@ function AgentNodeCard({ node }: { node: AgentNode }) {
         <span className="mt-1 inline-block text-[9px] bg-slate-100 text-slate-500 px-1.5 py-0.5 rounded-full">
           {node.skills.length} skill{node.skills.length > 1 ? 's' : ''}
         </span>
+      )}
+      {gatewayId && (
+        <Link
+          to="/board"
+          search={{ agent: gatewayId }}
+          className="mt-1.5 block text-[9px] text-indigo-500 hover:text-indigo-700 font-medium transition-colors"
+        >
+          Ver tarefas →
+        </Link>
       )}
     </div>
   )
