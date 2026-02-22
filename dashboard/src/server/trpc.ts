@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { gatewayCall, getGatewayUrl } from './ws/openclaw'
+import { gatewayCall, getGatewayUrl, isGatewayConnected } from './ws/openclaw'
 import { router, publicProcedure } from './trpc-init'
 import { evolutionRouter } from './routers/evolution'
 import { tasksRouter } from './routers/tasks'
@@ -24,6 +24,9 @@ const gatewayRouter = router({
       return { connected: false, targetUrl, error: (err as Error).message }
     }
   }),
+  status: publicProcedure.query(() => {
+    return { connected: isGatewayConnected(), url: getGatewayUrl() }
+  }),
   patch: publicProcedure
     .input(z.object({ patch: z.record(z.string(), z.unknown()) }))
     .mutation(async ({ input, ctx }) => {
@@ -33,7 +36,12 @@ const gatewayRouter = router({
 
 const sessionsRouter = router({
   list: publicProcedure.query(async ({ ctx }) => {
-    return gatewayCall('sessions_list', {}, ctx.gatewayToken).catch(() => [])
+    try {
+      const result = await gatewayCall('sessions_list', {}, ctx.gatewayToken)
+      return { data: Array.isArray(result) ? result as Record<string, unknown>[] : [], connected: true }
+    } catch {
+      return { data: [] as Record<string, unknown>[], connected: false }
+    }
   }),
   create: publicProcedure
     .input(z.object({ agentId: z.string(), channelId: z.string() }))
@@ -44,31 +52,56 @@ const sessionsRouter = router({
 
 const agentsRouter = router({
   list: publicProcedure.query(async ({ ctx }) => {
-    return gatewayCall('agents_list', {}, ctx.gatewayToken).catch(() => [])
+    try {
+      const result = await gatewayCall('agents_list', {}, ctx.gatewayToken)
+      return { data: Array.isArray(result) ? result as Record<string, unknown>[] : [], connected: true }
+    } catch {
+      return { data: [] as Record<string, unknown>[], connected: false }
+    }
   })
 })
 
 const toolsRouter = router({
   list: publicProcedure.query(async ({ ctx }) => {
-    return gatewayCall('tools_list', {}, ctx.gatewayToken).catch(() => [])
+    try {
+      const result = await gatewayCall('tools_list', {}, ctx.gatewayToken)
+      return { data: Array.isArray(result) ? result as Record<string, unknown>[] : [], connected: true }
+    } catch {
+      return { data: [] as Record<string, unknown>[], connected: false }
+    }
   })
 })
 
 const providersRouter = router({
   list: publicProcedure.query(async ({ ctx }) => {
-    return gatewayCall('providers_list', {}, ctx.gatewayToken).catch(() => [])
+    try {
+      const result = await gatewayCall('providers_list', {}, ctx.gatewayToken)
+      return { data: Array.isArray(result) ? result as Record<string, unknown>[] : [], connected: true }
+    } catch {
+      return { data: [] as Record<string, unknown>[], connected: false }
+    }
   })
 })
 
 const cronsRouter = router({
   list: publicProcedure.query(async ({ ctx }) => {
-    return gatewayCall('crons_list', {}, ctx.gatewayToken).catch(() => [])
+    try {
+      const result = await gatewayCall('crons_list', {}, ctx.gatewayToken)
+      return { data: Array.isArray(result) ? result as Record<string, unknown>[] : [], connected: true }
+    } catch {
+      return { data: [] as Record<string, unknown>[], connected: false }
+    }
   })
 })
 
 const channelsRouter = router({
   list: publicProcedure.query(async ({ ctx }) => {
-    return gatewayCall('channels_list', {}, ctx.gatewayToken).catch(() => [])
+    try {
+      const result = await gatewayCall('channels_list', {}, ctx.gatewayToken)
+      return { data: Array.isArray(result) ? result as Record<string, unknown>[] : [], connected: true }
+    } catch {
+      return { data: [] as Record<string, unknown>[], connected: false }
+    }
   })
 })
 

@@ -90,8 +90,8 @@ Before marking a task as complete:
 | Variable                  | Required | Purpose                        |
 | ------------------------- | -------- | ------------------------------ |
 | `DATABASE_URL`            | ✅       | Neon PostgreSQL connection     |
-| `OPENCLAW_GATEWAY_TOKEN`  | ✅       | Gateway auth token             |
-| `OPENCLAW_GATEWAY_URL`    | ✅       | Gateway WebSocket URL          |
+| `GATEWAY_TOKEN`           | ✅       | Gateway auth token             |
+| `GATEWAY_WS_URL`          | ✅       | Gateway WebSocket URL          |
 
 > [!WARNING]
 > Never hardcode secrets. Use `.env` (gitignored).

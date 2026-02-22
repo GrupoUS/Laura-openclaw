@@ -7,7 +7,9 @@ export const Route = createFileRoute('/sessions')({
 })
 
 function Sessions() {
-  const sessionsQuery = trpc.sessions.list.useQuery()
+  const sessionsQuery = trpc.sessions.list.useQuery(undefined, { refetchInterval: 30_000 })
+  const sessions = (sessionsQuery.data?.data ?? []) as Record<string, unknown>[]
+  const gwConnected = sessionsQuery.data?.connected ?? true
 
   return (
     <div className="flex flex-col gap-6">
@@ -25,6 +27,12 @@ function Sessions() {
         </button>
       </div>
 
+      {!gwConnected && (
+        <div className="bg-amber-50 border border-amber-200 rounded-lg px-4 py-3 text-amber-800 text-sm flex items-center gap-2">
+          <span>⚠️</span> Gateway offline — dados podem estar desatualizados
+        </div>
+      )}
+
       <div className="bg-neutral-950 rounded-lg border border-neutral-800 shadow-md overflow-hidden">
         {sessionsQuery.isLoading ? (
           <div className="p-8 text-center text-neutral-500">Loading sessions...</div>
@@ -41,8 +49,8 @@ function Sessions() {
               </tr>
             </thead>
             <tbody className="divide-y divide-neutral-800">
-              {(sessionsQuery.data as Record<string, unknown>[])?.length ? (
-                (sessionsQuery.data as Record<string, unknown>[]).map((s, i) => (
+              {sessions.length ? (
+                sessions.map((s, i) => (
                   <tr key={(s.id as string) || (s.sessionId as string) || `session-${i}`} className="hover:bg-neutral-900/50">
                     <td className="px-6 py-4 font-mono">{(s.id as string) || (s.sessionId as string)}</td>
                     <td className="px-6 py-4">{s.agentId as string}</td>

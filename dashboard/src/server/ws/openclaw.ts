@@ -6,6 +6,7 @@ import { sign, createPrivateKey } from 'node:crypto'
 
 let ws: WebSocket | null = null
 let reconnectTimer: ReturnType<typeof setTimeout> | null = null
+let connectingTimer: ReturnType<typeof setTimeout> | null = null
 let handshakeComplete = false
 let connectFrameId: string | null = null
 let challengeNonce: string | null = null
@@ -14,7 +15,7 @@ let pendingHandshakeCallbacks: Array<{
   reject: (err: Error) => void
 }> = []
 
-const GATEWAY_WS_URL = process.env.GATEWAY_WS_URL ?? 'ws://127.0.0.1:18789'
+const GATEWAY_WS_URL = process.env.GATEWAY_WS_URL ?? 'ws://127.0.0.1:3333'
 const GATEWAY_TOKEN = process.env.GATEWAY_TOKEN ?? ''
 const GATEWAY_TIMEOUT_MS = Number(process.env.GATEWAY_TIMEOUT_MS) || 15_000
 
@@ -31,11 +32,17 @@ const logErr = (...args: unknown[]) => console.error('[gateway-ws]', ...args)
 const logWarn = (...args: unknown[]) => console.warn('[gateway-ws]', ...args)
 /* eslint-enable no-console */
 const RECONNECT_DELAY_MS = 5_000
+const CONNECTING_TIMEOUT_MS = 10_000
 const PROTOCOL_VERSION = 3
 
 /** Expose the configured URL for diagnostics */
 export function getGatewayUrl(): string {
   return GATEWAY_WS_URL
+}
+
+/** Check whether the gateway WebSocket is connected and handshake is done */
+export function isGatewayConnected(): boolean {
+  return ws !== null && ws.readyState === WebSocket.OPEN && handshakeComplete
 }
 
 /**
@@ -175,7 +182,17 @@ export function getGatewayWs(url = GATEWAY_WS_URL): WebSocket {
     pendingHandshakeCallbacks = []
     ws = new WebSocket(url)
 
+    // Guard: if socket stays in CONNECTING for too long, force close & reconnect
+    connectingTimer = setTimeout(() => {
+      connectingTimer = null
+      if (ws && ws.readyState === WebSocket.CONNECTING) {
+        logWarn(`CONNECTING timeout after ${CONNECTING_TIMEOUT_MS / 1000}s — forcing close`)
+        ws.close()
+      }
+    }, CONNECTING_TIMEOUT_MS)
+
     ws.addEventListener('open', () => {
+      if (connectingTimer) { clearTimeout(connectingTimer); connectingTimer = null }
       log(`✓ connected to ${url}`)
       // Don't send connect yet — wait for connect.challenge event
     })
@@ -206,10 +223,10 @@ export function getGatewayWs(url = GATEWAY_WS_URL): WebSocket {
           // If device identity is configured, use device auth
           if (DEVICE_ID && DEVICE_PRIVATE_KEY) {
             try {
-              sendConnectWithDevice(ws!, challengeNonce)
+              sendConnectWithDevice(ws, challengeNonce)
             } catch (err) {
               logErr('device auth failed, falling back to simple auth:', (err as Error).message)
-              sendConnectSimple(ws!)
+              sendConnectSimple(ws)
             }
           } else {
             sendConnectSimple(ws!)
@@ -233,7 +250,7 @@ export function getGatewayWs(url = GATEWAY_WS_URL): WebSocket {
             cb.reject(new Error(`Gateway handshake rejected: ${errMsg}`))
           }
           pendingHandshakeCallbacks = []
-          ws?.close()
+           ws?.close()
           return
         }
 
@@ -258,6 +275,7 @@ export function getGatewayWs(url = GATEWAY_WS_URL): WebSocket {
 
     ws.addEventListener('close', (ev) => {
       logWarn(`closed (code=${ev.code}, reason=${ev.reason || 'none'})`)
+      if (connectingTimer) { clearTimeout(connectingTimer); connectingTimer = null }
       handshakeComplete = false
       connectFrameId = null
       challengeNonce = null

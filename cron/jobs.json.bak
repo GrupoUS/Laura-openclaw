@@ -412,7 +412,7 @@
     },
     {
       "id": "3a0b29be-63a1-4269-85f3-2a3aeffb01ff",
-      "agentId": "sdr",
+      "agentId": "main",
       "name": "sdr-lead-checker",
       "description": "Check for unresponded leads every hour",
       "enabled": true,
@@ -446,7 +446,7 @@
     },
     {
       "id": "29086beb-a9e5-407f-af2d-534fd1c82068",
-      "agentId": "sdr",
+      "agentId": "main",
       "name": "followup-comercial-diario",
       "enabled": true,
       "createdAtMs": 1771610323090,

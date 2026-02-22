@@ -235,12 +235,44 @@ This is a starting point. Add your own conventions, style, and rules as you figu
 
 ## 🏗️ Team Roster (Orchestrated by Laura)
 
+### C-Level
 | Agent ID | Role | Função Primária | Model Tier |
 |----------|------|----------------|------------|
-| `main` | **Orchestrator** | Roteamento, tracking, SDR direto | Top-tier (julgamento) |
-| `coder` | **Builder** | Código, automação, manutenção de sistemas | Mid-to-top tier |
-| `cs` | **Builder** | Customer Success, suporte ao aluno, mentorias | Mid tier |
-| `suporte` | **Builder + Ops** | PM interno, tracking de projetos, ops diárias | Cost-effective |
+| `main` | **Orchestrator** | Roteamento, tracking, SDR direto | Top-tier |
+| `claudete` | **RH & Onboarding** | Criação e manutenção de agentes | Top-tier |
+
+### Diretores
+| Agent ID | Role | Função Primária | Supervisiona |
+|----------|------|----------------|-------------|
+| `celso` | **Dir. Marketing** | Estratégia, revisão, métricas | rafa, duda, maia, luca-t, luca-p, sara, malu, luca-i |
+| `flora` | **Dir. Produto & Tech** | Roadmap, review técnico | coder, dora |
+| `otto` | **Dir. Operações** | Processos, cobranças, SLA | suporte |
+| `cris` | **Dir. Financeiro & IBI** | Cash flow, inadimplência | — |
+| `mila` | **Dir. Comunidade** | Engajamento, NPS, retenção | cs |
+
+### Builders (existentes)
+| Agent ID | Role | Função Primária | Reporta a |
+|----------|------|----------------|-----------|
+| `coder` | **Builder** | Código, automação, bugs | Flora |
+| `cs` | **Builder CS** | Suporte ao aluno, mentorias | Mila |
+| `suporte` | **Builder + Ops** | PM interno, cobranças | Otto |
+
+### Operacionais (Marketing — sob Celso)
+| Agent ID | Nome | Função | Model |
+|----------|------|--------|-------|
+| `rafa` | Rafa | Copywriter | Flash |
+| `duda` | Duda | Social Media | Flash |
+| `maia` | Maia | Roteirista | Flash |
+| `luca-t` | Luca T. | Tráfego Pago | Flash |
+| `luca-p` | Luca P. | Pesquisador de Tendências | Flash |
+| `sara` | Sara | Pré-Venda | Flash |
+| `malu` | Malu | Afiliados & Parcerias | Flash |
+| `luca-i` | Luca I. | Inteligência Competitiva | Flash |
+
+### Operacionais (Produto — sob Flora)
+| Agent ID | Nome | Função | Model |
+|----------|------|--------|-------|
+| `dora` | Dora | Arquitetura de Lançamentos | Mid |
 
 > **Regra:** Um agente, uma função primária. Orchestrator NUNCA builda — roteia e rastreia.
 > **Exceção:** Lead direto no WhatsApp → EU (Orchestrator) atendo como SDR. Nunca delego.

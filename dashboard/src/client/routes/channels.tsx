@@ -7,19 +7,27 @@ export const Route = createFileRoute('/channels')({
 })
 
 function Channels() {
-  const channelsQuery = trpc.channels.list.useQuery()
+  const channelsQuery = trpc.channels.list.useQuery(undefined, { refetchInterval: 30_000 })
+  const channels = (channelsQuery.data?.data ?? []) as Record<string, unknown>[]
+  const gwConnected = channelsQuery.data?.connected ?? true
 
   return (
     <div className="flex flex-col gap-6">
       <h2 className="text-3xl font-bold tracking-tight">Channels</h2>
       <p className="text-neutral-400">Manage communication channel authentications.</p>
 
+      {!gwConnected && (
+        <div className="bg-amber-50 border border-amber-200 rounded-lg px-4 py-3 text-amber-800 text-sm flex items-center gap-2">
+          <span>⚠️</span> Gateway offline — dados podem estar desatualizados
+        </div>
+      )}
+
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-4">
         {channelsQuery.isLoading && <div className="text-neutral-500">Loading channels...</div>}
         {channelsQuery.isError && <div className="text-red-500">Error: {channelsQuery.error.message}</div>}
-        {channelsQuery.data ? (
+        {channels.length > 0 ? (
           <React.Fragment>
-            {(channelsQuery.data as Record<string, unknown>[]).map((channel, i) => {
+            {channels.map((channel, i) => {
               const status = (channel.status as string) || 'unknown'
               const statusColor = status === 'connected' ? 'text-green-500'
                 : status === 'pending' ? 'text-yellow-500'
@@ -43,6 +51,8 @@ function Channels() {
               )
             })}
           </React.Fragment>
+        ) : !channelsQuery.isLoading ? (
+          <div className="text-neutral-500">No channels found.</div>
         ) : null}
       </div>
     </div>

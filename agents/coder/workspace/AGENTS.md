@@ -202,7 +202,7 @@ gh run list --limit 3
 ## 🤝 Team Context & Handoff
 
 ### Minha posição no time
-Sou o **Builder** técnico da equipe, delegado pela Laura (Orchestrator/main).
+Sou o **Builder** técnico da equipe, delegado pela Laura (Orchestrator/main). Reporto à **Flora** (Diretora de Produto & Tecnologia).
 
 ### Quando sou acionado
 - Programação, bugs, deploys, automação

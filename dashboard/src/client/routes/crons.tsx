@@ -7,7 +7,9 @@ export const Route = createFileRoute('/crons')({
 })
 
 function Crons() {
-  const cronsQuery = trpc.crons.list.useQuery()
+  const cronsQuery = trpc.crons.list.useQuery(undefined, { refetchInterval: 30_000 })
+  const crons = (cronsQuery.data?.data ?? []) as Record<string, unknown>[]
+  const gwConnected = cronsQuery.data?.connected ?? true
 
   return (
     <div className="flex flex-col gap-6">
@@ -25,6 +27,12 @@ function Crons() {
         </button>
       </div>
 
+      {!gwConnected && (
+        <div className="bg-amber-50 border border-amber-200 rounded-lg px-4 py-3 text-amber-800 text-sm flex items-center gap-2">
+          <span>⚠️</span> Gateway offline — dados podem estar desatualizados
+        </div>
+      )}
+
       <div className="bg-neutral-950 rounded-lg border border-neutral-800 shadow-md overflow-hidden">
         {cronsQuery.isLoading ? (
           <div className="p-8 text-center text-neutral-500">Loading crons...</div>
@@ -41,8 +49,8 @@ function Crons() {
               </tr>
             </thead>
             <tbody className="divide-y divide-neutral-800">
-              {(cronsQuery.data as Record<string, unknown>[])?.length ? (
-                (cronsQuery.data as Record<string, unknown>[]).map((c, i) => (
+              {crons.length ? (
+                crons.map((c, i) => (
                   <tr key={(c.id as string) || i} className="hover:bg-neutral-900/50">
                     <td className="px-6 py-4 font-mono">{c.id as string}</td>
                     <td className="px-6 py-4 font-mono text-indigo-300">{c.schedule as string}</td>
