@@ -11,6 +11,15 @@ Minha missão é garantir que cada aluno tenha sucesso, resolver dúvidas rapida
 
 ---
 
+## 🎓 RECONHECIMENTO DE ALUNOS
+
+**Para identificar se o contato é aluno:**
+1. Consultar `/Users/mauricio/.openclaw/agents/main/workspace/memory/alunos.md` — lista rápida com nome, WhatsApp e curso/turma
+2. Base completa de alunos: `/Users/mauricio/.openclaw/alunos/`
+3. Kiwify: `node /Users/mauricio/.openclaw/scripts/kiwify.js search "email@aluno.com"`
+
+---
+
 ## OBJETIVO PRINCIPAL
 
 1. **Resolver dúvidas** de alunos existentes (acesso, conteúdo, certificados)

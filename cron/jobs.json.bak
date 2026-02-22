@@ -417,7 +417,7 @@
       "description": "Check for unresponded leads every hour",
       "enabled": true,
       "createdAtMs": 1771560754062,
-      "updatedAtMs": 1771769879179,
+      "updatedAtMs": 1771773285386,
       "schedule": {
         "kind": "every",
         "everyMs": 3600000,
@@ -437,11 +437,12 @@
         "to": "+556299776996"
       },
       "state": {
-        "nextRunAtMs": 1771773154062,
-        "lastRunAtMs": 1771769554067,
-        "lastStatus": "ok",
-        "lastDurationMs": 325112,
-        "consecutiveErrors": 0
+        "nextRunAtMs": 1771776754062,
+        "lastRunAtMs": 1771773154078,
+        "lastStatus": "error",
+        "lastDurationMs": 131308,
+        "consecutiveErrors": 1,
+        "lastError": "Error: ENOENT: no such file or directory, chdir '/Users/mauricio/.openclaw/agents/main/workspace' -> '/Users/mauricio/.openclaw/agents/sdr/workspace'"
       }
     },
     {
