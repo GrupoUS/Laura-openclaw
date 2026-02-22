@@ -37,15 +37,18 @@ async function getRecentTranscripts(maxAge: number = 24 * 60 * 60 * 1000): Promi
     const files = await readdir(SESSIONS_DIR)
     const jsonlFiles = files.filter((f) => f.endsWith('.jsonl'))
 
-    for (const file of jsonlFiles) {
-      const filePath = join(SESSIONS_DIR, file)
-      const stats = await stat(filePath)
-      if (stats.mtime.getTime() > cutoff) {
-        const content = await readFile(filePath, 'utf8')
-        // Take last 10k chars to avoid memory issues
-        transcripts.push(content.slice(-10000))
-      }
-    }
+    const readResults = await Promise.all(
+      jsonlFiles.map(async (file) => {
+        const filePath = join(SESSIONS_DIR, file)
+        const stats = await stat(filePath)
+        if (stats.mtime.getTime() > cutoff) {
+          const content = await readFile(filePath, 'utf8')
+          return content.slice(-10000)
+        }
+        return null
+      })
+    )
+    transcripts.push(...readResults.filter((t): t is string => t !== null))
   } catch {
     // Sessions dir may not exist yet
   }
@@ -67,10 +70,10 @@ async function getRecentDailyNotes(days: number = 3): Promise<string[]> {
       .toSorted()
       .slice(-days)
 
-    for (const file of dateFiles) {
-      const content = await readFile(join(MEMORY_DIR, file), 'utf8')
-      notes.push(content)
-    }
+    const contents = await Promise.all(
+      dateFiles.map((file) => readFile(join(MEMORY_DIR, file), 'utf8'))
+    )
+    notes.push(...contents)
   } catch {
     // Memory dir may not exist
   }
@@ -263,6 +266,7 @@ export async function runEvolutionCycle(
         lesson: 'lesson',
       }
 
+      // eslint-disable-next-line no-await-in-loop -- sequential to avoid DB race conditions on memory store
       const memoryId = await storeMemory({
         content: finding.content,
         category: categoryMap[finding.type] || 'lesson',

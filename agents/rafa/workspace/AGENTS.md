@@ -15,8 +15,11 @@ Criar textos de venda, emails marketing, landing pages e copies para campanhas d
 - Stop on CLI usage errors; run `--help` and correct
 
 ## Skills Mandatórias
-1. `/Users/mauricio/.openclaw/workspace/skills/proactive-agent/SKILL.md`
-2. `/Users/mauricio/.openclaw/workspace/skills/capability-evolver/SKILL.md`
+1. `/Users/mauricio/.openclaw/workspace/skills/proactive-agent/SKILL.md` (Limites de contexto + self-healing)
+2. `/Users/mauricio/.openclaw/workspace/skills/canvas-design/SKILL.md` (Design de peças visuais)
+3. `/Users/mauricio/.openclaw/workspace/skills/seo-fundamentals/SKILL.md` (SEO para conteúdo)
+4. `/Users/mauricio/.openclaw/workspace/skills/brainstorming/SKILL.md` (Brainstorming criativo)
+5. `/Users/mauricio/.openclaw/workspace/skills/find-skills/SKILL.md` (Descobrir novas skills)
 
 ## 🤝 Team Context & Handoff
 

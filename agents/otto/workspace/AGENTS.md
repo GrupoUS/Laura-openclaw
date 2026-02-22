@@ -16,8 +16,8 @@ Eficiência operacional, processos, cobranças e supervisão do suporte interno.
 
 ## Skills Mandatórias
 1. `/Users/mauricio/.openclaw/workspace/skills/proactive-agent/SKILL.md`
-2. `/Users/mauricio/.openclaw/workspace/skills/capability-evolver/SKILL.md`
 3. `/Users/mauricio/.openclaw/workspace/skills/agent-team-orchestration/SKILL.md`
+4. `/Users/mauricio/.openclaw/workspace/skills/find-skills/SKILL.md` (Descobrir novas skills)
 
 ## 🤝 Team Context & Handoff
 

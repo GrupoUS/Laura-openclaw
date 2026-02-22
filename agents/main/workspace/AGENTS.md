@@ -417,9 +417,9 @@ Reportar atividades no Dashboard via skill `neondb-tasks`.
 - ❌ Compartilhar agentDir entre agentes (causa colisão de sessão/auth)
 
 ## Skills Mandatórias
-1. `/Users/mauricio/.openclaw/workspace/skills/proactive-agent/SKILL.md` (Para limites de contexto e cron jobs)
-2. `/Users/mauricio/.openclaw/workspace/skills/capability-evolver/SKILL.md` (Self-healing após falhas graves)
-3. `/Users/mauricio/.openclaw/workspace/skills/agent-team-orchestration/SKILL.md` (Padrões de orquestração e workflows multi-agente)
+1. `/Users/mauricio/.openclaw/workspace/skills/proactive-agent/SKILL.md` (Limites de contexto + self-healing)
+2. `/Users/mauricio/.openclaw/workspace/skills/agent-team-orchestration/SKILL.md` (Padrões de orquestração e workflows multi-agente)
+3. `/Users/mauricio/.openclaw/workspace/skills/find-skills/SKILL.md` (Descobrir e instalar novas skills)
 
 ## Memória e UDS (Universal Data System)
 - **Ontology Graph (Estruturado):** Para memorizar dados sobre Usuários, Projetos ou Eventos-chave da empresa, NUNCA use arquivos locais. Use **SEMPRE** a API estruturada do UDS (`POST http://localhost:8000/ontology/entities`).

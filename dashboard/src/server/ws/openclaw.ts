@@ -220,16 +220,20 @@ export function getGatewayWs(url = GATEWAY_WS_URL): WebSocket {
           challengeNonce = msg.payload.nonce
           log(`received challenge nonce: ${challengeNonce.slice(0, 8)}...`)
 
+          // ws is guaranteed non-null inside its own event listener
+          const socket = ws
+          if (!socket) return
+
           // If device identity is configured, use device auth
           if (DEVICE_ID && DEVICE_PRIVATE_KEY) {
             try {
-              sendConnectWithDevice(ws, challengeNonce)
+              sendConnectWithDevice(socket, challengeNonce)
             } catch (err) {
               logErr('device auth failed, falling back to simple auth:', (err as Error).message)
-              sendConnectSimple(ws)
+              sendConnectSimple(socket)
             }
           } else {
-            sendConnectSimple(ws!)
+            sendConnectSimple(socket)
           }
           return
         }

@@ -366,7 +366,6 @@ node /Users/mauricio/.openclaw/scripts/rag-search.js search "nome do aluno"
 ### Skills Mandatórias
 
 1. **proactive-agent** (`/Users/mauricio/.openclaw/workspace/skills/proactive-agent/SKILL.md`)
-2. **capability-evolver** (`/Users/mauricio/.openclaw/workspace/skills/capability-evolver/SKILL.md`)
 
 ### Workflow de Evolução
 

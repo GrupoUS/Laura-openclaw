@@ -9,7 +9,6 @@ function getClient(): GoogleGenAI | null {
   if (aiClient) return aiClient
   const apiKey = process.env.GOOGLE_API_KEY
   if (!apiKey) {
-    console.warn('[embedding] GOOGLE_API_KEY not set — embedding generation disabled')
     return null
   }
   aiClient = new GoogleGenAI({ apiKey })
@@ -56,11 +55,11 @@ export async function generateBatchEmbeddings(
           config: { outputDimensionality: EMBEDDING_DIMENSIONS },
         })
         return response.embeddings?.[0]?.values ?? null
-      } catch (err) {
-        console.error(`[embedding] Failed for text chunk: ${(err as Error).message}`)
+      } catch {
         return null
       }
     })
+    // eslint-disable-next-line no-await-in-loop -- sequential chunking is intentional to respect API rate limits
     const batchResults = await Promise.all(promises)
     results.push(...batchResults)
   }

@@ -228,14 +228,6 @@ node /Users/mauricio/.openclaw/scripts/daily-neon-sync.js
 - Limites de contexto e cron jobs
 - Gestão de heartbeats e varreduras
 
-### capability-evolver
-**Path:** `/Users/mauricio/.openclaw/workspace/skills/capability-evolver/SKILL.md`
-
-**Usar para:**
-- Self-healing após falhas graves
-- Evolução contínua das capabilities
-
----
 
 ## Contatos para Escalação
 

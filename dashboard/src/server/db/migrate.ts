@@ -8,6 +8,7 @@ if (!dbUrl) {
   throw new Error('DATABASE_URL is missing. Please set it in .env');
 }
 
+/* eslint-disable no-console -- CLI migration script needs stdout/stderr */
 console.log('Migrating database...');
 
 const pool = new Pool({ connectionString: dbUrl });
@@ -24,3 +25,4 @@ main().catch((err) => {
   console.error('Migration error:', err);
   process.exit(1);
 });
+/* eslint-enable no-console */

@@ -158,14 +158,6 @@ python3 /Users/mauricio/.openclaw/scripts/zoom_cli.py get-summary <meetingId>
 - Limites de contexto e cron jobs
 - Gestão de heartbeats
 
-### capability-evolver
-**Path:** `/Users/mauricio/.openclaw/workspace/skills/capability-evolver/SKILL.md`
-
-**Usar para:**
-- Self-healing após falhas graves
-- Evolução contínua das capabilities
-
----
 
 ## Contatos para Comunicação
 

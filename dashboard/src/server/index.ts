@@ -115,6 +115,7 @@ app.get('*', serveStatic({ root: './dist/public', path: 'index.html' }))
 
 const port = Number(process.env.PORT) || 3000
 
+// eslint-disable-next-line no-console -- startup log is intentional
 console.log(`🚀 Laura Dashboard listening on port ${port}`)
 
 export default Bun.serve({

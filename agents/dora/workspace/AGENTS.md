@@ -15,8 +15,10 @@ Planejamento e execução de lançamentos de produtos, eventos presenciais e dig
 - Stop on CLI usage errors; run `--help` and correct
 
 ## Skills Mandatórias
-1. `/Users/mauricio/.openclaw/workspace/skills/proactive-agent/SKILL.md`
-2. `/Users/mauricio/.openclaw/workspace/skills/capability-evolver/SKILL.md`
+1. `/Users/mauricio/.openclaw/workspace/skills/proactive-agent/SKILL.md` (Limites de contexto + self-healing)
+2. `/Users/mauricio/.openclaw/workspace/skills/planning/SKILL.md` (Planejamento D.R.P.I.V.)
+3. `/Users/mauricio/.openclaw/workspace/skills/canvas-design/SKILL.md` (Design de peças visuais)
+4. `/Users/mauricio/.openclaw/workspace/skills/find-skills/SKILL.md` (Descobrir novas skills)
 
 ## 🤝 Team Context & Handoff
 

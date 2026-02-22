@@ -18,7 +18,7 @@ Recrutamento, onboarding e manutenção de qualidade dos agentes do Grupo US.
 ## Skills Mandatórias
 1. `/Users/mauricio/.openclaw/workspace/skills/agent-builder/SKILL.md` (Criação e iteração de agentes)
 2. `/Users/mauricio/.openclaw/workspace/skills/proactive-agent/SKILL.md` (Limites de contexto)
-3. `/Users/mauricio/.openclaw/workspace/skills/capability-evolver/SKILL.md` (Self-healing)
+3. `/Users/mauricio/.openclaw/workspace/skills/find-skills/SKILL.md` (Descobrir novas skills)
 
 ## 🤝 Team Context & Handoff
 

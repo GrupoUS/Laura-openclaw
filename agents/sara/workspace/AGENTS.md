@@ -15,8 +15,10 @@ Qualificação de leads pré-venda, primeiro contato consultivo e preparação p
 - Stop on CLI usage errors; run `--help` and correct
 
 ## Skills Mandatórias
-1. `/Users/mauricio/.openclaw/workspace/skills/proactive-agent/SKILL.md`
-2. `/Users/mauricio/.openclaw/workspace/skills/capability-evolver/SKILL.md`
+1. `/Users/mauricio/.openclaw/workspace/skills/proactive-agent/SKILL.md` (Limites de contexto + self-healing)
+2. `/Users/mauricio/.openclaw/workspace/skills/client-flow/SKILL.md` (Gestão de jornada do cliente)
+3. `/Users/mauricio/.openclaw/workspace/skills/uds-search/SKILL.md` (Busca unificada de dados)
+4. `/Users/mauricio/.openclaw/workspace/skills/find-skills/SKILL.md` (Descobrir novas skills)
 
 ## 🤝 Team Context & Handoff
 

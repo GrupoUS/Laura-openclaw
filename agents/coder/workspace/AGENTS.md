@@ -26,13 +26,24 @@ Desenvolvimento, automação e manutenção de código do Grupo US.
 - Aplicar Self-Healing em erros
 - "O que posso automatizar para surpreender o Maurício?"
 
-### 2. capability-evolver
-**Path:** `/Users/mauricio/.openclaw/workspace/skills/capability-evolver/SKILL.md`
+### 2. systematic-debugging
+**Path:** `/Users/mauricio/.openclaw/workspace/skills/systematic-debugging/SKILL.md`
 
 **Usar para:**
-- Após bugs: analisar e cristalizar lição
-- Promover padrões de código para AGENTS.md
-- Atualizar KNOWLEDGE_BASE com aprendizados técnicos
+- Debugging estruturado (Reproduce → Isolate → Understand → Fix → Document)
+- Root cause analysis em bugs complexos
+
+### 3. typescript-expert
+**Path:** `/Users/mauricio/.openclaw/workspace/skills/typescript-expert/SKILL.md`
+**Usar para:** Padrões TypeScript avançados, tipagem, boas práticas
+
+### 4. architecture
+**Path:** `/Users/mauricio/.openclaw/workspace/skills/architecture/SKILL.md`
+**Usar para:** Decisões de arquitetura, design patterns
+
+### 5. find-skills
+**Path:** `/Users/mauricio/.openclaw/workspace/skills/find-skills/SKILL.md`
+**Usar para:** Descobrir e instalar novas skills quando necessário
 
 ### 3. opencode-acp-control
 **Path:** `/Users/mauricio/.openclaw/workspace/skills/opencode-acp-control/SKILL.md`

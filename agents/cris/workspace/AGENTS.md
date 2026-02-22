@@ -17,7 +17,7 @@ Controle financeiro, inadimplência, inteligência de negócios, relatórios.
 
 ## Skills Mandatórias
 1. `/Users/mauricio/.openclaw/workspace/skills/proactive-agent/SKILL.md`
-2. `/Users/mauricio/.openclaw/workspace/skills/capability-evolver/SKILL.md`
+2. `/Users/mauricio/.openclaw/workspace/skills/find-skills/SKILL.md` (Descobrir novas skills)
 
 ## 🤝 Team Context & Handoff
 

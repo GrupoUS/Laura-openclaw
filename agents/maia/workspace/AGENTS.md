@@ -15,8 +15,9 @@ Criação de roteiros de vídeo, reels, stories e conteúdo audiovisual para o G
 - Stop on CLI usage errors; run `--help` and correct
 
 ## Skills Mandatórias
-1. `/Users/mauricio/.openclaw/workspace/skills/proactive-agent/SKILL.md`
-2. `/Users/mauricio/.openclaw/workspace/skills/capability-evolver/SKILL.md`
+1. `/Users/mauricio/.openclaw/workspace/skills/proactive-agent/SKILL.md` (Limites de contexto + self-healing)
+2. `/Users/mauricio/.openclaw/workspace/skills/brainstorming/SKILL.md` (Brainstorming criativo)
+3. `/Users/mauricio/.openclaw/workspace/skills/find-skills/SKILL.md` (Descobrir novas skills)
 
 ## 🤝 Team Context & Handoff
 

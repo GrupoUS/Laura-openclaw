@@ -37,8 +37,8 @@ export function PlanPreview({ plan }: { plan: TaskPlan }) {
               Fase {phase.phase} \u2014 {phase.name}
             </p>
             <div className="flex flex-col gap-1">
-              {phase.subtasks.map((st, i) => (
-                <div key={i} className="flex items-start gap-2 text-xs text-slate-700 py-1
+              {phase.subtasks.map((st) => (
+                <div key={`${phase.phase}-${st.title}`} className="flex items-start gap-2 text-xs text-slate-700 py-1
                                         border-b border-slate-100 last:border-0">
                   <span className="text-slate-300 mt-0.5">\u25e6</span>
                   <span className="flex-1">{st.title}</span>

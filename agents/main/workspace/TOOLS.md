@@ -160,29 +160,6 @@ curl -s -X POST http://localhost:8000/search \
 - Limites de contexto e cron jobs
 - Gestão de heartbeats
 
-### capability-evolver
-**Path:** `/Users/mauricio/.openclaw/workspace/skills/capability-evolver/SKILL.md`
-
-**Usar para:**
-- Self-healing após falhas graves
-- Evolução contínua das capabilities
-
-**Usar para:**
-- Verificar agenda do closer (disponibilidade)
-- Enviar email de confirmação de reunião
-- Buscar contatos
-
-**Comandos principais:**
-```bash
-# Ver agenda de hoje
-gog calendar events --all --today --json
-
-# Buscar eventos da semana
-gog calendar events --all --week --json
-
-# Enviar email (PEDIR CONFIRMAÇÃO)
-gog gmail send --to lead@email.com --subject "Confirmação de Call" --body "..."
-```
 
 ### zoom
 **Path:** `/Users/mauricio/.openclaw/workspace/skills/zoom/SKILL.md`

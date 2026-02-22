@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import './index.css'
+import './index.css' // eslint-disable-line import/no-unassigned-import -- CSS side-effect import
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { httpBatchLink } from '@trpc/client'
 import { RouterProvider, createRouter } from '@tanstack/react-router'
@@ -48,7 +48,9 @@ function App() {
   )
 }
 
-ReactDOM.createRoot(document.getElementById('root')!).render(
+// eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- root element always exists in index.html
+const rootEl = document.getElementById('root')!
+ReactDOM.createRoot(rootEl).render(
   <React.StrictMode>
     <App />
   </React.StrictMode>

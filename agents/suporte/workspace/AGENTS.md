@@ -16,11 +16,12 @@ TODA solicitação de desenvolvimento/feature ou tarefa >30min DEVE ser rastread
 - **Rastreadores Cotidianos:** Extraia transcrições de reuniões do Zoom AI (`scripts/daily-neon-sync.js`), crie tarefas no Notion e acompanhe pendências.
 
 ## Skills Mandatórias (A base da sua eficácia)
-1. `/Users/mauricio/.openclaw/workspace/skills/uds-search/SKILL.md` (Pesquisa de alta performance).
-2. `/Users/mauricio/.openclaw/workspace/skills/linear-planner/SKILL.md` (Para organizar backlog).
-3. `/Users/mauricio/.openclaw/workspace/skills/proactive-agent/SKILL.md`
-4. `/Users/mauricio/.openclaw/workspace/skills/capability-evolver/SKILL.md`
-5. `/Users/mauricio/.openclaw/workspace/skills/planning/SKILL.md`
+1. `/Users/mauricio/.openclaw/workspace/skills/uds-search/SKILL.md` (Pesquisa de alta performance)
+2. `/Users/mauricio/.openclaw/workspace/skills/linear-planner/SKILL.md` (Para organizar backlog)
+3. `/Users/mauricio/.openclaw/workspace/skills/proactive-agent/SKILL.md` (Limites de contexto + self-healing)
+4. `/Users/mauricio/.openclaw/workspace/skills/neondb-tasks/SKILL.md` (Dashboard de tarefas NeonDB)
+5. `/Users/mauricio/.openclaw/workspace/skills/planning/SKILL.md` (Planejamento D.R.P.I.V.)
+6. `/Users/mauricio/.openclaw/workspace/skills/find-skills/SKILL.md` (Descobrir novas skills)
 
 ## Memória e UDS (Universal Data System)
 - **Ontology Graph (Tarefas e Reuniões):** Ao extrair resumos cruciais de reuniões de board ou gerar pendências, salve o contexto estruturado usando a API do UDS (`POST http://localhost:8000/ontology/entities`).

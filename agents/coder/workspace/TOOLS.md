@@ -293,13 +293,3 @@ python scripts/init_skill.py <skill-name> --path /Users/mauricio/.openclaw/works
 **Usar para:**
 - Limites de contexto e cron jobs
 
-### capability-evolver
-**Path:** `/Users/mauricio/.openclaw/workspace/skills/capability-evolver/SKILL.md`
-
-**Usar para:**
-- Self-healing após falhas graves
-
----
-
-*Última atualização: 2026-02-19*
-

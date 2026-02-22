@@ -22,8 +22,6 @@ export const SESSION_OPTIONS: SessionOptions = {
 }
 
 if (rawPassword.length < 32) {
-  console.error('################################################################')
-  console.error('# ⚠️  WARNING: IRON_SESSION_PASSWORD is not set or < 32 chars  #')
-  console.error('# ⚠️  Using insecure fallback. Please set it in your env!      #')
-  console.error('################################################################')
+  // eslint-disable-next-line no-console -- startup security warning is intentional
+  console.error('[session] ⚠️  IRON_SESSION_PASSWORD is not set or < 32 chars. Using insecure fallback!')
 }

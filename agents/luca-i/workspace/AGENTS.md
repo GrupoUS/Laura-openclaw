@@ -15,8 +15,10 @@ Análise de concorrentes, benchmarks de mercado, monitoramento de tendências co
 - Stop on CLI usage errors; run `--help` and correct
 
 ## Skills Mandatórias
-1. `/Users/mauricio/.openclaw/workspace/skills/proactive-agent/SKILL.md`
-2. `/Users/mauricio/.openclaw/workspace/skills/capability-evolver/SKILL.md`
+1. `/Users/mauricio/.openclaw/workspace/skills/proactive-agent/SKILL.md` (Limites de contexto + self-healing)
+2. `/Users/mauricio/.openclaw/workspace/skills/tavily-search/SKILL.md` (Pesquisa web avançada)
+3. `/Users/mauricio/.openclaw/workspace/skills/ai-data-analyst/SKILL.md` (Análise de dados e KPIs)
+4. `/Users/mauricio/.openclaw/workspace/skills/find-skills/SKILL.md` (Descobrir novas skills)
 
 ## 🤝 Team Context & Handoff
 

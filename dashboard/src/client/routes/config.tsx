@@ -14,7 +14,7 @@ function ConfigEditor() {
     try {
       const parsed = JSON.parse(jsonInput)
       patchMutation.mutate({ patch: parsed })
-    } catch (err) {
+    } catch {
       alert('Invalid JSON')
     }
   }

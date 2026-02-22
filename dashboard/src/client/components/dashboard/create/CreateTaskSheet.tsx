@@ -122,10 +122,11 @@ export function CreateTaskSheet({ open, onClose }: Props) {
           {(step === 'form' || step === 'loading') && (
             <div className="flex flex-col gap-4">
               <div>
-                <label className="text-xs font-medium text-slate-700 mb-1.5 block">
+                <label htmlFor="task-description" className="text-xs font-medium text-slate-700 mb-1.5 block">
                   Descri\u00e7\u00e3o da tarefa *
                 </label>
                 <Textarea
+                  id="task-description"
                   placeholder="Ex: Criar landing page para o curso de harmoniza\u00e7\u00e3o facial com formul\u00e1rio de captura de leads e integra\u00e7\u00e3o com ActiveCampaign..."
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
@@ -135,11 +136,11 @@ export function CreateTaskSheet({ open, onClose }: Props) {
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-xs font-medium text-slate-700 mb-1.5 block">
+                  <label htmlFor="task-priority" className="text-xs font-medium text-slate-700 mb-1.5 block">
                     Prioridade
                   </label>
                   <Select value={priority} onValueChange={setPriority} disabled={step === 'loading'}>
-                    <SelectTrigger><SelectValue /></SelectTrigger>
+                    <SelectTrigger id="task-priority"><SelectValue /></SelectTrigger>
                     <SelectContent>
                       <SelectItem value="low">\ud83d\udfe1 Low</SelectItem>
                       <SelectItem value="medium">\ud83d\udfe0 Medium</SelectItem>
@@ -149,11 +150,11 @@ export function CreateTaskSheet({ open, onClose }: Props) {
                   </Select>
                 </div>
                 <div>
-                  <label className="text-xs font-medium text-slate-700 mb-1.5 block">
+                  <label htmlFor="task-agent" className="text-xs font-medium text-slate-700 mb-1.5 block">
                     Agente principal
                   </label>
                   <Select value={agent} onValueChange={setAgent} disabled={step === 'loading'}>
-                    <SelectTrigger><SelectValue /></SelectTrigger>
+                    <SelectTrigger id="task-agent"><SelectValue /></SelectTrigger>
                     <SelectContent>
                       <SelectItem value="laura">\ud83e\udde0 Laura</SelectItem>
                       <SelectItem value="coder">\ud83d\udcbb Coder</SelectItem>
