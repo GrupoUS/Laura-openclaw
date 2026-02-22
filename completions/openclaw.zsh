@@ -91,7 +91,7 @@ _openclaw_onboard() {
     "--accept-risk[Acknowledge that agents are powerful and full system access is risky (required for --non-interactive)]" \
     "--flow[Wizard flow: quickstart|advanced|manual]" \
     "--mode[Wizard mode: local|remote]" \
-    "--auth-choice[Auth: token|openai-codex|chutes|vllm|openai-api-key|xai-api-key|qianfan-api-key|openrouter-api-key|litellm-api-key|ai-gateway-api-key|cloudflare-ai-gateway-api-key|moonshot-api-key|moonshot-api-key-cn|kimi-code-api-key|synthetic-api-key|venice-api-key|together-api-key|huggingface-api-key|github-copilot|gemini-api-key|google-antigravity|google-gemini-cli|zai-api-key|zai-coding-global|zai-coding-cn|zai-global|zai-cn|xiaomi-api-key|minimax-portal|qwen-portal|copilot-proxy|apiKey|opencode-zen|minimax-api|minimax-api-key-cn|minimax-api-lightning|custom-api-key|skip|setup-token|oauth|claude-cli|codex-cli|minimax-cloud|minimax]" \
+    "--auth-choice[Auth: token|openai-codex|chutes|vllm|openai-api-key|xai-api-key|volcengine-api-key|byteplus-api-key|qianfan-api-key|openrouter-api-key|litellm-api-key|ai-gateway-api-key|cloudflare-ai-gateway-api-key|moonshot-api-key|moonshot-api-key-cn|kimi-code-api-key|synthetic-api-key|venice-api-key|together-api-key|huggingface-api-key|github-copilot|gemini-api-key|google-antigravity|google-gemini-cli|zai-api-key|zai-coding-global|zai-coding-cn|zai-global|zai-cn|xiaomi-api-key|minimax-portal|qwen-portal|copilot-proxy|apiKey|opencode-zen|minimax-api|minimax-api-key-cn|minimax-api-lightning|custom-api-key|skip|setup-token|oauth|claude-cli|codex-cli|minimax-cloud|minimax]" \
     "--token-provider[Token provider id (non-interactive; used with --auth-choice token)]" \
     "--token[Token value (non-interactive; used with --auth-choice token)]" \
     "--token-profile-id[Auth profile id (non-interactive; default: <provider>:manual)]" \
@@ -117,6 +117,8 @@ _openclaw_onboard() {
     "--xai-api-key[xAI API key]" \
     "--litellm-api-key[LiteLLM API key]" \
     "--qianfan-api-key[QIANFAN API key]" \
+    "--volcengine-api-key[Volcano Engine API key]" \
+    "--byteplus-api-key[BytePlus API key]" \
     "--custom-base-url[Custom provider base URL]" \
     "--custom-api-key[Custom provider API key (optional)]" \
     "--custom-model-id[Custom provider model ID]" \
@@ -155,7 +157,8 @@ _openclaw_config_get() {
 
 _openclaw_config_set() {
   _arguments -C \
-    "--json[Parse value as JSON5 (required)]"
+    "--strict-json[Strict JSON5 parsing (error instead of raw string fallback)]" \
+    "--json[Legacy alias for --strict-json]"
 }
 
 _openclaw_config_unset() {

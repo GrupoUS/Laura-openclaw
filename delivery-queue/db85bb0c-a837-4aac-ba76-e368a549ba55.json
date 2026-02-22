@@ -1,0 +1,18 @@
+{
+  "id": "db85bb0c-a837-4aac-ba76-e368a549ba55",
+  "enqueuedAt": 1771774930746,
+  "channel": "whatsapp",
+  "to": "+556299776996",
+  "accountId": "default",
+  "payloads": [
+    {
+      "text": "**Deciphering the Request**\n\nThe user has presented a test prompt, asking for a specific string to be returned: \"OK modelo funcionando — Gemini 3.1 Pro\". The prompt also implies an explicit request to omit any other information.\n\n\n**Constructing the Reply**\n\nI'm currently structuring the required response string. The goal is to return precisely what was requested without adding any extra details.\n\n\n\nOK modelo funcionando — Gemini 3.1 Pro",
+      "mediaUrls": []
+    }
+  ],
+  "threadId": null,
+  "replyToId": null,
+  "bestEffort": false,
+  "retryCount": 1,
+  "lastError": "No active WhatsApp Web listener (account: default). Start the gateway, then link WhatsApp with: openclaw channels login --channel whatsapp --account default."
+}

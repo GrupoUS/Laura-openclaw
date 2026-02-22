@@ -267,6 +267,38 @@ python scripts/init_skill.py <skill-name> --path /Users/mauricio/.openclaw/works
 - Pair-programming com agente autônomo
 - Refactoring e debugging em repos externos
 
+### neondb-tasks (Dashboard de Tasks)
+**Path:** `/Users/mauricio/.openclaw/skills/neondb-tasks/SKILL.md`
+
+**Usar para:**
+- Reportar atividades de coding no Dashboard
+- **Agent ID:** sempre usar `coder`
+
+### neondb-memories (Memórias NeonDB)
+**Path:** `/Users/mauricio/.openclaw/skills/neondb-memories/SKILL.md`
+
+**Usar para:**
+- Salvar/buscar memórias de conversas e decisões técnicas
+
+### systematic-debugging
+**Path:** `/Users/mauricio/.openclaw/workspace/skills/systematic-debugging/SKILL.md`
+
+**Usar para:**
+- Debugging estruturado com root-cause analysis
+- Reprodução e isolamento de bugs
+
+### proactive-agent
+**Path:** `/Users/mauricio/.openclaw/workspace/skills/proactive-agent/SKILL.md`
+
+**Usar para:**
+- Limites de contexto e cron jobs
+
+### capability-evolver
+**Path:** `/Users/mauricio/.openclaw/workspace/skills/capability-evolver/SKILL.md`
+
+**Usar para:**
+- Self-healing após falhas graves
+
 ---
 
 *Última atualização: 2026-02-19*

@@ -1,5 +1,12 @@
 # TOOLS.md - Laura | Chat-SDR-Orquestradora
 
+## 📍 Fontes de Recursos
+- **SCRIPTS:** `/Users/mauricio/.openclaw/scripts/` (Global)
+- **SKILLS:** `/Users/mauricio/.openclaw/workspace/skills/` (Global)
+- **LOCAL WORKSPACE:** `/Users/mauricio/.openclaw/agents/main/workspace/` (Local - usar para arquivos de configuração e memória do agente)
+
+---
+
 ## Quick Reference
 
 ### Delegação de Agentes (Orquestração)
@@ -110,8 +117,55 @@ node /Users/mauricio/.openclaw/scripts/test-google.js
 
 ## Skills Disponíveis
 
-### gog-workspace (Google Workspace)
-**Path:** `/Users/mauricio/.openclaw/workspace/skills/gog-workspace/SKILL.md`
+### uds-search (Busca Unificada)
+**Path:** `/Users/mauricio/.openclaw/workspace/skills/uds-search/SKILL.md`
+
+**Usar para:**
+- Buscar QUALQUER informação (Drive, Notion, Kiwify)
+- Lookup de leads, produtos, vendas
+- Encontrar documentos internos
+
+> **REGRA:** Para qualquer busca de informação, SEMPRE começar pelo UDS.
+
+**Comandos:**
+```bash
+# Busca híbrida (padrão)
+python3 /Users/mauricio/.openclaw/workspace/skills/uds-search/scripts/uds-search.py search "termo"
+
+# API direta
+curl -s -X POST http://localhost:8000/search \
+  -H 'Content-Type: application/json' \
+  -d '{"query": "termo", "top_k": 10}' | python3 -m json.tool
+```
+
+### neondb-tasks (Dashboard de Tasks)
+**Path:** `/Users/mauricio/.openclaw/skills/neondb-tasks/SKILL.md`
+
+**Usar para:**
+- Criar/atualizar tasks e subtasks no Dashboard
+- Reportar progresso de atividades
+- **Agent ID:** sempre usar `main`
+
+### neondb-memories (Memórias NeonDB)
+**Path:** `/Users/mauricio/.openclaw/skills/neondb-memories/SKILL.md`
+
+**Usar para:**
+- Salvar/buscar memórias de conversas no NeonDB
+- Histórico de interações com leads e clientes
+
+### proactive-agent
+**Path:** `/Users/mauricio/.openclaw/workspace/skills/proactive-agent/SKILL.md`
+
+**Usar para:**
+- Limites de contexto e cron jobs
+- Gestão de heartbeats
+
+### capability-evolver
+**Path:** `/Users/mauricio/.openclaw/workspace/skills/capability-evolver/SKILL.md`
+
+**Usar para:**
+- Self-healing após falhas graves
+- Evolução contínua das capabilities
 
 **Usar para:**
 - Verificar agenda do closer (disponibilidade)

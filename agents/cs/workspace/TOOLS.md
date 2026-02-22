@@ -137,6 +137,34 @@ python3 /Users/mauricio/.openclaw/scripts/zoom_cli.py get-summary <meetingId>
 - Extrair conteúdo para relatórios
 - Converter playbooks e cronogramas para Markdown
 
+### neondb-memories (Memórias NeonDB)
+**Path:** `/Users/mauricio/.openclaw/skills/neondb-memories/SKILL.md`
+
+**Usar para:**
+- Salvar/buscar memórias de conversas no NeonDB
+- Histórico de interações com alunos
+
+### neondb-tasks (Dashboard de Tasks)
+**Path:** `/Users/mauricio/.openclaw/skills/neondb-tasks/SKILL.md`
+
+**Usar para:**
+- Reportar atividades de CS no Dashboard
+- **Agent ID:** sempre usar `cs`
+
+### proactive-agent
+**Path:** `/Users/mauricio/.openclaw/workspace/skills/proactive-agent/SKILL.md`
+
+**Usar para:**
+- Limites de contexto e cron jobs
+- Gestão de heartbeats
+
+### capability-evolver
+**Path:** `/Users/mauricio/.openclaw/workspace/skills/capability-evolver/SKILL.md`
+
+**Usar para:**
+- Self-healing após falhas graves
+- Evolução contínua das capabilities
+
 ---
 
 ## Contatos para Comunicação

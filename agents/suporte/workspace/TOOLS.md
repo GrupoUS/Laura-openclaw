@@ -206,6 +206,35 @@ node /Users/mauricio/.openclaw/scripts/daily-neon-sync.js
 - Extrair status e deadlines da equipe
 - Sync databases para outros sistemas
 
+### neondb-memories (Memórias NeonDB)
+**Path:** `/Users/mauricio/.openclaw/skills/neondb-memories/SKILL.md`
+
+**Usar para:**
+- Salvar/buscar memórias de conversas no NeonDB
+- Histórico de interações com equipe interna
+
+### neondb-tasks (Dashboard de Tasks)
+**Path:** `/Users/mauricio/.openclaw/skills/neondb-tasks/SKILL.md`
+
+**Usar para:**
+- Criar/atualizar tasks e subtasks no Dashboard
+- Reportar progresso de projetos
+- **Agent ID:** sempre usar `suporte`
+
+### proactive-agent
+**Path:** `/Users/mauricio/.openclaw/workspace/skills/proactive-agent/SKILL.md`
+
+**Usar para:**
+- Limites de contexto e cron jobs
+- Gestão de heartbeats e varreduras
+
+### capability-evolver
+**Path:** `/Users/mauricio/.openclaw/workspace/skills/capability-evolver/SKILL.md`
+
+**Usar para:**
+- Self-healing após falhas graves
+- Evolução contínua das capabilities
+
 ---
 
 ## Contatos para Escalação
