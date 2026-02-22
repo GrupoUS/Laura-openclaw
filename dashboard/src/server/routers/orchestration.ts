@@ -30,11 +30,19 @@ let _snapshot: Snapshot | null = null
 async function loadSnapshot(): Promise<Snapshot | null> {
   if (_snapshot) return _snapshot
   try {
+    // Tenta caminho dev (src/server/routers/../data)
     const raw = await readFile(join(import.meta.dir, '../data/openclaw-snapshot.json'), 'utf-8')
     _snapshot = JSON.parse(raw) as Snapshot
     return _snapshot
   } catch {
-    return null
+    try {
+      // Tenta caminho prod (dist/index.js -> dist/data/)
+      const raw = await readFile(join(import.meta.dir, 'data/openclaw-snapshot.json'), 'utf-8')
+      _snapshot = JSON.parse(raw) as Snapshot
+      return _snapshot
+    } catch {
+      return null
+    }
   }
 }
 

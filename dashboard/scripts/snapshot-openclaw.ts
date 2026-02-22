@@ -11,7 +11,8 @@ import { join, dirname } from 'node:path'
 
 const OPENCLAW_JSON = '/Users/mauricio/.openclaw/openclaw.json'
 const WORKSPACE_SKILLS_DIR = '/Users/mauricio/.openclaw/workspace/skills'
-const OUTPUT = join(dirname(import.meta.dir), 'src/server/data/openclaw-snapshot.json')
+// @ts-ignore - Bun specific or node 20+
+const OUTPUT = join(dirname(import.meta.dir ?? import.meta.dirname), 'src/server/data/openclaw-snapshot.json')
 
 const REPORT_PATTERNS = [
   /[Rr]eporto\s+(?:à|ao)\s+\*\*(\w+)\*\*/,
@@ -49,6 +50,7 @@ async function main() {
 
     // Read IDENTITY.md
     try {
+      /* eslint-disable-next-line no-await-in-loop */
       const identity = await readFile(join(agent.agentDir, 'workspace', 'IDENTITY.md'), 'utf-8')
       const nm = identity.match(/\*\*Nome:\*\*\s*(.+)/i)
       const rl = identity.match(/\*\*Espécie:\*\*\s*(.+)/i)
@@ -58,6 +60,7 @@ async function main() {
 
     // Read AGENTS.md for reportsTo
     try {
+      /* eslint-disable-next-line no-await-in-loop */
       const md = await readFile(join(agent.agentDir, 'workspace', 'AGENTS.md'), 'utf-8')
       for (const p of REPORT_PATTERNS) {
         const m = md.match(p)
@@ -66,8 +69,9 @@ async function main() {
     } catch {}
 
     // Extract skills
-    let skills: string[] = []
+    const skills: string[] = []
     try {
+      /* eslint-disable-next-line no-await-in-loop */
       const md = await readFile(join(agent.agentDir, 'workspace', 'AGENTS.md'), 'utf-8')
       const section = md.match(/## Skills Mandatórias[\s\S]*?(?=\n## |\n---|$)/i)
       if (section) {
@@ -115,8 +119,13 @@ async function main() {
   }
 
   await writeFile(OUTPUT, JSON.stringify(snapshot, null, 2))
-  console.log(`✅ Snapshot written to ${OUTPUT}`)
-  console.log(`   ${result.length} agents, ${workspaceSkills.length} workspace skills`)
+  // eslint-disable-next-line no-console
+  console.info(`✅ Snapshot written to ${OUTPUT}`)
+  // eslint-disable-next-line no-console
+  console.info(`   ${result.length} agents, ${workspaceSkills.length} workspace skills`)
 }
 
-main().catch(console.error)
+main().catch((e) => {
+  // eslint-disable-next-line no-console
+  console.error(e)
+})
