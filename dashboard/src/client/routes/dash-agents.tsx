@@ -3,6 +3,7 @@ import { useEffect } from 'react'
 import { AgentsGrid } from '@/client/components/dashboard/agents/AgentsGrid'
 import { useTaskStore, type ActivityEntry } from '@/client/hooks/useTaskStore'
 import { trpc } from '@/client/trpc'
+import type { Task } from '@/shared/types/tasks'
 
 export const Route = createFileRoute('/dash-agents')({
   component: AgentsPage,
@@ -21,23 +22,23 @@ function AgentsPage() {
   }, [agentsData, setAgentDetails])
 
   useEffect(() => {
-    if (tasksData?.data) setTasks(tasksData.data as any[])
+    if (tasksData?.data) setTasks(tasksData.data as unknown as Task[])
   }, [tasksData, setTasks])
 
-  const initialActivity: ActivityEntry[] = (activityData?.data ?? []).map((e: any) => ({
-    id:        e.id,
+  const initialActivity: ActivityEntry[] = (activityData?.data ?? []).map((e) => ({
+    id:        String(e.id),
     type:      e.eventType,
-    taskId:    e.taskId,
-    taskTitle: e.task?.title ?? undefined,
+    taskId:    String(e.taskId),
+    taskTitle: (e as unknown as { task?: { title?: string } }).task?.title ?? undefined,
     agent:     e.agent,
-    payload:   e.payload ? JSON.parse(e.payload as string) : {},
+    payload:   typeof e.payload === 'string' ? JSON.parse(e.payload) : ((e.payload as Record<string, unknown>) ?? {}),
     ts:        e.createdAt,
   }))
 
   return (
     <AgentsGrid
       initialAgents={agentsData?.data ?? []}
-      initialTasks={tasksData?.data as any[] ?? []}
+      initialTasks={tasksData?.data as unknown as Task[] ?? []}
       initialActivity={initialActivity}
     />
   )
