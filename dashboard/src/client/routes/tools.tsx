@@ -26,9 +26,9 @@ function Tools() {
       {toolsQuery.isError && <div className="bg-neutral-950 p-8 rounded-lg border border-neutral-800 text-red-500 text-center">Error: {toolsQuery.error.message}</div>}
       {tools.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {tools.map((tool, i) => (
-            <div key={(tool.id as string) || (tool.name as string) || i} className="bg-neutral-950 p-5 rounded-lg border border-neutral-800 shadow-md">
-              <h3 className="text-base font-semibold text-indigo-400 mb-1">{(tool.name as string) || (tool.id as string) || `Tool ${i + 1}`}</h3>
+          {tools.map((tool) => (
+            <div key={String(tool.id ?? tool.name ?? crypto.randomUUID())} className="bg-neutral-950 p-5 rounded-lg border border-neutral-800 shadow-md">
+              <h3 className="text-base font-semibold text-indigo-400 mb-1">{(tool.name as string) || (tool.id as string) || 'Tool'}</h3>
               {typeof tool.description === 'string' && <p className="text-xs text-neutral-500 mb-3">{tool.description}</p>}
               <div className="text-sm text-neutral-400 space-y-1">
                 {typeof tool.type === 'string' && <p>Type: <span className="text-white">{tool.type}</span></p>}

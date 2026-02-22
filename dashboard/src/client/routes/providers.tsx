@@ -26,9 +26,9 @@ function Providers() {
       {providersQuery.isError && <div className="bg-neutral-950 p-8 rounded-lg border border-neutral-800 text-red-500 text-center">Error: {providersQuery.error.message}</div>}
       {providers.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {providers.map((provider, i) => (
-            <div key={(provider.id as string) || (provider.name as string) || i} className="bg-neutral-950 p-5 rounded-lg border border-neutral-800 shadow-md">
-              <h3 className="text-base font-semibold text-indigo-400 mb-1">{(provider.name as string) || (provider.id as string) || `Provider ${i + 1}`}</h3>
+          {providers.map((provider) => (
+            <div key={String(provider.id ?? provider.name ?? crypto.randomUUID())} className="bg-neutral-950 p-5 rounded-lg border border-neutral-800 shadow-md">
+              <h3 className="text-base font-semibold text-indigo-400 mb-1">{(provider.name as string) || (provider.id as string) || 'Provider'}</h3>
               <div className="text-sm text-neutral-400 space-y-1">
                 {typeof provider.type === 'string' && <p>Type: <span className="text-white capitalize">{provider.type}</span></p>}
                 {typeof provider.model === 'string' && <p>Model: <span className="text-white font-mono text-xs">{provider.model}</span></p>}

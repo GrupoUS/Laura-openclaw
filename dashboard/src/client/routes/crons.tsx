@@ -50,8 +50,8 @@ function Crons() {
             </thead>
             <tbody className="divide-y divide-neutral-800">
               {crons.length ? (
-                crons.map((c, i) => (
-                  <tr key={(c.id as string) || i} className="hover:bg-neutral-900/50">
+                crons.map((c) => (
+                  <tr key={String(c.id ?? crypto.randomUUID())} className="hover:bg-neutral-900/50">
                     <td className="px-6 py-4 font-mono">{c.id as string}</td>
                     <td className="px-6 py-4 font-mono text-indigo-300">{c.schedule as string}</td>
                     <td className="px-6 py-4 truncate max-w-xs">{(c.action as string) || 'Unknown Action'}</td>

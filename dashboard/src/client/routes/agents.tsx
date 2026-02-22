@@ -27,8 +27,8 @@ function Agents() {
         {agentsQuery.isError && <div className="text-red-500">Error: {agentsQuery.error.message}</div>}
         {agents.length > 0 ? (
           <React.Fragment>
-            {agents.map((agent, i) => (
-              <div key={(agent.id as string) || i} className="bg-neutral-950 p-6 rounded-lg border border-neutral-800 shadow-md">
+            {agents.map((agent) => (
+              <div key={String(agent.id ?? agent.name ?? crypto.randomUUID())} className="bg-neutral-950 p-6 rounded-lg border border-neutral-800 shadow-md">
                 <h3 className="text-xl font-semibold mb-2 text-indigo-400">{(agent.name as string) || (agent.id as string)}</h3>
                 <div className="text-sm text-neutral-400 space-y-1 mb-4">
                   <p>Type: <span className="text-white">{(agent.type as string) || 'Standard'}</span></p>

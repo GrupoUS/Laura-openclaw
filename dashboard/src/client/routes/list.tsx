@@ -3,6 +3,7 @@ import { useEffect } from 'react'
 import { TaskList } from '@/client/components/dashboard/list/TaskList'
 import { useTaskStore } from '@/client/hooks/useTaskStore'
 import { trpc } from '@/client/trpc'
+import type { Task } from '@/shared/types/tasks'
 
 export const Route = createFileRoute('/list')({
   component: ListPage,
@@ -13,7 +14,7 @@ function ListPage() {
   const { data, isLoading } = trpc.tasks.list.useQuery()
 
   useEffect(() => {
-    if (data?.data) setTasks(data.data as any[])
+    if (data?.data) setTasks(data.data as unknown as Task[])
   }, [data, setTasks])
 
   if (isLoading) {
@@ -24,5 +25,5 @@ function ListPage() {
     )
   }
 
-  return <TaskList initialTasks={data?.data as any[] ?? []} />
+  return <TaskList initialTasks={data?.data as unknown as Task[] ?? []} />
 }

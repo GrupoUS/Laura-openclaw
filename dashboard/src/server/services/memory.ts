@@ -1,5 +1,4 @@
-import { eq, desc, gt, sql, and, lt } from 'drizzle-orm'
-import { cosineDistance } from 'drizzle-orm'
+import { eq, desc, gt, sql, and, lt, cosineDistance } from 'drizzle-orm'
 import { db } from '../db/client'
 import { agentMemories, type memoryCategoryEnum } from '../db/schema'
 import { generateEmbedding } from './embedding'
@@ -136,6 +135,7 @@ export async function consolidateMemories(): Promise<number> {
   for (const memory of all) {
     if (processed.has(memory.id)) continue
 
+    // eslint-disable-next-line no-await-in-loop -- sequential: each recall depends on previously processed set
     const duplicates = await recall({
       query: memory.content,
       threshold: 0.95,
@@ -147,6 +147,7 @@ export async function consolidateMemories(): Promise<number> {
       .map((d) => d.id)
 
     for (const dupeId of dupeIds) {
+      // eslint-disable-next-line no-await-in-loop -- sequential: must track processed set between deletions
       await deleteMemory(dupeId)
       processed.add(dupeId)
       merged++

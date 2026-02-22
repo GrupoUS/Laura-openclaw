@@ -1,4 +1,5 @@
-import { readdir } from 'node:fs/promises'
+import { readdir, readFile } from 'node:fs/promises'
+import { join } from 'node:path'
 import { router, publicProcedure } from '../trpc-init'
 import { gatewayCall } from '../ws/openclaw'
 import type {
@@ -12,36 +13,221 @@ import type {
 } from '@/shared/types/orchestration'
 
 // ---------------------------------------------------------------------------
-// Static hierarchy — GRUPO US org chart (REAL AGENTS ONLY)
+// Paths
 // ---------------------------------------------------------------------------
 
-const HIERARCHY_TEMPLATE: Omit<AgentNode, 'status' | 'skills' | 'tools'>[] = [
-  // Level 0 — Fundador (humano)
-  { id: 'mauricio', name: 'Maurício', role: 'Fundador', level: 0, reportsTo: null, manages: ['laura', 'claudete'] },
+const OPENCLAW_JSON = '/Users/mauricio/.openclaw/openclaw.json'
+const WORKSPACE_SKILLS_DIR = '/Users/mauricio/.openclaw/workspace/skills'
 
-  // Level 1 — C-Level
-  { id: 'laura', name: 'Laura', role: 'CEO — Orquestradora & SDR', level: 1, reportsTo: 'mauricio', manages: ['coder', 'cs', 'suporte'], requiredSkill: 'agent-team-orchestration' },
-  { id: 'claudete', name: 'Claudete', role: 'RH — Recrutamento & Onboarding', level: 1, reportsTo: 'mauricio', manages: [], requiredSkill: 'agent-builder' },
+// ---------------------------------------------------------------------------
+// Cache layer (30s TTL) — avoids hammering filesystem on every tRPC call
+// ---------------------------------------------------------------------------
 
-  // Level 2 — Directors (real gateway agents)
-  { id: 'coder', name: 'Coder', role: 'Diretor de Tecnologia', level: 2, reportsTo: 'laura', manages: [] },
-  { id: 'cs', name: 'CS', role: 'Diretor de Customer Success', level: 2, reportsTo: 'laura', manages: [] },
-  { id: 'suporte', name: 'Suporte', role: 'Diretor de Operações & PM', level: 2, reportsTo: 'laura', manages: [] },
-]
+interface CacheEntry<T> { data: T; ts: number }
+const cache = new Map<string, CacheEntry<unknown>>()
+const CACHE_TTL = 30_000
 
-// Map gateway agent IDs to hierarchy IDs (1:1 — all agents are real)
-const GATEWAY_TO_HIERARCHY: Record<string, string> = {
-  main: 'laura',
-  coder: 'coder',
-  cs: 'cs',
-  suporte: 'suporte',
+function cached<T>(key: string, fn: () => Promise<T>): Promise<T> {
+  const entry = cache.get(key) as CacheEntry<T> | undefined
+  if (entry && Date.now() - entry.ts < CACHE_TTL) return Promise.resolve(entry.data)
+  return fn().then((data) => { cache.set(key, { data, ts: Date.now() }); return data })
 }
 
 // ---------------------------------------------------------------------------
-// Workspace skills directory
+// openclaw.json reader
 // ---------------------------------------------------------------------------
 
-const WORKSPACE_SKILLS_DIR = '/Users/mauricio/.openclaw/workspace/skills'
+interface OpenClawAgent {
+  id: string
+  name: string
+  workspace: string
+  agentDir: string
+  model?: { primary?: string }
+}
+
+async function readOpenClawAgents(): Promise<OpenClawAgent[]> {
+  return cached('openclaw-agents', async () => {
+    try {
+      const raw = await readFile(OPENCLAW_JSON, 'utf-8')
+      const config = JSON.parse(raw) as { agents?: { list?: OpenClawAgent[] } }
+      return config.agents?.list ?? []
+    } catch {
+      return []
+    }
+  })
+}
+
+// ---------------------------------------------------------------------------
+// Agent SOUL.md / IDENTITY.md parser — extracts role, reportsTo
+// ---------------------------------------------------------------------------
+
+interface AgentMeta {
+  id: string
+  name: string
+  role: string
+  level: 0 | 1 | 2 | 3
+  reportsTo: string | null
+  manages: string[]
+  requiredSkill?: string
+}
+
+// Mapping of known hierarchy relationships from AGENTS.md "Reporto à/ao X"
+const REPORT_PATTERNS = [
+  /[Rr]eporto\s+(?:à|ao)\s+\*\*(\w+)\*\*/,
+  /[Rr]eporto\s+(?:à|ao)\s+(\w+)/,
+  /delegad[oa]\s+pel[oa]\s+(\w+)/i,
+]
+
+// Known name → agent ID mapping
+const NAME_TO_ID: Record<string, string> = {
+  'Laura': 'main',
+  'Maurício': 'mauricio',
+  'Celso': 'celso',
+  'Flora': 'flora',
+  'Otto': 'otto',
+  'Cris': 'cris',
+  'Mila': 'mila',
+  'Claudete': 'claudete',
+}
+
+async function parseAgentMeta(agentDir: string, _agentId: string): Promise<Partial<AgentMeta>> {
+  const meta: Partial<AgentMeta> = {}
+
+  // Read IDENTITY.md for name and role
+  try {
+    const identity = await readFile(join(agentDir, 'workspace', 'IDENTITY.md'), 'utf-8')
+    const nameMatch = identity.match(/\*\*Nome:\*\*\s*(.+)/i)
+    if (nameMatch) meta.name = nameMatch[1].trim()
+    const roleMatch = identity.match(/\*\*Espécie:\*\*\s*(.+)/i)
+    if (roleMatch) meta.role = roleMatch[1].trim()
+  } catch { /* no IDENTITY.md */ }
+
+  // Read AGENTS.md for reportsTo and requiredSkill
+  try {
+    const agents = await readFile(join(agentDir, 'workspace', 'AGENTS.md'), 'utf-8')
+    for (const pattern of REPORT_PATTERNS) {
+      const match = agents.match(pattern)
+      if (match) {
+        const directorName = match[1]
+        meta.reportsTo = NAME_TO_ID[directorName] ?? directorName.toLowerCase()
+        break
+      }
+    }
+  } catch { /* no AGENTS.md */ }
+
+  return meta
+}
+
+async function buildHierarchy(): Promise<AgentMeta[]> {
+  return cached('hierarchy', async () => {
+    const agents = await readOpenClawAgents()
+
+    // Start with Maurício (human/fundador)
+    const hierarchy: AgentMeta[] = [{
+      id: 'mauricio', name: 'Maurício', role: 'Fundador',
+      level: 0, reportsTo: null, manages: [],
+    }]
+
+    // Parse each agent from openclaw.json
+    for (const agent of agents) {
+      // eslint-disable-next-line no-await-in-loop -- sequential: each agent parses its own directory files
+      const meta = await parseAgentMeta(agent.agentDir, agent.id)
+
+      // Determine display name
+      const displayName = meta.name ?? agent.name.split('(')[0].trim()
+      const displayRole = meta.role ?? agent.name.match(/\((.+)\)/)?.[1] ?? agent.id
+
+      // Determine hierarchy level from reportsTo
+      let level: 0 | 1 | 2 | 3 = 2
+      const reportsTo = meta.reportsTo ?? 'main'
+
+      if (reportsTo === 'mauricio' || agent.id === 'main') level = 1
+      else if (reportsTo === 'main') level = 2
+      else level = 3
+
+      // Special case: main reports to mauricio
+      const finalReportsTo = agent.id === 'main' ? 'mauricio' : reportsTo
+
+      hierarchy.push({
+        id: agent.id === 'main' ? 'laura' : agent.id,
+        name: agent.id === 'main' ? 'Laura' : displayName,
+        role: agent.id === 'main' ? 'CEO — Orquestradora & SDR' : displayRole,
+        level,
+        reportsTo: finalReportsTo === 'main' ? 'laura' : finalReportsTo,
+        manages: [],
+        requiredSkill: meta.requiredSkill,
+      })
+    }
+
+    // Build manages[] from inverse reportsTo
+    for (const node of hierarchy) {
+      node.manages = hierarchy
+        .filter((n) => n.reportsTo === node.id)
+        .map((n) => n.id)
+    }
+
+    return hierarchy
+  })
+}
+
+// ---------------------------------------------------------------------------
+// Agent skills parser — reads AGENTS.md "Skills Mandatórias" section
+// ---------------------------------------------------------------------------
+
+const SKILL_PATH_PATTERN = /skills\/([a-z0-9_-]+)\/SKILL\.md/g
+
+async function extractAgentSkills(agentDir: string): Promise<string[]> {
+  try {
+    const content = await readFile(join(agentDir, 'workspace', 'AGENTS.md'), 'utf-8')
+
+    // Find skills section
+    const skillsSection = content.match(/## Skills Mandatórias[\s\S]*?(?=\n## |\n---|$)/i)
+    if (!skillsSection) return []
+
+    const skills: string[] = []
+    let match: RegExpExecArray | null
+    const pattern = new RegExp(SKILL_PATH_PATTERN.source, 'g')
+    while ((match = pattern.exec(skillsSection[0])) !== null) {
+      if (match[1] && !skills.includes(match[1])) {
+        skills.push(match[1])
+      }
+    }
+    return skills
+  } catch {
+    return []
+  }
+}
+
+async function buildAgentSkillsMap(): Promise<Record<string, string[]>> {
+  return cached('agent-skills', async () => {
+    const agents = await readOpenClawAgents()
+    const map: Record<string, string[]> = {}
+
+    for (const agent of agents) {
+      const hierarchyId = agent.id === 'main' ? 'laura' : agent.id
+      // eslint-disable-next-line no-await-in-loop -- sequential: each agent reads its own filesystem
+      map[hierarchyId] = await extractAgentSkills(agent.agentDir)
+    }
+
+    return map
+  })
+}
+
+// Gateway ID ↔ Hierarchy ID mapping (built dynamically)
+async function buildGatewayMapping(): Promise<Record<string, string>> {
+  return cached('gateway-map', async () => {
+    const agents = await readOpenClawAgents()
+    const map: Record<string, string> = {}
+    for (const agent of agents) {
+      map[agent.id] = agent.id === 'main' ? 'laura' : agent.id
+    }
+    return map
+  })
+}
+
+// ---------------------------------------------------------------------------
+// Workspace skills scanner (already existed — kept as-is)
+// ---------------------------------------------------------------------------
 
 async function scanWorkspaceSkills(): Promise<string[]> {
   try {
@@ -54,17 +240,8 @@ async function scanWorkspaceSkills(): Promise<string[]> {
   }
 }
 
-// Agent → skills mapping (real agents, real skills)
-const AGENT_SKILLS: Record<string, string[]> = {
-  laura: ['agent-team-orchestration', 'planning', 'google-ai-sdk', 'meta-api-integration'],
-  claudete: ['agent-builder', 'skill-creator'],
-  coder: ['frontend-rules', 'backend-design', 'docker-deploy', 'performance-optimization', 'webapp-testing'],
-  cs: ['clerk-neon-auth', 'evolution-core', 'notion'],
-  suporte: ['debugger', 'security-audit', 'seo-optimization'],
-}
-
 // ---------------------------------------------------------------------------
-// Workflow cycles (real agents only)
+// Workflow cycles (kept static — these are business-defined schedules)
 // ---------------------------------------------------------------------------
 
 const WORKFLOW_CYCLES: WorkflowCycle[] = [
@@ -98,10 +275,10 @@ const WORKFLOW_CYCLES: WorkflowCycle[] = [
 ]
 
 // ---------------------------------------------------------------------------
-// Token costs (mock data — real agent structure)
+// Token costs (mock data — will be replaced with real tracking later)
 // ---------------------------------------------------------------------------
 
-const MONTHLY_BUDGET = 10_000 // R$
+const MONTHLY_BUDGET = 10_000
 const MOCK_TOKEN_COSTS: TokenCost[] = [
   { squad: 'Liderança (Laura)', director: 'laura', tokens: 2_800_000, cost: 3_200, budgetPercent: 32 },
   { squad: 'Tecnologia (Coder)', director: 'coder', tokens: 1_500_000, cost: 1_800, budgetPercent: 18 },
@@ -116,6 +293,12 @@ const MOCK_TOKEN_COSTS: TokenCost[] = [
 export const orchestrationRouter = router({
   /** Full org hierarchy with live gateway status merge */
   hierarchy: publicProcedure.query(async ({ ctx }): Promise<AgentNode[]> => {
+    const [hierarchyTemplate, gatewayMap, agentSkills] = await Promise.all([
+      buildHierarchy(),
+      buildGatewayMapping(),
+      buildAgentSkillsMap(),
+    ])
+
     // Fetch live agents from gateway
     let liveAgents: Array<Record<string, unknown>> = []
     try {
@@ -134,18 +317,14 @@ export const orchestrationRouter = router({
       // ignore
     }
 
-    // Determine active agent IDs from sessions
     const activeGatewayIds = new Set(
       liveSessions.map((s) => String(s.agentId ?? ''))
     )
 
-    // Build hierarchy nodes with live status
-    return HIERARCHY_TEMPLATE.map((tmpl): AgentNode => {
-      // Check if this hierarchy agent maps to a gateway agent
-      const gatewayId = Object.entries(GATEWAY_TO_HIERARCHY)
+    return hierarchyTemplate.map((tmpl): AgentNode => {
+      const gatewayId = Object.entries(gatewayMap)
         .find(([, hId]) => hId === tmpl.id)?.[0]
 
-      // Default: 'idle' for planned agents, 'active' for Mauricio
       let status: AgentStatus = tmpl.id === 'mauricio' ? 'active' : 'idle'
       if (gatewayId) {
         const isLive = liveAgents.some((a) => a.id === gatewayId)
@@ -157,36 +336,37 @@ export const orchestrationRouter = router({
 
       return Object.assign({}, tmpl, {
         status,
-        skills: AGENT_SKILLS[tmpl.id] ?? [],
+        skills: agentSkills[tmpl.id] ?? [],
         tools: [] as string[],
       })
     })
   }),
 
-  /** Skills map — workspace skills × assigned agents (merged with agent-referenced skills) */
+  /** Skills map — workspace skills × assigned agents (dynamic) */
   skillsMap: publicProcedure.query(async (): Promise<SkillEntry[]> => {
-    const workspaceSkills = await scanWorkspaceSkills()
+    const [workspaceSkills, agentSkills] = await Promise.all([
+      scanWorkspaceSkills(),
+      buildAgentSkillsMap(),
+    ])
 
-    // Collect ALL skill names: workspace + agent-referenced
     const allSkillNames = new Set(workspaceSkills)
-    for (const skills of Object.values(AGENT_SKILLS)) {
+    for (const skills of Object.values(agentSkills)) {
       for (const skill of skills) {
         allSkillNames.add(skill)
       }
     }
 
-    // Build reverse map: skill → agents
     const skillToAgents: Record<string, string[]> = {}
     for (const skill of allSkillNames) {
       skillToAgents[skill] = []
     }
-    for (const [agentId, skills] of Object.entries(AGENT_SKILLS)) {
+    for (const [agentId, skills] of Object.entries(agentSkills)) {
       for (const skill of skills) {
+        if (!skillToAgents[skill]) skillToAgents[skill] = []
         skillToAgents[skill].push(agentId)
       }
     }
 
-    // Sort: unassigned first, then alphabetical
     return Array.from(allSkillNames)
       .map((name): SkillEntry => ({
         name,
@@ -226,13 +406,15 @@ export const orchestrationRouter = router({
     return WORKFLOW_CYCLES
   }),
 
-  /** Aggregated alerts */
+  /** Aggregated alerts (dynamic) */
   alerts: publicProcedure.query(async (): Promise<AlertItem[]> => {
-    const allSkills = await scanWorkspaceSkills()
+    const [allSkills, agentSkills] = await Promise.all([
+      scanWorkspaceSkills(),
+      buildAgentSkillsMap(),
+    ])
     const alerts: AlertItem[] = []
 
-    // Skills not assigned to any agent
-    const assignedSkills = new Set(Object.values(AGENT_SKILLS).flat())
+    const assignedSkills = new Set(Object.values(agentSkills).flat())
     for (const skill of allSkills) {
       if (!assignedSkills.has(skill)) {
         alerts.push({
@@ -244,7 +426,6 @@ export const orchestrationRouter = router({
       }
     }
 
-    // Token overload check (mock)
     for (const cost of MOCK_TOKEN_COSTS) {
       if (cost.budgetPercent > 25) {
         alerts.push({

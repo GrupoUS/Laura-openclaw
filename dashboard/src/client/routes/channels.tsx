@@ -27,14 +27,14 @@ function Channels() {
         {channelsQuery.isError && <div className="text-red-500">Error: {channelsQuery.error.message}</div>}
         {channels.length > 0 ? (
           <React.Fragment>
-            {channels.map((channel, i) => {
+            {channels.map((channel) => {
               const status = (channel.status as string) || 'unknown'
               const statusColor = status === 'connected' ? 'text-green-500'
                 : status === 'pending' ? 'text-yellow-500'
                 : status === 'disconnected' ? 'text-red-500'
                 : 'text-neutral-400'
               return (
-                <div key={(channel.id as string) || (channel.name as string) || i} className="bg-neutral-950 p-6 rounded-lg border border-neutral-800 shadow-md">
+                <div key={String(channel.id ?? channel.name ?? crypto.randomUUID())} className="bg-neutral-950 p-6 rounded-lg border border-neutral-800 shadow-md">
                   <h3 className="text-xl font-semibold mb-2 text-indigo-400">{(channel.id as string) || (channel.name as string)}</h3>
                   <div className="text-sm text-neutral-400 space-y-1 mb-4">
                     <p>Type: <span className="text-white capitalize">{channel.provider as string}</span></p>

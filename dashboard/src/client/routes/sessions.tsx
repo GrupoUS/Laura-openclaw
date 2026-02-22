@@ -50,8 +50,8 @@ function Sessions() {
             </thead>
             <tbody className="divide-y divide-neutral-800">
               {sessions.length ? (
-                sessions.map((s, i) => (
-                  <tr key={(s.id as string) || (s.sessionId as string) || `session-${i}`} className="hover:bg-neutral-900/50">
+                sessions.map((s) => (
+                  <tr key={String(s.id ?? s.sessionId ?? crypto.randomUUID())} className="hover:bg-neutral-900/50">
                     <td className="px-6 py-4 font-mono">{(s.id as string) || (s.sessionId as string)}</td>
                     <td className="px-6 py-4">{s.agentId as string}</td>
                     <td className="px-6 py-4">{s.channelId as string}</td>

@@ -6,6 +6,25 @@ export const Route = createFileRoute('/evolution')({
   component: Evolution,
 })
 
+interface MemoryRecord {
+  id: string
+  content: string
+  category: string
+  source: string
+  score: number | null
+  similarity?: number
+  createdAt: string | null
+}
+
+interface CycleRecord {
+  id: string
+  trigger: string
+  status: string
+  memoriesCreated: number | null
+  durationMs: number | null
+  createdAt: string | null
+}
+
 function Evolution() {
   const statsQuery = trpc.evolution.stats.useQuery()
   const memoriesQuery = trpc.evolution.memories.list.useQuery()
@@ -127,7 +146,7 @@ function Evolution() {
         />
         {searchResults.data && searchResults.data.length > 0 && (
           <div className="mt-4 flex flex-col gap-2">
-            {searchResults.data.map((m: any) => (
+            {searchResults.data.map((m: MemoryRecord) => (
               <div
                 key={m.id}
                 className="flex items-start gap-3 p-3 bg-neutral-900 rounded-lg border border-neutral-800"
@@ -140,7 +159,7 @@ function Evolution() {
                 <div className="flex-1 min-w-0">
                   <p className="text-sm text-neutral-200 break-words">{m.content}</p>
                   <p className="text-xs text-neutral-500 mt-1">
-                    Similarity: {(m.similarity * 100).toFixed(1)}% · Source: {m.source}
+                    Similarity: {((m.similarity ?? 0) * 100).toFixed(1)}% · Source: {m.source}
                   </p>
                 </div>
               </div>
@@ -176,8 +195,8 @@ function Evolution() {
               </tr>
             </thead>
             <tbody className="divide-y divide-neutral-800">
-              {(cyclesQuery.data as any[])?.length ? (
-                (cyclesQuery.data as any[]).map((c: any) => (
+              {(cyclesQuery.data as CycleRecord[])?.length ? (
+                (cyclesQuery.data as CycleRecord[]).map((c) => (
                   <tr key={c.id} className="hover:bg-neutral-900/50">
                     <td className="px-6 py-4 font-mono text-xs">
                       {c.id?.slice(0, 8)}
@@ -226,8 +245,8 @@ function Evolution() {
           </div>
         ) : (
           <div className="divide-y divide-neutral-800">
-            {(memoriesQuery.data as any[])?.length ? (
-              (memoriesQuery.data as any[]).slice(0, 20).map((m: any) => (
+            {(memoriesQuery.data as MemoryRecord[])?.length ? (
+              (memoriesQuery.data as MemoryRecord[]).slice(0, 20).map((m) => (
                 <div
                   key={m.id}
                   className="px-6 py-4 flex items-start gap-3 hover:bg-neutral-900/50"

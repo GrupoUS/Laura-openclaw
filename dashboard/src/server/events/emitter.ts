@@ -3,6 +3,7 @@
  * PUBLISH → @upstash/redis REST API (fire-and-forget)
  * SUBSCRIBE → ioredis TCP singleton (receives from ALL Railway instances)
  */
+/* eslint-disable no-console -- infrastructure logging is intentional for EventBus observability */
 import { Redis as UpstashRedis } from '@upstash/redis'
 import IoRedis from 'ioredis'
 import type { TaskEvent } from './types'
@@ -94,6 +95,7 @@ class TaskEventBus {
     return this.handlers.size
   }
 }
+/* eslint-enable no-console */
 
 // ─── Module-level singleton ───────────────────────────────────────
 // No lazy proxy needed — Bun doesn't have Next.js prerender issue
@@ -113,3 +115,4 @@ export const eventBus = new Proxy({} as TaskEventBus, {
     return typeof value === 'function' ? value.bind(instance) : value
   }
 })
+
