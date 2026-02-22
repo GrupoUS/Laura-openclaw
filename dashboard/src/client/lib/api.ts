@@ -25,7 +25,7 @@ export async function patchTaskStatus(
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     credentials: 'include',
-    body: JSON.stringify({ json: { id, status, agent } }),
+    body: JSON.stringify({ json: { id: Number(id), status, agent } }),
   })
   if (!res.ok) throw new Error(`patchTask: ${res.status}`)
   const json = await res.json()
@@ -40,7 +40,7 @@ export async function patchSubtaskStatus(
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     credentials: 'include',
-    body: JSON.stringify({ json: { taskId, sid, status } }),
+    body: JSON.stringify({ json: { taskId: Number(taskId), sid: Number(sid), status } }),
   })
   if (res.status === 409) return null
   if (!res.ok) throw new Error(`patchSubtask: ${res.status}`)
@@ -65,7 +65,7 @@ export async function createSubtask(data: Record<string, unknown>): Promise<Subt
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     credentials: 'include',
-    body: JSON.stringify({ json: data }),
+    body: JSON.stringify({ json: { ...data, taskId: Number(data.taskId) } }),
   })
   if (!res.ok) throw new Error(`createSubtask: ${res.status}`)
   const json = await res.json()

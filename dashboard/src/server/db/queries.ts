@@ -50,10 +50,15 @@ export async function getTasks(filter: TaskFilter) {
     subtasksByTaskId.set(s.taskId, arr)
   }
 
-  return taskRows.map(t => {
-    const result = Object.assign({}, t, { subtasks: subtasksByTaskId.get(t.id) ?? [] })
-    return result
-  })
+  return taskRows.map(t => ({
+    ...t,
+    id: String(t.id),
+    subtasks: (subtasksByTaskId.get(t.id) ?? []).map(s => ({
+      ...s,
+      id: String(s.id),
+      taskId: String(s.taskId),
+    })),
+  }))
 }
 
 export async function getTaskById(id: number) {
