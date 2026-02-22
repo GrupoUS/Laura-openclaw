@@ -15,17 +15,9 @@ const LEVEL_LABELS: Record<number, string> = {
   3: 'Operacional',
 }
 
-// Map hierarchy IDs to gateway agent IDs for board linking
-const HIERARCHY_TO_GATEWAY: Record<string, string> = {
-  laura: 'main',
-  coder: 'coder',
-  cs: 'cs',
-  suporte: 'suporte',
-}
-
-function AgentNodeCard({ node }: { node: AgentNode }) {
+function AgentNodeCard({ node, liveAction }: { node: AgentNode; liveAction?: string }) {
   const colors = STATUS_COLORS[node.status]
-  const gatewayId = HIERARCHY_TO_GATEWAY[node.id]
+  const gatewayId = node.id === 'laura' ? 'main' : node.id
 
   return (
     <div
@@ -37,6 +29,11 @@ function AgentNodeCard({ node }: { node: AgentNode }) {
         <span className="text-xs font-semibold text-slate-800 truncate">{node.name}</span>
       </div>
       <p className="text-[10px] text-slate-500 leading-tight truncate">{node.role}</p>
+      {node.status === 'in_workflow' && liveAction && (
+        <span className="mt-0.5 animate-pulse text-[9px] text-blue-500 font-medium truncate block max-w-full">
+          {liveAction}
+        </span>
+      )}
       {node.requiredSkill && (
         <span className="mt-1 inline-block text-[9px] bg-indigo-100 text-indigo-700 px-1.5 py-0.5 rounded-full font-medium truncate max-w-full">
           {node.requiredSkill}
@@ -80,7 +77,7 @@ function HorizontalConnector({ count }: { count: number }) {
   )
 }
 
-export function HierarchyTree({ nodes }: { nodes: AgentNode[] }) {
+export function HierarchyTree({ nodes, liveEvents }: { nodes: AgentNode[]; liveEvents?: Map<string, string> }) {
   // Group by level
   const byLevel: Record<number, AgentNode[]> = { 0: [], 1: [], 2: [], 3: [] }
   for (const node of nodes) {
@@ -103,7 +100,7 @@ export function HierarchyTree({ nodes }: { nodes: AgentNode[] }) {
           <span className="text-[9px] text-slate-400 uppercase tracking-wider font-medium">{LEVEL_LABELS[0]}</span>
         </div>
         <div className="flex justify-center">
-          {byLevel[0].map((n) => <AgentNodeCard key={n.id} node={n} />)}
+          {byLevel[0].map((n) => <AgentNodeCard key={n.id} node={n} liveAction={liveEvents?.get(n.id === 'laura' ? 'main' : n.id)} />)}
         </div>
 
         <ConnectorLine />
@@ -114,7 +111,7 @@ export function HierarchyTree({ nodes }: { nodes: AgentNode[] }) {
         </div>
         <HorizontalConnector count={byLevel[1].length} />
         <div className="flex justify-center gap-6 flex-wrap">
-          {byLevel[1].map((n) => <AgentNodeCard key={n.id} node={n} />)}
+          {byLevel[1].map((n) => <AgentNodeCard key={n.id} node={n} liveAction={liveEvents?.get(n.id === 'laura' ? 'main' : n.id)} />)}
         </div>
 
         <ConnectorLine />
@@ -125,7 +122,7 @@ export function HierarchyTree({ nodes }: { nodes: AgentNode[] }) {
         </div>
         <HorizontalConnector count={byLevel[2].length} />
         <div className="flex justify-center gap-4 flex-wrap">
-          {byLevel[2].map((n) => <AgentNodeCard key={n.id} node={n} />)}
+          {byLevel[2].map((n) => <AgentNodeCard key={n.id} node={n} liveAction={liveEvents?.get(n.id === 'laura' ? 'main' : n.id)} />)}
         </div>
 
         {/* Level 3 — Operational (grouped by director) */}
@@ -145,7 +142,7 @@ export function HierarchyTree({ nodes }: { nodes: AgentNode[] }) {
                     </span>
                     <HorizontalConnector count={agents.length} />
                     <div className="flex gap-2 flex-wrap justify-center">
-                      {agents.map((n) => <AgentNodeCard key={n.id} node={n} />)}
+                      {agents.map((n) => <AgentNodeCard key={n.id} node={n} liveAction={liveEvents?.get(n.id === 'laura' ? 'main' : n.id)} />)}
                     </div>
                   </div>
                 )

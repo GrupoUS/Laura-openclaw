@@ -15,6 +15,7 @@ export interface AgentNode {
   requiredSkill?: string
   tokensUsed?: number
   lastActive?: string
+  currentAction?: string
 }
 
 export interface SkillEntry {
