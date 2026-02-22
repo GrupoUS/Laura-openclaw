@@ -2,7 +2,10 @@
 import { AGENT_EMOJIS } from '@/shared/types/tasks'
 import { SubtaskProgress } from '@/client/components/dashboard/shared/SubtaskProgress'
 import { useTaskStore } from '@/client/hooks/useTaskStore'
+import { useOrchestrationEvents, type AgentSkillUsage } from '@/client/hooks/useOrchestrationEvents'
+import { useState, useEffect } from 'react'
 import type { AgentDetail } from '@/server/db/queries'
+import type { AgentNode } from '@/shared/types/orchestration'
 
 const STATUS_CONFIG = {
   doing:   { label: '⚡ ATIVO',    dot: 'bg-blue-400 animate-pulse',  border: 'border-blue-300',  bg: 'bg-blue-50'  },
@@ -20,16 +23,64 @@ function timeAgo(iso: string | null): string {
   return `há ${Math.floor(s / 3600)}h`
 }
 
-export function AgentCard({ agent }: { agent: AgentDetail }) {
+function SkillBadge({ skill, usage }: { skill: string; usage?: AgentSkillUsage }) {
+  const [isActive, setIsActive] = useState(false)
+
+  useEffect(() => {
+    if (!usage?.lastUsed) {
+      setIsActive(false)
+      return
+    }
+    const age = Date.now() - new Date(usage.lastUsed).getTime()
+    if (age < 10000) {
+      setIsActive(true)
+      const t = setTimeout(() => setIsActive(false), 10000 - age)
+      return () => clearTimeout(t)
+    } else {
+      setIsActive(false)
+    }
+  }, [usage?.lastUsed])
+
+  if (isActive) {
+    return (
+      <span className="bg-blue-100 text-blue-700 animate-pulse px-1.5 py-0.5 rounded-full text-[9px] font-medium border border-blue-200" title="Ativa agora">
+        {skill} {usage?.count ? `(${usage.count})` : ''}
+      </span>
+    )
+  }
+
+  const isIdle = (usage?.count ?? 0) > 0
+  return (
+    <span 
+      className={`px-1.5 py-0.5 rounded-full text-[9px] font-medium border transition-colors ${
+        isIdle 
+          ? 'bg-slate-100 text-slate-500 border-slate-200 dark:bg-slate-700 dark:text-slate-300 dark:border-slate-600' 
+          : 'bg-emerald-50 text-emerald-600 border-emerald-100 dark:bg-emerald-900/30 dark:text-emerald-400 dark:border-emerald-800'
+      }`}
+      title={isIdle ? 'Idle' : 'Disponível'}
+    >
+      {skill} {isIdle ? `(${usage?.count ?? 0})` : ''}
+    </span>
+  )
+}
+
+export function AgentCard({ agent, hierarchyNode }: { agent: AgentDetail; hierarchyNode?: AgentNode }) {
   const cfg   = STATUS_CONFIG[agent.status]
   const emoji = AGENT_EMOJIS?.[agent.name] ?? '🤖'
 
-  // Pegar subtasks da task atual para o progress bar
   const currentTaskFull = useTaskStore((s) =>
     agent.currentTask ? s.tasks.find((t) => t.id === agent.currentTask?.id) : null
   )
 
+  const { liveAgentMap } = useOrchestrationEvents()
+  const gatewayId = agent.name === 'laura' ? 'main' : agent.name
+  const targetId = hierarchyNode?.id ?? gatewayId
+  const liveState = liveAgentMap.get(targetId)
+  
   const totalTasks = Object.values(agent.counts).reduce((a: number, b) => a + (b ?? 0), 0)
+  const skills = hierarchyNode?.skills ?? []
+  
+  const [skillsExpanded, setSkillsExpanded] = useState(false)
 
   return (
     <div className={`rounded-xl border-2 p-4 flex flex-col gap-3 transition-all ${cfg.border} ${cfg.bg} dark:bg-slate-800/60 dark:border-slate-700 min-h-[180px]`}>
@@ -70,6 +121,31 @@ export function AgentCard({ agent }: { agent: AgentDetail }) {
         <p className="text-xs text-slate-400 dark:text-slate-500 flex-1 flex items-center">
           {agent.status === 'blocked' ? '⛔ Task bloqueada' : 'Sem tasks ativas'}
         </p>
+      )}
+
+      {/* Skills Section */}
+      {skills.length > 0 && (
+        <div className="flex flex-col gap-1.5 mt-auto">
+          <button 
+            onClick={() => setSkillsExpanded(!skillsExpanded)}
+            className="flex items-center justify-between text-[10px] text-slate-500 dark:text-slate-400 uppercase tracking-wide font-medium hover:text-slate-700 dark:hover:text-slate-200 transition-colors"
+          >
+            <span>Skills ({skills.length})</span>
+            <span className="text-xs">{skillsExpanded ? '▲' : '▼'}</span>
+          </button>
+          
+          {skillsExpanded && (
+            <div className="flex flex-wrap gap-1 mt-1">
+              {skills.map(s => (
+                <SkillBadge 
+                  key={s} 
+                  skill={s} 
+                  usage={liveState?.skillsActive?.[s]} 
+                />
+              ))}
+            </div>
+          )}
+        </div>
       )}
 
       {/* Footer */}

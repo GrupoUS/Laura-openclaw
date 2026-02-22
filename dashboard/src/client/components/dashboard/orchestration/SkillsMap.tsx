@@ -1,16 +1,34 @@
 import { useState } from 'react'
 import type { SkillEntry } from '@/shared/types/orchestration'
+import { useOrchestrationEvents } from '@/client/hooks/useOrchestrationEvents'
 
 export function SkillsMap({ skills }: { skills: SkillEntry[] }) {
   const [filter, setFilter] = useState<'all' | 'assigned' | 'unassigned'>('all')
+  const { liveAgentMap } = useOrchestrationEvents()
 
-  const filtered = skills.filter((s) => {
-    if (filter === 'assigned') return !s.unassigned
-    if (filter === 'unassigned') return s.unassigned
-    return true
+  const unassignedSkills = skills.filter((s) => s.unassigned)
+  const unassignedCount = unassignedSkills.length
+
+  const agentsMap = new Map<string, string[]>()
+  skills.forEach(s => {
+    s.assignedAgents.forEach(a => {
+      const arr = agentsMap.get(a) ?? []
+      arr.push(s.name)
+      agentsMap.set(a, arr)
+    })
   })
 
-  const unassignedCount = skills.filter((s) => s.unassigned).length
+  for (const [agentId, state] of liveAgentMap.entries()) {
+    if (Object.keys(state.skillsActive).length > 0) {
+      const list = agentsMap.get(agentId) ?? []
+      for (const sk of Object.keys(state.skillsActive)) {
+        if (!list.includes(sk)) list.push(sk)
+      }
+      agentsMap.set(agentId, list)
+    }
+  }
+
+  const agentList = Array.from(agentsMap.keys()).toSorted()
 
   return (
     <div className="flex flex-col gap-3">
@@ -27,55 +45,85 @@ export function SkillsMap({ skills }: { skills: SkillEntry[] }) {
             }`}
           >
             {f === 'all' && `Todas (${skills.length})`}
-            {f === 'assigned' && `Atribuídas (${skills.length - unassignedCount})`}
+            {f === 'assigned' && `Agrupadas (${skills.length - unassignedCount})`}
             {f === 'unassigned' && `Livres (${unassignedCount})`}
           </button>
         ))}
       </div>
 
-      {/* Skills grid */}
-      <div className="max-h-[320px] overflow-y-auto space-y-1.5">
-        {filtered.length === 0 ? (
-          <p className="text-xs text-slate-400 text-center py-4">Nenhuma skill encontrada.</p>
-        ) : (
-          filtered.map((skill) => (
-            <div
-              key={skill.name}
-              className={`flex items-center justify-between px-3 py-2 rounded-lg border transition-colors ${
-                skill.unassigned
-                  ? 'bg-red-50 border-red-200'
-                  : 'bg-slate-50 border-slate-200'
-              }`}
-            >
-              <div className="flex items-center gap-2 min-w-0">
-                <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${
-                  skill.unassigned ? 'bg-red-400' : 'bg-emerald-400'
-                }`} />
-                <span className="text-xs text-slate-700 font-medium truncate">{skill.name}</span>
-              </div>
-              <div className="flex gap-1 shrink-0 ml-2">
-                {skill.assignedAgents.length > 0 ? (
-                  skill.assignedAgents.slice(0, 3).map((agent) => (
-                    <span
-                      key={agent}
-                      className="text-[9px] bg-indigo-100 text-indigo-700 px-1.5 py-0.5 rounded-full font-medium"
-                    >
-                      {agent}
-                    </span>
-                  ))
-                ) : (
-                  <span className="text-[9px] bg-red-100 text-red-600 px-1.5 py-0.5 rounded-full font-medium">
-                    não atribuída
-                  </span>
-                )}
-                {skill.assignedAgents.length > 3 && (
-                  <span className="text-[9px] text-slate-400">
-                    +{skill.assignedAgents.length - 3}
-                  </span>
-                )}
-              </div>
+      {/* Skills groups */}
+      <div className="max-h-[320px] overflow-y-auto space-y-3 pr-2">
+        
+        {/* Assigned */}
+        {(filter === 'all' || filter === 'assigned') && agentList.length > 0 && (
+          <div className="space-y-3">
+            {agentList.map(agentId => {
+              const agentSkills = agentsMap.get(agentId) ?? []
+              const liveState = liveAgentMap.get(agentId)
+              const skillsActive = liveState?.skillsActive ?? {}
+
+              // Sort by usage count in the last hour
+              const sortedSkills = agentSkills.toSorted((a, b) => {
+                const usageA = skillsActive[a]
+                const usageB = skillsActive[b]
+                const countA = usageA && (Date.now() - new Date(usageA.lastUsed).getTime() <= 3600000) ? usageA.count : 0
+                const countB = usageB && (Date.now() - new Date(usageB.lastUsed).getTime() <= 3600000) ? usageB.count : 0
+                if (countA !== countB) return countB - countA
+                return a.localeCompare(b)
+              })
+
+              return (
+                <div key={agentId} className="border border-indigo-50/50 bg-slate-50 rounded-lg p-3">
+                  <h3 className="text-xs font-semibold text-slate-700 mb-2 flex items-center gap-1.5">
+                    🤖 {agentId}
+                    {liveState?.status === 'in_workflow' && (
+                      <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse" title="Ativo" />
+                    )}
+                  </h3>
+                  <div className="flex flex-wrap gap-1.5">
+                    {sortedSkills.map(s => {
+                      const usage = skillsActive[s]
+                      const age = usage ? Date.now() - new Date(usage.lastUsed).getTime() : Infinity
+                      const hot = age <= 10000
+                      const recent = age <= 3600000
+
+                      return (
+                        <span 
+                          key={s} 
+                          title={usage ? `Usada há ${Math.floor(age/1000)}s` : 'Disponível'}
+                          className={`px-2 py-0.5 rounded text-[10px] font-medium border transition-colors ${
+                            hot ? 'bg-blue-100 text-blue-700 border-blue-200 animate-pulse' : 
+                            recent ? 'bg-indigo-50 text-indigo-600 border-indigo-100' : 
+                            'bg-white text-slate-500 border-slate-200'
+                          }`}
+                        >
+                          {s} {usage?.count ? `(${usage.count})` : ''}
+                        </span>
+                      )
+                    })}
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+        )}
+
+        {/* Unassigned */}
+        {(filter === 'all' || filter === 'unassigned') && unassignedSkills.length > 0 && (
+          <div className="border border-red-100 bg-red-50/30 rounded-lg p-3">
+            <h3 className="text-xs font-semibold text-red-600 mb-2">⚠️ Não Atribuídas ({unassignedCount})</h3>
+            <div className="flex flex-wrap gap-1.5">
+              {unassignedSkills.map((skill) => (
+                <span key={skill.name} className="px-2 py-0.5 rounded text-[10px] font-medium border bg-white border-red-200 text-red-700">
+                  {skill.name}
+                </span>
+              ))}
             </div>
-          ))
+          </div>
+        )}
+
+        {skills.length === 0 && (
+          <p className="text-xs text-slate-400 text-center py-4">Nenhuma skill encontrada.</p>
         )}
       </div>
     </div>

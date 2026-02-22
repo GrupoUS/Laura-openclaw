@@ -54,17 +54,22 @@ function ActivityItem({ entry }: { entry: ActivityEntry }) {
   )
 }
 
-export function ActivityFeed({ initialEvents }: { initialEvents: ActivityEntry[] }) {
+export function ActivityFeed({ initialEvents = [], filterAgentId, maxHeight }: { initialEvents?: ActivityEntry[], filterAgentId?: string, maxHeight?: string | number }) {
   // Combinar: eventos SSE em memória (mais recentes) + histórico NeonDB
   const liveEvents = useTaskStore((s) => s.activityLog)
 
   // Merge: live events first, then historical (no duplicates by ts)
   const liveTimes  = new Set(liveEvents.map((e) => e.ts))
   const historical = initialEvents.filter((e) => !liveTimes.has(e.ts))
-  const merged     = [...liveEvents, ...historical].slice(0, 50)
+  let merged     = [...liveEvents, ...historical]
+  
+  if (filterAgentId) {
+    merged = merged.filter((e) => e.agent === filterAgentId)
+  }
+  merged = merged.slice(0, 50)
 
   return (
-    <div className="flex flex-col h-full bg-slate-50 dark:bg-slate-900">
+    <div className="flex flex-col h-full bg-slate-50 dark:bg-slate-900" style={maxHeight ? { maxHeight } : undefined}>
       <div className="px-4 py-3 border-b border-slate-200 dark:border-slate-700 flex items-center gap-2">
         <span className="text-sm font-semibold text-slate-700 dark:text-slate-200">📡 Atividade</span>
         <span className="text-xs text-slate-400 dark:text-slate-500 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded-full">
