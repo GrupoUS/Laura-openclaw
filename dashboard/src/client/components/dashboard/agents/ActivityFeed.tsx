@@ -31,7 +31,7 @@ function ActivityItem({ entry }: { entry: ActivityEntry }) {
   const icon   = EVENT_ICONS[entry.type]   ?? '📌'
   const status = (entry.payload?.status as string) ?? 'created'
   const color  = STATUS_COLORS[status] ?? 'text-slate-600'
-  const label  = entry.taskTitle ?? (entry.payload?.title as string) ?? entry.taskId.slice(0, 8)
+  const label  = entry.taskTitle ?? (entry.payload?.title as string) ?? String(entry.taskId).slice(0, 8)
 
   return (
     <div className="flex gap-2.5 py-2.5 border-b border-slate-100 last:border-0">

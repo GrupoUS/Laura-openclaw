@@ -33,7 +33,7 @@ export function TaskCard({ task, isDragging }: Props) {
       {/* Header: ID + Priority */}
       <div className="flex items-center justify-between mb-1.5">
         <span className="text-[10px] font-mono text-slate-400">
-          #{task.id.slice(0, 8)}
+          #{task.id}
         </span>
         <PriorityBadge priority={task.priority} />
       </div>
