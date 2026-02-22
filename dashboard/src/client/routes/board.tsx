@@ -3,6 +3,7 @@ import { useEffect } from 'react'
 import { KanbanBoard } from '@/client/components/dashboard/board/KanbanBoard'
 import { useTaskStore } from '@/client/hooks/useTaskStore'
 import { trpc } from '@/client/trpc'
+import type { Task } from '@/shared/types/tasks'
 
 export const Route = createFileRoute('/board')({
   component: BoardPage,
@@ -14,7 +15,7 @@ function BoardPage() {
 
   useEffect(() => {
     if (data?.data) {
-      setTasks(data.data as any[])
+      setTasks(data.data as unknown as Task[])
     }
   }, [data, setTasks])
 
@@ -26,5 +27,5 @@ function BoardPage() {
     )
   }
 
-  return <KanbanBoard initialTasks={data?.data as any[] ?? []} />
+  return <KanbanBoard initialTasks={data?.data as unknown as Task[] ?? []} />
 }
