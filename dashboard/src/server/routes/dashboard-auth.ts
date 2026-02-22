@@ -14,11 +14,7 @@ const SEAL_PASSWORD = SESSION_OPTIONS.password
 
 const DASHBOARD_PWD = process.env.DASHBOARD_PASSWORD || '947685'
 
-if (!process.env.DASHBOARD_PASSWORD) {
-  console.error('################################################################')
-  console.error('# ⚠️  DASHBOARD_PASSWORD env var is NOT SET — using fallback   #')
-  console.error('################################################################')
-}
+
 
 // POST /api/auth/login
 dashboardAuth.post('/login', async (c) => {

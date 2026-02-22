@@ -78,7 +78,7 @@ export function ActivityFeed({ initialEvents }: { initialEvents: ActivityEntry[]
             <span className="text-[10px]">Events aparecerão aqui em tempo real.</span>
           </p>
         ) : (
-          merged.map((entry, i) => <ActivityItem key={`${entry.ts}-${i}`} entry={entry} />)
+          merged.map((entry) => <ActivityItem key={entry.id} entry={entry} />)
         )}
       </ScrollArea>
     </div>
