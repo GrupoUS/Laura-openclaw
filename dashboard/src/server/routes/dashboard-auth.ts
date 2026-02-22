@@ -12,9 +12,11 @@ const dashboardAuth = new Hono()
 const COOKIE_NAME = SESSION_OPTIONS.cookieName
 const SEAL_PASSWORD = SESSION_OPTIONS.password
 
+const DASHBOARD_PWD = process.env.DASHBOARD_PASSWORD || '947685'
+
 if (!process.env.DASHBOARD_PASSWORD) {
   console.error('################################################################')
-  console.error('# ⚠️  DASHBOARD_PASSWORD env var is NOT SET — login will FAIL  #')
+  console.error('# ⚠️  DASHBOARD_PASSWORD env var is NOT SET — using fallback   #')
   console.error('################################################################')
 }
 
@@ -22,7 +24,7 @@ if (!process.env.DASHBOARD_PASSWORD) {
 dashboardAuth.post('/login', async (c) => {
   const { password } = await c.req.json<{ password: string }>()
 
-  if (!password || password !== process.env.DASHBOARD_PASSWORD) {
+  if (!password || password !== DASHBOARD_PWD) {
     await new Promise(r => setTimeout(r, 500))
     return c.json({ ok: false, error: 'Senha incorreta' }, 401)
   }
