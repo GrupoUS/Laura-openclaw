@@ -7,7 +7,11 @@
 const https = require('https');
 
 // Load Gemini API key
-const GEMINI_API_KEY = process.env.GEMINI_API_KEY || 'AIzaSyCl39UHQTiRoc_iyhhHwtn7oYdbvgt7F04';
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+
+if (!GEMINI_API_KEY) {
+  console.warn('⚠️ AVISO: A variável de ambiente GEMINI_API_KEY não está definida. O STT falhará.');
+}
 
 // Mulaw decode table
 const MULAW_DECODE = new Int16Array(256);
@@ -239,7 +243,7 @@ class GeminiSTT {
             const text = response.candidates?.[0]?.content?.parts?.[0]?.text || '';
             resolve(text.trim());
           } catch (e) {
-            reject(new Error('Failed to parse Gemini response'));
+            reject(new Error('Failed to parse Gemini response: ' + e.message));
           }
         });
       });

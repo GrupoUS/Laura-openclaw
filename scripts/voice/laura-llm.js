@@ -9,7 +9,11 @@ const https = require('https');
 const { spawn } = require('child_process');
 const path = require('path');
 
-const GEMINI_API_KEY = process.env.GEMINI_API_KEY || 'AIzaSyCl39UHQTiRoc_iyhhHwtn7oYdbvgt7F04';
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+
+if (!GEMINI_API_KEY) {
+  console.warn('⚠️ AVISO: A variável de ambiente GEMINI_API_KEY não está definida. O LLM falhará.');
+}
 
 const LAURA_SYSTEM_PROMPT = `Você é a Laura, atendente e SDR do Grupo US.
 
