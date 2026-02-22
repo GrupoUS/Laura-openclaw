@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, useCallback } from 'react'
+import React, { createContext, useContext, useState, useEffect, useCallback, useMemo } from 'react'
 
 type AuthState = {
   authenticated: boolean
@@ -37,7 +37,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [checkAuth])
 
   const login = useCallback(async (password: string) => {
-    const res = await fetch('/api/login', {
+    const res = await fetch('/api/auth/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ password }),
@@ -48,16 +48,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setAuthenticated(true)
       return { ok: true }
     }
-    return { ok: false, error: data.error || 'Login failed' }
+    return { ok: false, error: data.error || 'Senha incorreta' }
   }, [])
 
   const logout = useCallback(async () => {
-    await fetch('/api/logout', { method: 'POST', credentials: 'include' })
+    await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' })
     setAuthenticated(false)
   }, [])
 
+  const value = useMemo(
+    () => ({ authenticated, loading, login, logout, checkAuth }),
+    [authenticated, loading, login, logout, checkAuth]
+  )
+
   return (
-    <AuthContext.Provider value={{ authenticated, loading, login, logout, checkAuth }}>
+    <AuthContext.Provider value={value}>
       {children}
     </AuthContext.Provider>
   )

@@ -417,7 +417,7 @@
       "description": "Check for unresponded leads every hour",
       "enabled": true,
       "createdAtMs": 1771560754062,
-      "updatedAtMs": 1771687354103,
+      "updatedAtMs": 1771769879179,
       "schedule": {
         "kind": "every",
         "everyMs": 3600000,
@@ -427,9 +427,9 @@
       "wakeMode": "now",
       "payload": {
         "kind": "agentTurn",
-        "message": "Verifique todos os leads do WhatsApp que estão sem resposta. Analise a última mensagem de cada um e responda o que eles perguntaram (não peça permissão para perguntar, entregue valor primeiro conforme SOUL.md). Se o lead não responder após sua mensagem inicial, envie um áudio (usando sag) com uma abordagem diferente, forçando a interação: 'Sei que o dia a dia é corrido, mas o objetivo da mentoria/TRINTAE3 é justamente te dar mais tempo'. Use sessions_spawn para cada lead se necessário para manter a performance. Reporte um resumo para Maurício (+556299776996) via sessions_send ou message tool apenas se houver ações tomadas. Se tudo estiver em dia, não envie nada (NO_REPLY).",
+        "message": "⛔ REGRAS DE IDENTIFICAÇÃO OBRIGATÓRIAS:\n+556299776996 = MAURÍCIO (único destinatário de status/sistema)\n+556195220319 / +556284414105 = LUCAS (Head de Vendas) — NUNCA sistema, NUNCA chamar de Maurício\n+556299438005 = ERIKA (Consultora) — NUNCA sistema\n+556294705081 = EU MESMA (Laura) — NUNCA enviar para mim mesma\n\nTAREFA: Verifique leads do WhatsApp sem resposta. Responda conforme SOUL.md (entregue valor primeiro). Use sessions_spawn por lead se necessário. Reporte SOMENTE para Maurício (+556299776996) apenas se houver ações. Se tudo OK, responda NO_REPLY.",
         "thinking": "medium",
-        "model": "gemini3-flash"
+        "model": "google-gemini-cli/gemini-3-flash-preview"
       },
       "delivery": {
         "mode": "none",
@@ -437,11 +437,11 @@
         "to": "+556299776996"
       },
       "state": {
-        "nextRunAtMs": 1771693954062,
-        "lastRunAtMs": 1771686754075,
-        "lastStatus": "error",
-        "lastDurationMs": 600028,
-        "consecutiveErrors": 1
+        "nextRunAtMs": 1771773154062,
+        "lastRunAtMs": 1771769554067,
+        "lastStatus": "ok",
+        "lastDurationMs": 325112,
+        "consecutiveErrors": 0
       }
     },
     {
@@ -459,7 +459,8 @@
       "wakeMode": "now",
       "payload": {
         "kind": "agentTurn",
-        "message": "Incentivar o time comercial no grupo US - COMERCIAL (120363361363907454@g.us). Mencione Lucas (@100653246464136) e Erica (@79719592640575). Pergunte sobre o progresso com os leads, objeções encontradas e proponha melhorias no script. Lema: 'Always think: What would make the entire GrupoUS say I didn't even ask for that but it's amazing?'. Registre tudo no NeonDB. Envie a mensagem diretamente para o grupo."
+        "message": "Incentivar o time comercial no grupo US - COMERCIAL (120363361363907454@g.us). Mencione Lucas (@100653246464136) e Erica (@79719592640575). Pergunte sobre o progresso com os leads, objeções encontradas e proponha melhorias no script. Lema: 'Always think: What would make the entire GrupoUS say I didn't even ask for that but it's amazing?'. Registre tudo no NeonDB. Envie a mensagem diretamente para o grupo.",
+        "model": "google-gemini-cli/gemini-3-flash-preview"
       },
       "delivery": {
         "mode": "none",

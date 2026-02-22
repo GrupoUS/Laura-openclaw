@@ -1,0 +1,21 @@
+{
+  "id": "a4ba5dc5-b61d-498d-8e97-85e4e6385175",
+  "enqueuedAt": 1771695853153,
+  "channel": "whatsapp",
+  "to": "120363403248383827@g.us",
+  "accountId": "default",
+  "payloads": [
+    {
+      "text": "🚨 *NOVO LEAD (INTERESSE PÓS TRINTAE3)* 🚨\n\nLead: +55 22 9971-43673\nStatus: Começando do zero agora.\nPreferência de contato: Período da tarde.\n\n@Lucas @Erika, favor realizar o follow-up! 🚀💜"
+    }
+  ],
+  "threadId": null,
+  "gifPlayback": false,
+  "mirror": {
+    "sessionKey": "agent:chat:whatsapp:group:120363403248383827@g.us",
+    "agentId": "chat",
+    "text": "🚨 *NOVO LEAD (INTERESSE PÓS TRINTAE3)* 🚨\n\nLead: +55 22 9971-43673\nStatus: Começando do zero agora.\nPreferência de contato: Período da tarde.\n\n@Lucas @Erika, favor realizar o follow-up! 🚀💜"
+  },
+  "retryCount": 1,
+  "lastError": "item-not-found"
+}

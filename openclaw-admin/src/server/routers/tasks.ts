@@ -20,7 +20,7 @@ export const tasksRouter = router({
     }),
 
   getById: publicProcedure
-    .input(z.object({ id: z.string().uuid() }))
+    .input(z.object({ id: z.number().int() }))
     .query(async ({ input }) => {
       const task = await getTaskById(input.id)
       if (!task) throw new Error('Not found')
@@ -49,7 +49,7 @@ export const tasksRouter = router({
 
   update: publicProcedure
     .input(z.object({
-      id:       z.string().uuid(),
+      id:       z.number().int(),
       status:   taskStatusEnum.optional(),
       priority: priorityEnum.optional(),
       agent:    z.string().optional(),
@@ -70,7 +70,7 @@ export const tasksRouter = router({
 
   createSubtask: publicProcedure
     .input(z.object({
-      taskId: z.string().uuid(),
+      taskId: z.number().int(),
       title:  z.string().min(3).max(300),
       phase:  z.number().int().min(1).default(1),
       agent:  z.string().optional(),
@@ -89,8 +89,8 @@ export const tasksRouter = router({
 
   updateSubtask: publicProcedure
     .input(z.object({
-      taskId: z.string().uuid(),
-      sid:    z.string().uuid(),
+      taskId: z.number().int(),
+      sid:    z.number().int(),
       status: subtaskStatusEnum,
     }))
     .mutation(async ({ input }) => {

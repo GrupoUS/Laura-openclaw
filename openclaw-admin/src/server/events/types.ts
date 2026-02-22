@@ -6,7 +6,7 @@ export type TaskEventType =
 
 export interface TaskEvent {
   type:    TaskEventType
-  taskId:  string
+  taskId:  number
   payload: Record<string, unknown>
   agent?:  string
   ts:      string  // ISO 8601

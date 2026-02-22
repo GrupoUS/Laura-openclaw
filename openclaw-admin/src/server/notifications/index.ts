@@ -4,7 +4,7 @@ import { sendWebhook, type WebhookPayload } from './webhook'
 const APP_URL = process.env.APP_URL ?? 'https://tasks.laura.gpus.me'
 
 function buildBlockedMessage(data: {
-  event: string; taskTitle: string; taskId: string
+  event: string; taskTitle: string; taskId: number
   agent: string | null; phase: number; priority: string
 }): string {
   const agentLabel = data.agent ? `@${data.agent}` : 'sistema'
@@ -22,7 +22,7 @@ function buildBlockedMessage(data: {
     `📌 Fase: ${data.phase}`,
     `${priorityEmoji[data.priority] ?? '·'} Prioridade: ${data.priority}`,
     ``,
-    `<a href="${APP_URL}/dashboard/board">🗂️ Abrir Kanban</a>`,
+    `<a href="${APP_URL}/board">🗂️ Abrir Kanban</a>`,
   ].join('\n')
 }
 
@@ -32,7 +32,7 @@ function escapeHtml(str: string): string {
 
 export async function notifyBlocked(data: {
   event:     'task:blocked' | 'task:stuck' | 'subtask:blocked'
-  taskId:    string
+  taskId:    number
   taskTitle: string
   agent:     string | null
   phase:     number
@@ -41,7 +41,7 @@ export async function notifyBlocked(data: {
   const html    = buildBlockedMessage(data)
   const payload: WebhookPayload = {
     ...data,
-    dashboardUrl: `${APP_URL}/dashboard/board`,
+    dashboardUrl: `${APP_URL}/board`,
     ts: new Date().toISOString(),
   }
 
@@ -50,7 +50,7 @@ export async function notifyBlocked(data: {
     sendWebhook(payload),
   ]).then((results) => {
     const [tg, wh] = results
-    if (tg.status === 'rejected') console.error('[notify] Telegram failed:', tg.reason)
-    if (wh.status === 'rejected') console.error('[notify] Webhook failed:', wh.reason)
+    void tg // notification failures are non-critical
+    void wh
   })
 }

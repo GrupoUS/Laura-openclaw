@@ -1,6 +1,6 @@
 import { db } from './client'
 import { tasks, subtasks, taskEvents } from './schema'
-import { eq, and, desc, sql } from 'drizzle-orm'
+import { eq, and, desc, asc, sql, inArray } from 'drizzle-orm'
 import { notifyBlocked } from '@/server/notifications'
 
 export type TaskFilter = {
@@ -11,7 +11,7 @@ export type TaskFilter = {
 
 // ─── Helper — writes to task_events (fire-and-forget) ──────────────
 async function logEvent(
-  taskId: string,
+  taskId: number,
   eventType: string,
   agent: string | null | undefined,
   payload: Record<string, unknown>
@@ -20,7 +20,7 @@ async function logEvent(
     taskId,
     eventType,
     agent: agent ?? null,
-    payload: JSON.stringify(payload),
+    payload,
   })
 }
 
@@ -30,22 +30,42 @@ export async function getTasks(filter: TaskFilter) {
   if (filter.status) conditions.push(eq(tasks.status, filter.status))
   if (filter.agent)  conditions.push(eq(tasks.agent,  filter.agent))
   if (filter.phase)  conditions.push(eq(tasks.phase,  filter.phase))
-  return db.query.tasks.findMany({
-    where: conditions.length ? and(...conditions) : undefined,
-    with: { subtasks: { orderBy: (s, { asc }) => [asc(s.phase), asc(s.createdAt)] } },
-    orderBy: [desc(tasks.updatedAt)],
-    limit: 100,
+
+  const taskRows = await db.select().from(tasks)
+    .where(conditions.length ? and(...conditions) : undefined)
+    .orderBy(desc(tasks.updatedAt))
+    .limit(100)
+
+  if (taskRows.length === 0) return []
+
+  const taskIds = taskRows.map(t => t.id)
+  const subtaskRows = await db.select().from(subtasks)
+    .where(inArray(subtasks.taskId, taskIds))
+    .orderBy(asc(subtasks.phase), asc(subtasks.createdAt))
+
+  const subtasksByTaskId = new Map<number, typeof subtaskRows>()
+  for (const s of subtaskRows) {
+    const arr = subtasksByTaskId.get(s.taskId) ?? []
+    arr.push(s)
+    subtasksByTaskId.set(s.taskId, arr)
+  }
+
+  return taskRows.map(t => {
+    const result = Object.assign({}, t, { subtasks: subtasksByTaskId.get(t.id) ?? [] })
+    return result
   })
 }
 
-export async function getTaskById(id: string) {
-  return db.query.tasks.findFirst({
-    where: eq(tasks.id, id),
-    with: {
-      subtasks: true,
-      taskEvents: { orderBy: (e, { desc: descFn }) => [descFn(e.createdAt)], limit: 20 },
-    },
-  })
+export async function getTaskById(id: number) {
+  const [task] = await db.select().from(tasks).where(eq(tasks.id, id)).limit(1)
+  if (!task) return undefined
+
+  const [subs, events] = await Promise.all([
+    db.select().from(subtasks).where(eq(subtasks.taskId, id)).orderBy(asc(subtasks.phase), asc(subtasks.createdAt)),
+    db.select().from(taskEvents).where(eq(taskEvents.taskId, id)).orderBy(desc(taskEvents.createdAt)).limit(20),
+  ])
+
+  return { ...task, subtasks: subs, taskEvents: events }
 }
 
 export async function createTask(data: {
@@ -54,11 +74,11 @@ export async function createTask(data: {
 }) {
   const [task] = await db.insert(tasks).values(data).returning()
   logEvent(task.id, 'task:created', data.agent, { title: task.title, priority: task.priority })
-    .catch((e) => console.error('[queries] logEvent task:created:', e.message))
+    .catch(() => { /* fire-and-forget */ })
   return task
 }
 
-export async function updateTask(id: string, data: Partial<typeof tasks.$inferInsert>) {
+export async function updateTask(id: number, data: Partial<typeof tasks.$inferInsert>) {
   const [task] = await db.update(tasks)
     .set({ ...data, updatedAt: new Date() })
     .where(eq(tasks.id, id))
@@ -66,7 +86,7 @@ export async function updateTask(id: string, data: Partial<typeof tasks.$inferIn
   if (task) {
     logEvent(task.id, 'task:updated', data.agent ?? task.agent, {
       status: task.status, priority: task.priority
-    }).catch((e) => console.error('[queries] logEvent task:updated:', e.message))
+    }).catch(() => { /* fire-and-forget */ })
     
     if (data.status === 'blocked') {
       notifyBlocked({
@@ -83,15 +103,15 @@ export async function updateTask(id: string, data: Partial<typeof tasks.$inferIn
 }
 
 export async function createSubtask(data: {
-  taskId: string; title: string; phase?: number; agent?: string
+  taskId: number; title: string; phase?: number; agent?: string
 }) {
   const [subtask] = await db.insert(subtasks).values(data).returning()
   logEvent(data.taskId, 'subtask:created', data.agent, { title: subtask.title })
-    .catch((e) => console.error('[queries] logEvent subtask:created:', e.message))
+    .catch(() => { /* fire-and-forget */ })
   return subtask
 }
 
-export async function updateSubtask(id: string, status: 'todo' | 'doing' | 'done' | 'blocked') {
+export async function updateSubtask(id: number, status: 'todo' | 'doing' | 'done' | 'blocked') {
   const [subtask] = await db.update(subtasks)
     .set({
       status,
@@ -106,7 +126,7 @@ export async function updateSubtask(id: string, status: 'todo' | 'doing' | 'done
   if (subtask) {
     logEvent(subtask.taskId, 'subtask:updated', subtask.agent, {
       subtaskId: subtask.id, title: subtask.title, status
-    }).catch((e) => console.error('[queries] logEvent subtask:updated:', e.message))
+    }).catch(() => { /* fire-and-forget */ })
 
     if (status === 'blocked') {
       const parentTask = await db.query.tasks.findFirst({
@@ -232,10 +252,23 @@ export interface AgentDetail {
 
 // ─── Activity Feed ─────────────────────────────────────────────────────
 export async function getRecentActivity(limit = 30) {
-  return db.query.taskEvents.findMany({
-    orderBy: (e, { desc: descFn }) => [descFn(e.createdAt)],
-    limit,
-    with: { task: { columns: { id: true, title: true } } },
+  const events = await db.select({
+    id: taskEvents.id,
+    taskId: taskEvents.taskId,
+    eventType: taskEvents.eventType,
+    agent: taskEvents.agent,
+    payload: taskEvents.payload,
+    createdAt: taskEvents.createdAt,
+    taskTitle: tasks.title,
+  })
+    .from(taskEvents)
+    .leftJoin(tasks, eq(taskEvents.taskId, tasks.id))
+    .orderBy(desc(taskEvents.createdAt))
+    .limit(limit)
+
+  return events.map(e => {
+    const result = Object.assign({}, e, { task: { id: e.taskId, title: e.taskTitle ?? 'Unknown' } })
+    return result
   })
 }
 

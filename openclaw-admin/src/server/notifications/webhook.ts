@@ -1,6 +1,6 @@
 export interface WebhookPayload {
   event:     string
-  taskId:    string
+  taskId:    number
   taskTitle: string
   agent:     string | null
   phase:     number
@@ -19,14 +19,8 @@ export async function sendWebhook(payload: WebhookPayload): Promise<boolean> {
       headers: { 'Content-Type': 'application/json' },
       body:    JSON.stringify(payload),
     })
-    if (!res.ok) {
-      console.error('[Webhook] Failed:', res.status, await res.text())
-      return false
-    }
-    console.log(`[Webhook] ✓ ${payload.event} sent to ${url}`)
-    return true
-  } catch (e: unknown) {
-    console.error('[Webhook] Network error:', e instanceof Error ? e.message : String(e))
+    return res.ok
+  } catch {
     return false
   }
 }

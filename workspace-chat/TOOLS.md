@@ -24,12 +24,16 @@ Things like:
 ### SSH
 
 - home-server → 192.168.1.100, user: admin
-
-### TTS
-
-- Preferred voice: "Raquel"
-- Note: Always convert to OGG Opus for WhatsApp.
 ```
+
+---
+
+## ⚠️ TTS — REGRA OBRIGATÓRIA (NÃO MUDAR!)
+
+- **Voz EXCLUSIVA para áudios:** `Raquel` (ElevenLabs)
+- **NUNCA** usar outra voz (masculina ou qualquer outra).
+- **SEMPRE** converter o áudio para **OGG Opus** antes de enviar no WhatsApp.
+- Isso vale para leads, grupos ou qualquer envio de áudio.
 
 ## Why Separate?
 
