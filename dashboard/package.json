@@ -15,6 +15,7 @@
     "db:generate": "drizzle-kit generate"
   },
   "devDependencies": {
+    "@playwright/test": "^1.58.2",
     "@tailwindcss/vite": "^4.2.0",
     "@tanstack/router-plugin": "^1.161.3",
     "@types/bun": "latest",

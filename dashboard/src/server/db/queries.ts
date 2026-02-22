@@ -50,15 +50,17 @@ export async function getTasks(filter: TaskFilter) {
     subtasksByTaskId.set(s.taskId, arr)
   }
 
-  return taskRows.map(t => ({
-    ...t,
-    id: String(t.id),
-    subtasks: (subtasksByTaskId.get(t.id) ?? []).map(s => ({
-      ...s,
-      id: String(s.id),
-      taskId: String(s.taskId),
-    })),
-  }))
+  return taskRows.map(t => {
+    const subs = (subtasksByTaskId.get(t.id) ?? []).map(s => {
+      const sub = Object.assign({}, s)
+      sub.id = String(s.id) as unknown as typeof s.id
+      sub.taskId = String(s.taskId) as unknown as typeof s.taskId
+      return sub
+    })
+    const task = Object.assign({}, t, { subtasks: subs })
+    task.id = String(t.id) as unknown as typeof t.id
+    return task
+  })
 }
 
 export async function getTaskById(id: number) {
@@ -99,8 +101,8 @@ export async function updateTask(id: number, data: Partial<typeof tasks.$inferIn
         taskId:    task.id,
         taskTitle: task.title,
         agent:     data.agent ?? task.agent,
-        phase:     task.phase,
-        priority:  task.priority,
+        phase:     task.phase ?? 1,
+        priority:  task.priority ?? 'medium',
       })
     }
   }
@@ -144,8 +146,8 @@ export async function updateSubtask(id: number, status: 'todo' | 'doing' | 'done
           taskId:    subtask.taskId,
           taskTitle: `${parentTask.title} → ${subtask.title}`,
           agent:     subtask.agent,
-          phase:     parentTask.phase,
-          priority:  parentTask.priority,
+          phase:     parentTask.phase ?? 1,
+          priority:  parentTask.priority ?? 'medium',
         })
       }
     }

@@ -12,6 +12,7 @@ import {
   index,
   boolean,
   bigint,
+  numeric,
 } from 'drizzle-orm/pg-core'
 
 // ── Enums ──
@@ -150,7 +151,9 @@ export const driveChannels = pgTable('drive_channels', {
   token: text('token').notNull(),
   expiration: timestamp('expiration', { withTimezone: true }).notNull(),
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
-})
+}, (table) => [
+  index('drive_channels_account_idx').on(table.accountId)
+])
 
 export const driveState = pgTable('drive_state', {
   accountId: uuid('account_id')
@@ -181,7 +184,9 @@ export const files = pgTable('files', {
   extractionError: text('extraction_error'),
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
   updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow().notNull(),
-})
+}, (table) => [
+  index('files_account_idx').on(table.accountId)
+])
 
 export const chunks = pgTable(
   'chunks',
@@ -209,16 +214,16 @@ export const chunks = pgTable(
 // Dashboard Tables (migrated from dashboard/lib/db/schema.ts)
 // ══════════════════════════════════════════════════════════════════════════════
 
-import { relations } from 'drizzle-orm'
+import { relations, sql } from 'drizzle-orm'
 
 // ── Dashboard Enums ──
 
 export const taskStatusEnum = pgEnum('task_status', [
-  'backlog', 'in_progress', 'done', 'blocked',
+  'backlog', 'in_progress', 'done', 'blocked', 'pending', 'doing'
 ])
 
 export const subtaskStatusEnum = pgEnum('subtask_status', [
-  'todo', 'doing', 'done', 'blocked',
+  'todo', 'doing', 'done', 'blocked', 'pending'
 ])
 
 export const priorityEnum = pgEnum('priority', [
@@ -235,9 +240,9 @@ export const tasks = pgTable('tasks', {
   id:          serial('id').primaryKey(),
   title:       text('title').notNull(),
   description: text('description'),
-  status:      taskStatusEnum('status').default('backlog').notNull(),
-  phase:       integer('phase').default(1).notNull(),
-  priority:    priorityEnum('priority').default('medium').notNull(),
+  status:      taskStatusEnum('status').default('backlog'),
+  phase:       integer('phase').default(1),
+  priority:    priorityEnum('priority').default('medium'),
   agent:       text('agent'),
   createdAt:   timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
   updatedAt:   timestamp('updated_at', { withTimezone: true }).defaultNow().notNull(),
@@ -247,12 +252,14 @@ export const subtasks = pgTable('subtasks', {
   id:          serial('id').primaryKey(),
   taskId:      integer('task_id').references(() => tasks.id, { onDelete: 'cascade' }).notNull(),
   title:       text('title').notNull(),
-  status:      subtaskStatusEnum('status').default('todo').notNull(),
-  phase:       integer('phase').default(1).notNull(),
+  status:      subtaskStatusEnum('status').default('todo'),
+  phase:       integer('phase').default(1),
   agent:       text('agent'),
   completedAt: timestamp('completed_at', { withTimezone: true }),
   createdAt:   timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
-})
+}, (table) => [
+  index('subtasks_task_idx').on(table.taskId)
+])
 
 export const taskEvents = pgTable('task_events', {
   id:        serial('id').primaryKey(),
@@ -261,7 +268,9 @@ export const taskEvents = pgTable('task_events', {
   eventType: text('event_type').notNull(),
   payload:   jsonb('payload'),
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
-})
+}, (table) => [
+  index('task_events_task_idx').on(table.taskId)
+])
 
 // ── Dashboard Relations ──
 
@@ -283,4 +292,42 @@ export const taskEventsRelations = relations(taskEvents, ({ one }) => ({
     references: [tasks.id],
   }),
 }))
+
+// ── Restored Missing Tables ──
+
+export const students = pgTable("students", {
+  id: uuid("id").defaultRandom().primaryKey().notNull(),
+  name: text("name").notNull(),
+  email: text("email"),
+  phone: text("phone"),
+  cpf: text("cpf"),
+  course: text("course"),
+  turma: text("turma"),
+  paymentStatus: text("payment_status"),
+  totalPaid: numeric("total_paid", { precision: 10, scale: 2 }),
+  totalPending: numeric("total_pending", { precision: 10, scale: 2 }),
+  rawData: jsonb("raw_data"),
+  lastSync: timestamp("last_sync", { withTimezone: true }).defaultNow(),
+})
+
+export const lauraMemories = pgTable("laura_memories", {
+  id: serial("id").primaryKey().notNull(),
+  content: text("content").notNull(),
+  metadata: jsonb("metadata"),
+  createdAt: timestamp("created_at", { withTimezone: true }).default(sql`CURRENT_TIMESTAMP`),
+})
+
+export const products = pgTable("products", {
+  id: serial("id").primaryKey().notNull(),
+  name: text("name").notNull(),
+  description: text("description"),
+  price: numeric("price"),
+  format: text("format"),
+  category: text("category"),
+  details: jsonb("details"),
+  embedding: vector("embedding", { dimensions: 768 }),
+  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow(),
+})
+
 
