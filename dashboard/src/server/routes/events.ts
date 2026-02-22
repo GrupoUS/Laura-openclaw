@@ -64,19 +64,15 @@ events.get('/', async (c) => {
       }
     }, HEARTBEAT_MS)
 
-    console.log(`[SSE] Client connected. Active listeners: ${eventBus.getListenerCount()}`)
-
     // Cleanup on disconnect
     stream.onAbort(() => {
       clearInterval(heartbeat)
       unsubscribe()
-      console.log(`[SSE] Client disconnected. Active listeners: ${eventBus.getListenerCount()}`)
     })
 
-    // Keep stream alive
-    while (true) {
-      await new Promise(r => setTimeout(r, 1000))
-      if (c.req.raw.signal.aborted) break
+    // Keep stream alive — sequential await is intentional (event loop keep-alive)
+    while (!c.req.raw.signal.aborted) {
+      await new Promise(r => setTimeout(r, 1000)) // eslint-disable-line no-await-in-loop
     }
   })
 })

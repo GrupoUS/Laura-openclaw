@@ -20,6 +20,38 @@ export const Route = createFileRoute('/calendar')({
   component: CalendarPage,
 })
 
+interface CalendarTask {
+  id: number
+  title: string
+  createdAt: string
+  department?: string
+}
+
+const getDeptColor = (dept: string) => {
+  switch(dept) {
+    case 'Coordenação': return 'border-blue-500 text-blue-700 bg-blue-50'
+    case 'Comercial': return 'border-green-500 text-green-700 bg-green-50'
+    case 'Marketing': return 'border-purple-500 text-purple-700 bg-purple-50'
+    case 'Jurídico': return 'border-red-500 text-red-700 bg-red-50'
+    case 'Diretoria': return 'border-amber-500 text-amber-700 bg-amber-50'
+    default: return 'border-slate-400 text-slate-600 bg-slate-50'
+  }
+}
+
+const WEEK_DAYS = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb']
+
+function RenderDays() {
+  return (
+    <div className="grid grid-cols-7 mb-2">
+      {WEEK_DAYS.map(day => (
+        <div key={day} className="text-center text-xs font-bold text-slate-400 uppercase tracking-wider py-2">
+          {day}
+        </div>
+      ))}
+    </div>
+  )
+}
+
 function CalendarPage() {
   const [currentMonth, setCurrentMonth] = useState(new Date())
   const [selectedDepartment, setSelectedDepartment] = useState('all')
@@ -33,17 +65,6 @@ function CalendarPage() {
     start: start.toISOString(),
     end: end.toISOString(),
   })
-
-  const getDeptColor = (dept: string) => {
-    switch(dept) {
-      case 'Coordenação': return 'border-blue-500 text-blue-700 bg-blue-50'
-      case 'Comercial': return 'border-green-500 text-green-700 bg-green-50'
-      case 'Marketing': return 'border-purple-500 text-purple-700 bg-purple-50'
-      case 'Jurídico': return 'border-red-500 text-red-700 bg-red-50'
-      case 'Diretoria': return 'border-amber-500 text-amber-700 bg-amber-50'
-      default: return 'border-slate-400 text-slate-600 bg-slate-50'
-    }
-  }
 
   const renderHeader = () => (
     <div className="flex items-center justify-between mb-6">
@@ -91,19 +112,6 @@ function CalendarPage() {
     </div>
   )
 
-  const renderDays = () => {
-    const days = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb']
-    return (
-      <div className="grid grid-cols-7 mb-2">
-        {days.map(day => (
-          <div key={day} className="text-center text-xs font-bold text-slate-400 uppercase tracking-wider py-2">
-            {day}
-          </div>
-        ))}
-      </div>
-    )
-  }
-
   const renderCells = () => {
     const monthStart = startOfMonth(currentMonth)
     const monthEnd = endOfMonth(monthStart)
@@ -118,8 +126,8 @@ function CalendarPage() {
       for (let i = 0; i < 7; i++) {
         const formattedDate = format(day, "d")
         const cloneDay = day
-        const dayTasks = (tasks as any[]).filter((task: any) =>
-          isSameDay(new Date(task.dueDate || task.createdAt), cloneDay)
+        const dayTasks = (tasks as CalendarTask[]).filter((task) =>
+          isSameDay(new Date(task.createdAt), cloneDay)
         )
 
         days.push(
@@ -135,10 +143,10 @@ function CalendarPage() {
               </span>
             </div>
             <div className="space-y-1 overflow-y-auto max-h-[85px] scrollbar-hide">
-              {dayTasks.map((task: any) => (
+              {dayTasks.map((task) => (
                 <div
                   key={task.id}
-                  className={`text-[10px] p-1.5 rounded border-l-2 truncate shadow-sm bg-white ${getDeptColor(task.department)}`}
+                  className={`text-[10px] p-1.5 rounded border-l-2 truncate shadow-sm bg-white ${getDeptColor(task.department ?? '')}`}
                   title={task.title}
                 >
                   <span className="font-bold opacity-70 mr-1">[{task.department?.substring(0,3)}]</span>
@@ -163,7 +171,7 @@ function CalendarPage() {
   return (
     <div className="p-8 max-w-[1400px] mx-auto bg-slate-50/30 min-h-full">
       {renderHeader()}
-      {renderDays()}
+      <RenderDays />
       {isLoading ? (
         <div className="h-[600px] flex items-center justify-center bg-white rounded-xl border border-slate-200 shadow-sm">
           <div className="flex flex-col items-center gap-3">
