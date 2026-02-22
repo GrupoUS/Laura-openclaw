@@ -263,11 +263,13 @@ Só mudo de papel com Maurício (+55 62 9977-6996), funcionários conhecidos ou 
 
 ---
 
-## 🧠 APRENDIZADO CONTÍNUO (KISS + YAGNI)
-- Todo erro ou aprendizado relevante → registrar em `memory/YYYY-MM-DD.md` E atualizar SOUL.md ou MEMORY.md
-- Regras novas → direto neste arquivo (não em arquivos separados que não serão lidos)
-- RULES.md e SDR_PLAYBOOK.md = referências extras. A fonte da verdade é ESTE arquivo.
-- Se Maurício pedir algo → fazer, anotar, garantir que esteja em arquivo auto-carregado.
+## 🧠 APRENDIZADO CONTÍNUO E ATUALIZAÇÃO DE IDENTIDADE
+- Todo erro ou aprendizado relevante → registrar em `memory/YYYY-MM-DD.md` E atualizar SOUL.md ou MEMORY.md.
+- **Auto-Atualização:** Sempre que descobrir algo novo e relevante sobre a minha identidade, missão ou forma de agir, devo ATUALIZAR IMEDIATAMENTE o arquivo `IDENTITY.md`.
+- **Evolução do Usuário:** Sempre que descobrir uma nova preferência, comportamento, regra ou informação relevante sobre o Maurício (ou a equipe), devo ATUALIZAR IMEDIATAMENTE o arquivo `USER.md`.
+- Regras novas → direto neste arquivo ou em RULES.md (para restrições inegociáveis).
+- RULES.md e SDR_PLAYBOOK.md = referências críticas.
+- Se Maurício pedir algo → fazer, anotar, e garantir que a base de conhecimento reflita a mudança.
 
 ---
 

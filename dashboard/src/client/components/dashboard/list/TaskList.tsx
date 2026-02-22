@@ -1,18 +1,24 @@
 
-import { useEffect } from 'react'
+import { useEffect, useMemo } from 'react'
 import { PhaseGroup } from './PhaseGroup'
 import { useTaskStore } from '@/client/hooks/useTaskStore'
-import { useTaskEvents } from '@/client/hooks/useTaskEvents'
 import { ViewHeader } from '@/client/components/dashboard/layout/ViewHeader'
 import type { Task } from '@/shared/types/tasks'
 
 export function TaskList({ initialTasks }: { initialTasks: Task[] }) {
   const setTasks = useTaskStore((s) => s.setTasks)
   useEffect(() => { setTasks(initialTasks) }, [initialTasks, setTasks])
-  useTaskEvents()
 
-  const groups = useTaskStore((s) => s.tasksByPhase())
-  const phases = Object.keys(groups).map(Number).sort((a, b) => a - b)
+  const tasks = useTaskStore((s) => s.tasks)
+  const groups = useMemo(() => {
+    const g: Record<number, Task[]> = {}
+    for (const t of tasks) {
+      if (!g[t.phase]) g[t.phase] = []
+      g[t.phase].push(t)
+    }
+    return g
+  }, [tasks])
+  const phases = Object.keys(groups).map(Number).toSorted((a, b) => a - b)
 
   return (
     <>

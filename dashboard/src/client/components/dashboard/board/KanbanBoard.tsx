@@ -1,5 +1,5 @@
 
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import {
   DndContext, DragEndEvent, DragOverlay, DragStartEvent,
   PointerSensor, useSensor, useSensors, closestCorners,
@@ -7,7 +7,6 @@ import {
 import { KanbanColumn } from './KanbanColumn'
 import { TaskCard } from './TaskCard'
 import { useTaskStore } from '@/client/hooks/useTaskStore'
-import { useTaskEvents } from '@/client/hooks/useTaskEvents'
 import { patchTaskStatus } from '@/client/lib/api'
 import { ViewHeader } from '@/client/components/dashboard/layout/ViewHeader'
 import type { Task, TaskStatus } from '@/shared/types/tasks'
@@ -21,10 +20,15 @@ export function KanbanBoard({ initialTasks }: { initialTasks: Task[] }) {
 
   useEffect(() => { setTasks(initialTasks) }, [initialTasks, setTasks])
 
-  // Connect SSE
-  useTaskEvents()
-
-  const groups = useTaskStore((s) => s.tasksByStatus())
+  const tasks = useTaskStore((s) => s.tasks)
+  const groups = useMemo(() => {
+    const g: Record<TaskStatus, Task[]> = { backlog: [], in_progress: [], done: [], blocked: [] }
+    for (const t of tasks) {
+      const col = g[t.status] ? t.status : 'backlog'
+      g[col].push(t)
+    }
+    return g
+  }, [tasks])
   const [activeTask, setActiveTask] = useState<Task | null>(null)
 
   const sensors = useSensors(
@@ -53,9 +57,8 @@ export function KanbanBoard({ initialTasks }: { initialTasks: Task[] }) {
       // 2. Persist to NeonDB
       await patchTaskStatus(taskId, newStatus)
     } catch {
-      // 3. Rollback on failure
+      // Rollback on failure
       rollbackTaskStatus(taskId, prevStatus)
-      console.error(`[KanbanBoard] Failed to move task ${taskId} → rolling back to ${prevStatus}`)
     }
   }
 

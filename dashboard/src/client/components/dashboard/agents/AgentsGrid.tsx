@@ -1,10 +1,9 @@
 
-import { useEffect } from 'react'
+import { useEffect, useMemo } from 'react'
 import { AgentCard } from './AgentCard'
 import { ActivityFeed } from './ActivityFeed'
 import { ConnectionStatus } from '@/client/components/dashboard/shared/ConnectionStatus'
 import { useTaskStore, type ActivityEntry } from '@/client/hooks/useTaskStore'
-import { useTaskEvents } from '@/client/hooks/useTaskEvents'
 import type { AgentDetail } from '@/server/db/queries'
 import type { Task } from '@/shared/types/tasks'
 
@@ -20,7 +19,8 @@ const STATUS_ORDER: Record<string, number> = {
 }
 
 export function AgentsGrid({ initialAgents, initialTasks, initialActivity }: Props) {
-  const { setTasks, setAgentDetails } = useTaskStore()
+  const setTasks = useTaskStore((s) => s.setTasks)
+  const setAgentDetails = useTaskStore((s) => s.setAgentDetails)
 
   // Hidratar store
   useEffect(() => {
@@ -28,13 +28,12 @@ export function AgentsGrid({ initialAgents, initialTasks, initialActivity }: Pro
     setAgentDetails(initialAgents)
   }, [initialTasks, initialAgents, setTasks, setAgentDetails])
 
-  // Conectar SSE
-  useTaskEvents()
-
-  const agents = useTaskStore((s) =>
-    s.agentDetails.toSorted(
+  const agentDetails = useTaskStore((s) => s.agentDetails)
+  const agents = useMemo(
+    () => agentDetails.toSorted(
       (a, b) => (STATUS_ORDER[a.status] ?? 4) - (STATUS_ORDER[b.status] ?? 4)
-    )
+    ),
+    [agentDetails]
   )
 
   const activeCount = agents.filter((a) => a.status === 'doing' || a.status === 'active').length
