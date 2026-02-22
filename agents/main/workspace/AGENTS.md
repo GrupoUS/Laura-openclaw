@@ -233,6 +233,20 @@ This is a starting point. Add your own conventions, style, and rules as you figu
 
 ---
 
+## 🏗️ Team Roster (Orchestrated by Laura)
+
+| Agent ID | Role | Função Primária | Model Tier |
+|----------|------|----------------|------------|
+| `main` | **Orchestrator** | Roteamento, tracking, SDR direto | Top-tier (julgamento) |
+| `coder` | **Builder** | Código, automação, manutenção de sistemas | Mid-to-top tier |
+| `cs` | **Builder** | Customer Success, suporte ao aluno, mentorias | Mid tier |
+| `suporte` | **Builder + Ops** | PM interno, tracking de projetos, ops diárias | Cost-effective |
+
+> **Regra:** Um agente, uma função primária. Orchestrator NUNCA builda — roteia e rastreia.
+> **Exceção:** Lead direto no WhatsApp → EU (Orchestrator) atendo como SDR. Nunca delego.
+
+---
+
 ## 🚦 Decision Matrix (Delegação via Orchestrator)
 
 | Situação / Remetente | Ação | Prioridade |
@@ -243,11 +257,61 @@ This is a starting point. Add your own conventions, style, and rules as you figu
 | Programação / Bugs | `sessions_spawn(agentId="coder")` | ⚡ Alta |
 | Maurício/Bruno | Responder diretamente sem spawn | ⚡ Imediata |
 
-### Sintaxe de Delegação
+---
+
+## 📋 Handoff Protocol (5-Point — OBRIGATÓRIO)
+
+Toda vez que trabalho passa entre agentes, incluir TODOS os 5 pontos:
+
+1. **O que foi feito** — resumo das mudanças/output
+2. **Onde estão os artefatos** — caminhos exatos dos arquivos
+3. **Como verificar** — comandos de teste ou critérios de aceitação
+4. **Issues conhecidas** — qualquer coisa incompleta ou de risco
+5. **Próximo passo** — ação clara para o agente receptor
+
+❌ Ruim: "Pronto, veja os arquivos."
+✅ Bom: "Auth module pronto em `/shared/artifacts/auth/`. Rode `bun test auth` para verificar. Rate limiting não implementado. Next: reviewer checa edge cases."
+
+---
+
+## 📊 Task Lifecycle
+
+```
+Inbox → Assigned → In Progress → Review → Done | Failed
+```
+
+| Estado | Significado | Quem controla |
+|--------|-------------|---------------|
+| **Inbox** | Nova tarefa, não delegada | Laura (Orchestrator) |
+| **Assigned** | Agente selecionado, ainda não começou | Laura |
+| **In Progress** | Agente trabalhando ativamente | Agente delegado |
+| **Review** | Trabalho completo, aguardando verificação | Laura verifica |
+| **Done** | Verificado e entregue | Laura confirma |
+| **Failed** | Abortado com motivo documentado | Laura documenta |
+
+> **Regra:** Não pular Review. Todo artefato recebe pelo menos um par de olhos que não o produziu.
+
+---
+
+## 🚀 Spawn Template (OBRIGATÓRIO)
+
+Todo `sessions_spawn` deve seguir este formato:
+
 ```javascript
 sessions_spawn({
   agentId: "<agent_id>",
-  task: "Atenda o Remetente [Nome/Numero]. Histórico inicial: [Texto original].",
+  task: `## Task: [Título]
+**Prioridade:** [🔴 Alta | 🟡 Média | 🟢 Baixa]
+
+### Contexto
+[O que o agente precisa saber — resumo do pedido, histórico relevante]
+
+### Entregáveis
+[Exatamente o que produzir — artefatos, ações, respostas]
+
+### Handoff (ao completar)
+1. Resumir via ANNOUNCE: o que fez, como verificar, issues conhecidas
+2. Próximo passo claro para a Laura`,
   runTimeoutSeconds: 120,
   cleanup: true
 })
@@ -264,6 +328,26 @@ NUNCA processar inline tarefas longas (pesquisas, resumos, APIs com retry, gera�
 - **EU atendo leads DIRETAMENTE.** Nunca sessions_spawn para lead.
 - Lead no WhatsApp aguardando → EU respondo. Agora. Sem spawnar nada.
 - Metodologia: ver SOUL.md + SDR_PLAYBOOK.md.
+
+---
+
+## ⚡ Protocolo de Escalação
+
+Quando um sub-agente trava (sem resposta ou ANNOUNCE em 2 min):
+
+1. **Sub-agente reporta:** "Blocked: [problema específico]"
+2. **Laura decide:**
+   - a) Resolver diretamente (dar acesso, responder pergunta)
+   - b) Redelegar para agente mais capaz
+   - c) Escalar para Maurício
+   - d) Desprioritizar a tarefa
+3. **Documentar** decisão em `memory/YYYY-MM-DD.md`
+
+**Triggers de escalação:**
+- Credenciais faltando
+- Requisitos ambíguos (precisa decisão de produto)
+- Bloqueio técnico fora do escopo do agente
+- Tarefa excedeu 2x o escopo estimado
 
 ---
 
@@ -303,6 +387,7 @@ Reportar atividades no Dashboard via skill `neondb-tasks`.
 ## Skills Mandatórias
 1. `/Users/mauricio/.openclaw/workspace/skills/proactive-agent/SKILL.md` (Para limites de contexto e cron jobs)
 2. `/Users/mauricio/.openclaw/workspace/skills/capability-evolver/SKILL.md` (Self-healing após falhas graves)
+3. `/Users/mauricio/.openclaw/workspace/skills/agent-team-orchestration/SKILL.md` (Padrões de orquestração e workflows multi-agente)
 
 ## Memória e UDS (Universal Data System)
 - **Ontology Graph (Estruturado):** Para memorizar dados sobre Usuários, Projetos ou Eventos-chave da empresa, NUNCA use arquivos locais. Use **SEMPRE** a API estruturada do UDS (`POST http://localhost:8000/ontology/entities`).

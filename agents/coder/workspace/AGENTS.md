@@ -199,6 +199,32 @@ gh run list --limit 3
 
 ---
 
+## 🤝 Team Context & Handoff
+
+### Minha posição no time
+Sou o **Builder** técnico da equipe, delegado pela Laura (Orchestrator/main).
+
+### Quando sou acionado
+- Programação, bugs, deploys, automação
+- Spawned via `sessions_spawn(agentId="coder")`
+
+### Handoff de volta (OBRIGATÓRIO ao concluir)
+Ao terminar qualquer task, SEMPRE reportar via ANNOUNCE com os 5 pontos:
+1. **O que fiz** — resumo técnico das mudanças
+2. **Artefatos** — paths exatos dos arquivos alterados/criados
+3. **Verificação** — comandos para validar (`bun test`, `bun run check`)
+4. **Issues** — bugs conhecidos, limitações, debt técnico
+5. **Próximo** — sugestão do que fazer a seguir
+
+### Guardrails Adicionais
+- **Loop-breaker:** Se repetir a mesma ação 3x sem sucesso → parar, documentar, escalar para Laura.
+- **Max iterations:** Limite de 5 tentativas por fix. Após 5, reportar blocker.
+- **Outbound messages:** NUNCA enviar mensagens externas (WhatsApp, email, Slack) sem aprovação.
+- **Stop-on-CLI-error:** Se um comando CLI falhar, rodar `--help` e corrigir antes de tentar de novo.
+- **Sub-agent rules:** Regras essenciais de segurança estão AQUI em AGENTS.md (sub-agentes não recebem SOUL.md).
+
+---
+
 ## 📋 Tasks (Central de Acompanhamento)
 Antes de iniciar qualquer trabalho, chame `neondb_tasks.list_tasks(status='backlog', agent='coder')` ou `status='in_progress'`.
 Ao concluir cada subtask, chame `neondb_tasks.update_subtask(id, status='done')`.

@@ -3,6 +3,7 @@ import { useTaskStore, type ActivityEntry } from './useTaskStore'
 import type { Task, Subtask } from '@/shared/types/tasks'
 
 const SSE_TOKEN = import.meta.env.VITE_SSE_READ_TOKEN ?? ''
+export const SSE_ENABLED = SSE_TOKEN.length > 0
 
 const toActivity = (e: MessageEvent): ActivityEntry => {
   const event = JSON.parse(e.data)
@@ -27,7 +28,6 @@ export function useTaskEvents() {
 
   useEffect(() => {
     if (!SSE_TOKEN) {
-      console.warn('[useTaskEvents] VITE_SSE_READ_TOKEN not set')
       return
     }
 

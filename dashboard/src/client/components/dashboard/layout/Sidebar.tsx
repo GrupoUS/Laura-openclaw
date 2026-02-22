@@ -2,11 +2,12 @@ import { Link, useRouterState } from '@tanstack/react-router'
 import { useTaskStore } from '@/client/hooks/useTaskStore'
 
 const NAV = [
-  { href: '/board',     label: '🗂️  Kanban'     },
-  { href: '/list',      label: '📋  Lista'      },
-  { href: '/calendar',  label: '📅  Calendário' },
-  { href: '/dash-agents', label: '🤖  Agentes' },
-  { href: '/analytics', label: '📊  Analytics'  },
+  { href: '/board',          label: '🗂️  Kanban'       },
+  { href: '/list',           label: '📋  Lista'        },
+  { href: '/calendar',       label: '📅  Calendário'   },
+  { href: '/dash-agents',    label: '🤖  Agentes'      },
+  { href: '/orchestration',  label: '🏗️  Orquestração' },
+  { href: '/analytics',      label: '📊  Analytics'    },
 ]
 
 const handleLogout = async () => {

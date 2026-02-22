@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as ToolsRouteImport } from './routes/tools'
 import { Route as SessionsRouteImport } from './routes/sessions'
 import { Route as ProvidersRouteImport } from './routes/providers'
+import { Route as OrchestrationRouteImport } from './routes/orchestration'
 import { Route as ListRouteImport } from './routes/list'
 import { Route as EvolutionRouteImport } from './routes/evolution'
 import { Route as DashAgentsRouteImport } from './routes/dash-agents'
@@ -37,6 +38,11 @@ const SessionsRoute = SessionsRouteImport.update({
 const ProvidersRoute = ProvidersRouteImport.update({
   id: '/providers',
   path: '/providers',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OrchestrationRoute = OrchestrationRouteImport.update({
+  id: '/orchestration',
+  path: '/orchestration',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ListRoute = ListRouteImport.update({
@@ -107,6 +113,7 @@ export interface FileRoutesByFullPath {
   '/dash-agents': typeof DashAgentsRoute
   '/evolution': typeof EvolutionRoute
   '/list': typeof ListRoute
+  '/orchestration': typeof OrchestrationRoute
   '/providers': typeof ProvidersRoute
   '/sessions': typeof SessionsRoute
   '/tools': typeof ToolsRoute
@@ -123,6 +130,7 @@ export interface FileRoutesByTo {
   '/dash-agents': typeof DashAgentsRoute
   '/evolution': typeof EvolutionRoute
   '/list': typeof ListRoute
+  '/orchestration': typeof OrchestrationRoute
   '/providers': typeof ProvidersRoute
   '/sessions': typeof SessionsRoute
   '/tools': typeof ToolsRoute
@@ -140,6 +148,7 @@ export interface FileRoutesById {
   '/dash-agents': typeof DashAgentsRoute
   '/evolution': typeof EvolutionRoute
   '/list': typeof ListRoute
+  '/orchestration': typeof OrchestrationRoute
   '/providers': typeof ProvidersRoute
   '/sessions': typeof SessionsRoute
   '/tools': typeof ToolsRoute
@@ -158,6 +167,7 @@ export interface FileRouteTypes {
     | '/dash-agents'
     | '/evolution'
     | '/list'
+    | '/orchestration'
     | '/providers'
     | '/sessions'
     | '/tools'
@@ -174,6 +184,7 @@ export interface FileRouteTypes {
     | '/dash-agents'
     | '/evolution'
     | '/list'
+    | '/orchestration'
     | '/providers'
     | '/sessions'
     | '/tools'
@@ -190,6 +201,7 @@ export interface FileRouteTypes {
     | '/dash-agents'
     | '/evolution'
     | '/list'
+    | '/orchestration'
     | '/providers'
     | '/sessions'
     | '/tools'
@@ -207,6 +219,7 @@ export interface RootRouteChildren {
   DashAgentsRoute: typeof DashAgentsRoute
   EvolutionRoute: typeof EvolutionRoute
   ListRoute: typeof ListRoute
+  OrchestrationRoute: typeof OrchestrationRoute
   ProvidersRoute: typeof ProvidersRoute
   SessionsRoute: typeof SessionsRoute
   ToolsRoute: typeof ToolsRoute
@@ -233,6 +246,13 @@ declare module '@tanstack/react-router' {
       path: '/providers'
       fullPath: '/providers'
       preLoaderRoute: typeof ProvidersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/orchestration': {
+      id: '/orchestration'
+      path: '/orchestration'
+      fullPath: '/orchestration'
+      preLoaderRoute: typeof OrchestrationRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/list': {
@@ -327,6 +347,7 @@ const rootRouteChildren: RootRouteChildren = {
   DashAgentsRoute: DashAgentsRoute,
   EvolutionRoute: EvolutionRoute,
   ListRoute: ListRoute,
+  OrchestrationRoute: OrchestrationRoute,
   ProvidersRoute: ProvidersRoute,
   SessionsRoute: SessionsRoute,
   ToolsRoute: ToolsRoute,
