@@ -4,9 +4,10 @@ const sql = neon(process.env.DATABASE_URL);
 async function main() {
   try {
     const result = await sql`
-      SELECT * FROM agent_memories 
+      SELECT content, metadata, created_at 
+      FROM laura_memories 
       ORDER BY created_at DESC 
-      LIMIT 100
+      LIMIT 50
     `;
     console.log(JSON.stringify(result, null, 2));
   } catch (err) {

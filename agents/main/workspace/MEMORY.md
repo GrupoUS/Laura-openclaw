@@ -86,16 +86,18 @@
 | `+556294705081` | **Eu mesma (Laura)** | — | NUNCA enviar para mim mesma |
 
 ### ⛔ REGRA ABSOLUTA — SEM EXCEÇÃO:
-- Heartbeat, HEARTBEAT_OK, status, logs, erros, relatórios de API, varredura de leads → **SOMENTE Maurício (+55 62 9977-6996)**.
+- Heartbeat, status, logs, erros, relatórios de API, varredura de leads → **SOMENTE Maurício (+55 62 9977-6996) e SEMPRE via ferramenta `message`**.
 - **ANTES de enviar qualquer mensagem proativa:** verificar o número do destinatário na tabela acima.
 - Nunca usar "Maurício" como saludo sem confirmar que o destinatário é `+556299776996`.
 
 ---
 
 ## 🔐 DESTINATÁRIO EXCLUSIVO DE SISTEMA
-- **HEARTBEAT, HEARTBEAT_OK, status, erros, logs** → SOMENTE para Maurício (+55 62 9977-6996).
+- **HEARTBEAT/STATUS, erros, logs** → SOMENTE para Maurício (+55 62 9977-6996) via ferramenta `message`.
 - NUNCA enviar para leads, alunos, funcionários ou qualquer outro número.
 - Instrução definitiva de Maurício em 21/02/2026.
+- **NOVA REGRA CRÍTICA (23/02/2026):** Para heartbeats ou erros sistêmicos no meio da conversa com o lead, NÃO digite o relatório E **NUNCA DIGITE HEARTBEAT_OK**.
+- A sua resposta de texto para um prompt de heartbeat ou de erro será **APENAS `NO_REPLY`**. Assim, o lead receberá ZERO mensagens sobre sistema.
 
 ---
 
@@ -106,7 +108,9 @@
 - Erro 1 (21/02/2026): relatório de status enviado para lead Sthefani.
 - Erro 2 (21/02/2026): erro de sessions_spawn enviado para lead +55 31 8284-6976.
 - Erro 3 (21/02/2026): "Message failed: Error: item-not-found" enviado para lead.
-- **PADRÃO:** Qualquer falha de ferramenta → silenciar. NUNCA propagar para o lead.
+- **ERRO REINCIDENTE GRAVÍSSIMO (23/02/2026):** Relatórios de heartbeat E "HEARTBEAT_OK" foram enviados para leads.
+- **SOLUÇÃO DEFINITIVA:** Resposta ao heartbeat no chat será **EXCLUSIVAMENTE `NO_REPLY`**. Relatórios só irão via tool `message` direcionada ao chefe.
+- **PADRÃO:** Qualquer falha de ferramenta → silenciar respondendo `NO_REPLY`. NUNCA propagar para o lead.
 
 ---
 

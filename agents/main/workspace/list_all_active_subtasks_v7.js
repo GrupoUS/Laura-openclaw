@@ -3,12 +3,8 @@ const sql = neon(process.env.DATABASE_URL);
 
 async function main() {
   try {
-    const result = await sql`
-      SELECT * FROM agent_memories 
-      ORDER BY created_at DESC 
-      LIMIT 100
-    `;
-    console.log(JSON.stringify(result, null, 2));
+    const subtasks = await sql\`SELECT * FROM subtasks WHERE status IN ('backlog', 'pending', 'doing')\`;
+    console.log(JSON.stringify(subtasks, null, 2));
   } catch (err) {
     console.error(err);
   }

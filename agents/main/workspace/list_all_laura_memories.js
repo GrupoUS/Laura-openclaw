@@ -3,12 +3,12 @@ const sql = neon(process.env.DATABASE_URL);
 
 async function main() {
   try {
-    const result = await sql`
-      SELECT * FROM agent_memories 
+    const memories = await sql`
+      SELECT * FROM laura_memories 
       ORDER BY created_at DESC 
       LIMIT 100
     `;
-    console.log(JSON.stringify(result, null, 2));
+    console.log("All memories:", JSON.stringify(memories, null, 2));
   } catch (err) {
     console.error(err);
   }

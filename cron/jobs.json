@@ -417,7 +417,7 @@
       "description": "Check for unresponded leads every hour",
       "enabled": true,
       "createdAtMs": 1771560754062,
-      "updatedAtMs": 1771791647649,
+      "updatedAtMs": 1771852561500,
       "schedule": {
         "kind": "every",
         "everyMs": 3600000,
@@ -437,10 +437,10 @@
         "to": "+556299776996"
       },
       "state": {
-        "nextRunAtMs": 1771794754062,
-        "lastRunAtMs": 1771791154079,
+        "nextRunAtMs": 1771855954062,
+        "lastRunAtMs": 1771852354074,
         "lastStatus": "ok",
-        "lastDurationMs": 493570,
+        "lastDurationMs": 207426,
         "consecutiveErrors": 0
       }
     },
@@ -450,7 +450,7 @@
       "name": "followup-comercial-diario",
       "enabled": true,
       "createdAtMs": 1771610323090,
-      "updatedAtMs": 1771616555932,
+      "updatedAtMs": 1771851733105,
       "schedule": {
         "kind": "cron",
         "expr": "0 10 * * 1-5"
@@ -468,7 +468,11 @@
         "to": "120363361363907454@g.us"
       },
       "state": {
-        "nextRunAtMs": 1771851600000
+        "nextRunAtMs": 1771938000000,
+        "lastRunAtMs": 1771851600023,
+        "lastStatus": "ok",
+        "lastDurationMs": 133082,
+        "consecutiveErrors": 0
       }
     }
   ]
