@@ -34,3 +34,8 @@ Este arquivo contém as restrições críticas baseadas em erros reais para evit
 
 ---
 *Última atualização: 2026-02-22 (Consolidação de segurança e orquestração)*
+
+
+### REGRA 17 — VERIFICAÇÃO DE INADIMPLÊNCIA PARA FASE 2 E 3
+- A coordenação deve SEMPRE verificar se o aluno possui inadimplência ativa antes de agendar ou autorizar participação nas Fases 2 e 3 da TRINTAE3.
+- Se houver inadimplência: avisar para 'cabecear' o aluno informando gentilmente que, por pendências financeiras, a vaga na fase presencial não pode ser liberada.

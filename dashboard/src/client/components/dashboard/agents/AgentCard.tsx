@@ -1,4 +1,3 @@
-
 import { AGENT_EMOJIS } from '@/shared/types/tasks'
 import { SubtaskProgress } from '@/client/components/dashboard/shared/SubtaskProgress'
 import { useTaskStore } from '@/client/hooks/useTaskStore'
@@ -65,7 +64,7 @@ function SkillBadge({ skill, usage }: { skill: string; usage?: AgentSkillUsage }
 }
 
 export function AgentCard({ agent, hierarchyNode }: { agent: AgentDetail; hierarchyNode?: AgentNode }) {
-  const cfg   = STATUS_CONFIG[agent.status]
+  const cfg   = STATUS_CONFIG[agent.status] ?? STATUS_CONFIG.idle
   const emoji = AGENT_EMOJIS?.[agent.name] ?? '🤖'
 
   const currentTaskFull = useTaskStore((s) =>
@@ -86,10 +85,24 @@ export function AgentCard({ agent, hierarchyNode }: { agent: AgentDetail; hierar
     <div className={`rounded-xl border-2 p-4 flex flex-col gap-3 transition-all ${cfg.border} ${cfg.bg} dark:bg-slate-800/60 dark:border-slate-700 min-h-[180px]`}>
 
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <span className="text-2xl">{emoji}</span>
-          <span className="font-semibold text-slate-800 dark:text-slate-100 text-sm">@{agent.name}</span>
+      <div className="flex items-start justify-between">
+        <div className="flex flex-col">
+          <div className="flex items-center gap-2">
+            <span className="text-2xl">{emoji}</span>
+            <span className="font-semibold text-slate-800 dark:text-slate-100 text-sm">@{agent.name}</span>
+          </div>
+          {hierarchyNode && (
+            <div className="mt-1 flex flex-col gap-0.5">
+              <span className="text-[10px] text-slate-500 font-medium truncate max-w-[150px]" title={hierarchyNode.role}>
+                {hierarchyNode.role}
+              </span>
+              {hierarchyNode.reportsTo && (
+                <span className="text-[9px] text-slate-400 bg-white/50 px-1.5 py-0.5 rounded-full w-fit">
+                  ↳ Reporta a: @{hierarchyNode.reportsTo}
+                </span>
+              )}
+            </div>
+          )}
         </div>
         <div className="flex items-center gap-1.5">
           <span className={`w-2.5 h-2.5 rounded-full ${cfg.dot}`} />
@@ -97,7 +110,7 @@ export function AgentCard({ agent, hierarchyNode }: { agent: AgentDetail; hierar
         </div>
       </div>
 
-      {/* Task atual */}
+      {/* Task atual ou Live Action */}
       {agent.currentTask ? (
         <div className="flex flex-col gap-1">
           <p className="text-[10px] text-slate-400 dark:text-slate-500 uppercase tracking-wide">Trabalhando em</p>
@@ -116,6 +129,15 @@ export function AgentCard({ agent, hierarchyNode }: { agent: AgentDetail; hierar
           <span className="text-[10px] text-slate-400 dark:text-slate-500 bg-white/60 dark:bg-slate-700/50 px-1.5 py-0.5 rounded w-fit">
             Fase {agent.currentTask.phase}
           </span>
+        </div>
+      ) : liveState?.currentAction ? (
+        <div className="flex flex-col gap-1 bg-white/50 p-2 rounded border border-slate-100">
+           <p className="text-[10px] text-blue-500 uppercase tracking-wide flex items-center gap-1">
+             <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse" /> Live Action
+           </p>
+           <p className="text-xs text-slate-600 font-medium italic">
+             "{liveState.currentAction}"
+           </p>
         </div>
       ) : (
         <p className="text-xs text-slate-400 dark:text-slate-500 flex-1 flex items-center">
@@ -159,5 +181,4 @@ export function AgentCard({ agent, hierarchyNode }: { agent: AgentDetail; hierar
       </div>
     </div>
   )
-
 }
