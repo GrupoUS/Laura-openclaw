@@ -13,6 +13,7 @@ import { runEvolutionCycle } from './services/evolution'
 import { dashboardAuth } from './routes/dashboard-auth'
 import { preferencesRouter } from './routes/preferences'
 import { sseRoutes } from './routes/events'
+import { apiTasksRoutes } from './routes/api-tasks'
 
 const app = new Hono()
 
@@ -30,6 +31,7 @@ app.route('/api/preferences', preferencesRouter)
 // SSE + Health (public paths with their own auth)
 // ────────────────────────────────────────────────────────────────────
 app.route('/api/events', sseRoutes)
+app.route('/api', apiTasksRoutes)
 app.get('/api/health', async (c) => {
   // Merged health: basic + dashboard
   const { db } = await import('./db/client')

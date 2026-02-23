@@ -1,0 +1,12 @@
+import { neon } from '@neondatabase/serverless';
+const sql = neon(process.env.DATABASE_URL);
+
+async function main() {
+  try {
+    const subtasks = await sql`SELECT * FROM subtasks ORDER BY created_at DESC LIMIT 5`;
+    console.log(JSON.stringify(subtasks, null, 2));
+  } catch (err) {
+    console.error(err);
+  }
+}
+main();

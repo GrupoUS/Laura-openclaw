@@ -417,7 +417,7 @@
       "description": "Check for unresponded leads every hour",
       "enabled": true,
       "createdAtMs": 1771560754062,
-      "updatedAtMs": 1771852561500,
+      "updatedAtMs": 1771859769455,
       "schedule": {
         "kind": "every",
         "everyMs": 3600000,
@@ -437,10 +437,10 @@
         "to": "+556299776996"
       },
       "state": {
-        "nextRunAtMs": 1771855954062,
-        "lastRunAtMs": 1771852354074,
+        "nextRunAtMs": 1771863154062,
+        "lastRunAtMs": 1771859554076,
         "lastStatus": "ok",
-        "lastDurationMs": 207426,
+        "lastDurationMs": 215379,
         "consecutiveErrors": 0
       }
     },
