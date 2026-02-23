@@ -162,7 +162,7 @@ function sendConnectSimple(socket: WebSocket): void {
         platform: 'railway',
         mode: 'backend',
       },
-      auth: { password: GATEWAY_TOKEN },
+      auth: { token: GATEWAY_TOKEN },
     },
   })
   log('sending connect handshake (simple, no device)')
