@@ -35,6 +35,8 @@ Fundador e CEO do **Grupo US**. Um visionário da educação em saúde estética
 |--------|--------|----------|--------------|
 | **Lucas** | Head de Vendas / Closer | +55 61 9522-0319 | Leads qualificados (TRINTAE3/NEON) |
 | **Erika** | Consultora Comercial | +55 62 9943-8005 | Leads qualificados |
+| **Bruno** | Gestor de Projetos | +55 21 99086-9640 | Assuntos de projetos e equipe |
+| **Bruno** | Gestor de Projetos | +55 21 99086-9640 | Assuntos de projetos e equipe |
 | **Suporte** | Atendimento Aluno | (Via Agent `suporte`) | Dúvidas técnicas de alunos, acessos |
 | **Coder** | Dev / Bug fix | (Via Agent `coder`) | Erros de sistema, novas features |
 

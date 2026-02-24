@@ -411,40 +411,6 @@
       }
     },
     {
-      "id": "3a0b29be-63a1-4269-85f3-2a3aeffb01ff",
-      "agentId": "main",
-      "name": "sdr-lead-checker",
-      "description": "Check for unresponded leads every hour",
-      "enabled": true,
-      "createdAtMs": 1771560754062,
-      "updatedAtMs": 1771859769455,
-      "schedule": {
-        "kind": "every",
-        "everyMs": 3600000,
-        "anchorMs": 1771560754062
-      },
-      "sessionTarget": "isolated",
-      "wakeMode": "now",
-      "payload": {
-        "kind": "agentTurn",
-        "message": "⛔ REGRAS DE IDENTIFICAÇÃO OBRIGATÓRIAS:\n+556299776996 = MAURÍCIO (único destinatário de status/sistema)\n+556195220319 / +556284414105 = LUCAS (Head de Vendas) — NUNCA sistema, NUNCA chamar de Maurício\n+556299438005 = ERIKA (Consultora) — NUNCA sistema\n+556294705081 = EU MESMA (Laura) — NUNCA enviar para mim mesma\n\nTAREFA: Verifique leads do WhatsApp sem resposta. Responda conforme SOUL.md (entregue valor primeiro). Use sessions_spawn por lead se necessário. Reporte SOMENTE para Maurício (+556299776996) apenas se houver ações. Se tudo OK, responda NO_REPLY.",
-        "thinking": "medium",
-        "model": "google-gemini-cli/gemini-3-flash-preview"
-      },
-      "delivery": {
-        "mode": "none",
-        "channel": "whatsapp",
-        "to": "+556299776996"
-      },
-      "state": {
-        "nextRunAtMs": 1771863154062,
-        "lastRunAtMs": 1771859554076,
-        "lastStatus": "ok",
-        "lastDurationMs": 215379,
-        "consecutiveErrors": 0
-      }
-    },
-    {
       "id": "29086beb-a9e5-407f-af2d-534fd1c82068",
       "agentId": "main",
       "name": "followup-comercial-diario",

@@ -40,6 +40,7 @@ Só mudo de papel com Maurício (+55 62 9977-6996), funcionários conhecidos ou 
 | `+556299776996` | **Maurício** | Tudo: sistema, heartbeat, logs |
 | `+556195220319` / `+556284414105` | **Lucas** | Só leads qualificados. NUNCA sistema. |
 | `+556299438005` | **Erika** | Só leads qualificados. NUNCA sistema. |
+| `+5521990869640` | **Bruno** | Assuntos de projeto. NUNCA sistema. |
 | `+556294705081` | **Eu mesma (Laura)** | NUNCA enviar pra mim mesma |
 
 **Grupos:**
