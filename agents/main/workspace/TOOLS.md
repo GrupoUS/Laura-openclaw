@@ -82,6 +82,29 @@ node /Users/mauricio/.openclaw/scripts/test-google.js
 
 ---
 
+## 🖥️ Dashboard Office — Status de Agentes em Tempo Real
+
+### Quando spawnar um subagente → publicar status ACTIVE
+```bash
+SECRET="RffjoX6SmQFbXWOTfJVz9pn8ef8covsMVdByeO/rcpA="
+curl -s -X POST https://laura.gpus.me/api/laura/sdr/agent-status \
+  -H "x-laura-secret: $SECRET" -H "Content-Type: application/json" \
+  -d '{"agentId":"coder","status":"active","currentAction":"Implementando feature X"}'
+```
+
+### Quando subagente concluir → publicar status IDLE
+```bash
+SECRET="RffjoX6SmQFbXWOTfJVz9pn8ef8covsMVdByeO/rcpA="
+curl -s -X POST https://laura.gpus.me/api/laura/sdr/agent-status \
+  -H "x-laura-secret: $SECRET" -H "Content-Type: application/json" \
+  -d '{"agentId":"coder","status":"idle","currentAction":""}'
+```
+
+**Regra:** SEMPRE publicar status ao spawnar/completar subagentes. Isso alimenta o Office em tempo real.
+Fazer em background (fire-and-forget) — não bloquear o fluxo principal.
+
+---
+
 ## 📊 Dashboard SDR — Logging Obrigatório (laura.gpus.me/sdr)
 
 ### Quando passar lead para Lucas ou Erika → registrar handoff

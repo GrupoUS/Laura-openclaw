@@ -1,35 +1,6 @@
 {
   "version": 2,
   "runs": {
-    "b1a71257-d43f-46bb-9cd3-1d6eb732f5b7": {
-      "runId": "b1a71257-d43f-46bb-9cd3-1d6eb732f5b7",
-      "childSessionKey": "agent:coder:subagent:5e43453c-0e4d-4bfe-bc09-103b3a3be55e",
-      "requesterSessionKey": "agent:main:whatsapp:direct:+556299776996",
-      "requesterOrigin": {
-        "channel": "whatsapp",
-        "to": "+556299776996",
-        "accountId": "default"
-      },
-      "requesterDisplayKey": "agent:main:whatsapp:direct:+556299776996",
-      "task": "## Task: Dashboard — Endpoint Real-Time Sync SDR + Produtos\n**Projeto:** `/Users/mauricio/.openclaw/dashboard/`\n**Prioridade:** 🔴 Alta\n\n### Contexto\nO dashboard em `https://laura.gpus.me` precisa receber eventos em tempo real da Laura (agente SDR). Sempre que Laura contata um lead, faz handoff ou trata uma objeção, o dashboard deve atualizar via SSE instantaneamente.\n\nJá existe:\n- SSE endpoint: `/api/events` (com auth via `SSE_READ_TOKEN`)\n- eventBus: `src/server/events/emitter.ts`\n- Auth para agentes: `x-laura-secret` header (`LAURA_API_SECRET` env)\n- `/api/tasks` route com auth já funcionando\n- Tabelas: `laura_memories`, `lead_handoffs`, `products` (todas existem no NeonDB)\n\n### O que implementar\n\n#### 1. Novo endpoint REST: `/api/laura/sdr`\nCriar `src/server/routes/api-sdr.ts` e montar em `src/server/index.ts`.\n\n**POST `/api/laura/sdr/lead-contact`** — Laura contatou um lead\n```ts\nBody: { phone: string, name?: string, product?: string, message?: string }\n```\nAções: INSERT em `laura_memories` com `metadata: {type:'lead_interaction', lead: phone}` + publicar evento SSE `lead_contacted`.\n\n**POST `/api/laura/sdr/handoff`** — Laura passou lead para closer\n```ts\nBody: { phone: string, name?: string, product?: string, closerPhone: string, closerName: string, notes?: string }\n```\nAções: INSERT em `lead_handoffs` + publicar evento SSE `lead_handoff`.\n\n**POST `/api/laura/sdr/objection`** — Laura tratou uma objeção\n```ts\nBody: { phone: string, objection: string, resolution?: string }\n```\nAções: INSERT em `laura_memories` com `metadata: {type:'sdr_action', objection, action:'objection_handled'}` + evento SSE `objection_handled`.\n\n**POST `/api/laura/sdr/event`** — Evento genérico\n```ts\nBody: { type: string, payload: Record<string, unknown> }\n```\nAções: publicar evento SSE diretamente via eventBus.\n\nAuth igual ao `/api/tasks`: header `x-laura-secret` validado contra `process.env.LAURA_API_SECRET`.\n\n#### 2. Atualizar SSE event types em `src/server/events/types.ts`\nAdicionar os novos tipos: `lead_contacted`, `lead_handoff`, `objection_handled`, `sdr_generic`.\n\n#### 3. Atualizar `src/server/index.ts`\nImportar e montar: `app.route('/api/laura', sdrApiRoutes)`\n\n#### 4. Quality gates\n- `bun run type-check` — zero erros\n- `bun run lint:check` — zero warnings\n\n#### 5. Deploy\nApós passar os quality gates, fazer `railway up --detach` no workdir `/Users/mauricio/.openclaw/dashboard/`.\n\n### Handoff ao concluir\n1. Listar arquivos criados/modificados\n2. URL do endpoint: `https://laura.gpus.me/api/laura/sdr/lead-contact`\n3. Curl de teste para validar\n4. Issues conhecidas\n\n**LAURA_API_SECRET:** `m7N3mwuueFz7f9aptRh9EIbt2AioxYRe3U+J+Q3byUM=`\n**NeonDB:** `postgresql://neondb_owner:npg_P0ljy3pWNTYc@ep-falling-morning-acpph9w8-pooler.sa-east-1.aws.neon.tech/neondb`",
-      "cleanup": "keep",
-      "expectsCompletionMessage": true,
-      "spawnMode": "run",
-      "label": "dashboard-sdr-realtime-sync",
-      "model": "anthropic/claude-sonnet-4-6",
-      "runTimeoutSeconds": 480,
-      "createdAt": 1772118652462,
-      "startedAt": 1772119003561,
-      "archiveAtMs": 1772122252462,
-      "cleanupHandled": true,
-      "endedAt": 1772119001521,
-      "outcome": {
-        "status": "timeout"
-      },
-      "endedReason": "subagent-complete",
-      "endedHookEmittedAt": 1772119006415,
-      "cleanupCompletedAt": 1772119006415
-    },
     "ca5c1096-3f9a-4a2b-8766-56409ee9e1ce": {
       "runId": "ca5c1096-3f9a-4a2b-8766-56409ee9e1ce",
       "childSessionKey": "agent:coder:subagent:fe176093-5f0e-4014-88dc-dd159d1b5bed",
