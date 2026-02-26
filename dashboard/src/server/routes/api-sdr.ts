@@ -150,4 +150,30 @@ sdr.post('/event', async (c) => {
   return c.json({ ok: true })
 })
 
+// ── POST /sdr/agent-status — publish agent working/idle status ─────
+const agentStatusSchema = z.object({
+  agentId:       z.string().min(1),
+  status:        z.enum(['active', 'standby', 'idle']),
+  currentAction: z.string().optional(),
+})
+
+sdr.post('/agent-status', async (c) => {
+  const body = await c.req.json().catch(() => null)
+  const parsed = agentStatusSchema.safeParse(body)
+  if (!parsed.success) {
+    return c.json({ error: 'Invalid payload', issues: parsed.error.issues }, 422)
+  }
+  const { agentId, status, currentAction } = parsed.data
+
+  eventBus.publish({
+    type: 'agent:status',
+    taskId: 0,
+    payload: { agentId, status, currentAction: currentAction ?? '' },
+    agent: agentId,
+    ts: new Date().toISOString(),
+  })
+
+  return c.json({ ok: true })
+})
+
 export { sdr as sdrApiRoutes }

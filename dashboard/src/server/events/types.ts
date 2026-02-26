@@ -7,6 +7,8 @@ export type TaskEventType =
   | 'lead_handoff'
   | 'objection_handled'
   | 'sdr_generic'
+  | 'agent:status'
+  | 'agent:skill_used'
 
 export interface TaskEvent {
   type:    TaskEventType
