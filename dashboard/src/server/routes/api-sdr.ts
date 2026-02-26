@@ -1,0 +1,151 @@
+/**
+ * SDR API — Real-time sync endpoints for Laura SDR agent
+ * Auth: x-laura-secret header (same as /api/tasks)
+ * All routes publish SSE events via eventBus
+ */
+import { Hono } from 'hono'
+import { z } from 'zod'
+import { db } from '../db/client'
+import { lauraMemories, leadHandoffs } from '../db/schema'
+import { eventBus } from '../events/emitter'
+
+const sdr = new Hono()
+
+// ── Auth middleware ────────────────────────────────────────────────
+sdr.use('*', async (c, next) => {
+  const secret = c.req.header('x-laura-secret')
+  if (!secret || secret !== process.env.LAURA_API_SECRET) {
+    return c.json({ error: 'Unauthorized' }, 401)
+  }
+  return next()
+})
+
+// ── Schemas ────────────────────────────────────────────────────────
+const leadContactSchema = z.object({
+  phone:   z.string().min(1),
+  name:    z.string().optional(),
+  product: z.string().optional(),
+  message: z.string().optional(),
+})
+
+const handoffSchema = z.object({
+  phone:       z.string().min(1),
+  name:        z.string().optional(),
+  product:     z.string().optional(),
+  closerPhone: z.string().min(1),
+  closerName:  z.string().min(1),
+  notes:       z.string().optional(),
+})
+
+const objectionSchema = z.object({
+  phone:      z.string().min(1),
+  objection:  z.string().min(1),
+  resolution: z.string().optional(),
+})
+
+const genericEventSchema = z.object({
+  type:    z.string().min(1),
+  payload: z.record(z.string(), z.unknown()),
+})
+
+// ── POST /sdr/lead-contact ─────────────────────────────────────────
+sdr.post('/lead-contact', async (c) => {
+  const body = await c.req.json().catch(() => null)
+  const parsed = leadContactSchema.safeParse(body)
+  if (!parsed.success) {
+    return c.json({ error: 'Invalid payload', issues: parsed.error.issues }, 422)
+  }
+  const { phone, name, product, message } = parsed.data
+
+  const [row] = await db.insert(lauraMemories).values({
+    content: message ?? `Lead contact: ${phone}`,
+    metadata: { type: 'lead_interaction', lead: phone, name, product },
+  }).returning()
+
+  eventBus.publish({
+    type: 'lead_contacted',
+    taskId: row?.id ?? 0,
+    payload: { phone, name, product, message, memoryId: row?.id },
+    agent: 'laura',
+    ts: new Date().toISOString(),
+  })
+
+  return c.json({ ok: true, id: row?.id }, 201)
+})
+
+// ── POST /sdr/handoff ──────────────────────────────────────────────
+sdr.post('/handoff', async (c) => {
+  const body = await c.req.json().catch(() => null)
+  const parsed = handoffSchema.safeParse(body)
+  if (!parsed.success) {
+    return c.json({ error: 'Invalid payload', issues: parsed.error.issues }, 422)
+  }
+  const { phone, name, product, closerPhone, closerName, notes } = parsed.data
+
+  const [row] = await db.insert(leadHandoffs).values({
+    leadPhone:   phone,
+    leadName:    name,
+    product,
+    closerPhone,
+    closerName,
+    notes,
+    status:      'pending',
+  }).returning()
+
+  eventBus.publish({
+    type: 'lead_handoff',
+    taskId: row?.id ?? 0,
+    payload: { phone, name, product, closerPhone, closerName, notes, handoffId: row?.id },
+    agent: 'laura',
+    ts: new Date().toISOString(),
+  })
+
+  return c.json({ ok: true, id: row?.id }, 201)
+})
+
+// ── POST /sdr/objection ────────────────────────────────────────────
+sdr.post('/objection', async (c) => {
+  const body = await c.req.json().catch(() => null)
+  const parsed = objectionSchema.safeParse(body)
+  if (!parsed.success) {
+    return c.json({ error: 'Invalid payload', issues: parsed.error.issues }, 422)
+  }
+  const { phone, objection, resolution } = parsed.data
+
+  const [row] = await db.insert(lauraMemories).values({
+    content: `Objection handled for ${phone}: ${objection}`,
+    metadata: { type: 'sdr_action', objection, action: 'objection_handled', lead: phone, resolution },
+  }).returning()
+
+  eventBus.publish({
+    type: 'objection_handled',
+    taskId: row?.id ?? 0,
+    payload: { phone, objection, resolution, memoryId: row?.id },
+    agent: 'laura',
+    ts: new Date().toISOString(),
+  })
+
+  return c.json({ ok: true, id: row?.id }, 201)
+})
+
+// ── POST /sdr/event ────────────────────────────────────────────────
+sdr.post('/event', async (c) => {
+  const body = await c.req.json().catch(() => null)
+  const parsed = genericEventSchema.safeParse(body)
+  if (!parsed.success) {
+    return c.json({ error: 'Invalid payload', issues: parsed.error.issues }, 422)
+  }
+  const { type, payload } = parsed.data
+
+  eventBus.publish({
+    type: 'sdr_generic',
+    taskId: 0,
+    payload: { sdrType: type, ...payload },
+    agent: 'laura',
+    ts: new Date().toISOString(),
+  })
+
+  return c.json({ ok: true })
+})
+
+export { sdr as sdrApiRoutes }

@@ -3,6 +3,10 @@ export type TaskEventType =
   | 'task:updated'
   | 'subtask:created'
   | 'subtask:updated'
+  | 'lead_contacted'
+  | 'lead_handoff'
+  | 'objection_handled'
+  | 'sdr_generic'
 
 export interface TaskEvent {
   type:    TaskEventType
