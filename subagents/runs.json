@@ -50,7 +50,14 @@
       "createdAt": 1772121689180,
       "startedAt": 1772121689255,
       "archiveAtMs": 1772125289180,
-      "cleanupHandled": false
+      "cleanupHandled": true,
+      "endedAt": 1772121773827,
+      "outcome": {
+        "status": "ok"
+      },
+      "endedReason": "subagent-complete",
+      "endedHookEmittedAt": 1772121775844,
+      "cleanupCompletedAt": 1772121775844
     }
   }
 }
