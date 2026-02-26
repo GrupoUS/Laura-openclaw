@@ -26,8 +26,10 @@ const app = new Hono()
 // NOTE: hono/compress removed — uses Node.js zlib internally, crashes on Bun runtime.
 // Railway proxy handles gzip at the edge layer.
 
-// ── ETag for conditional requests ──
-app.use('*', etag())
+// ── ETag for conditional requests (skip dynamic API/tRPC routes) ──
+app.use('/assets/*', etag())
+app.use('/*.js', etag())
+app.use('/*.css', etag())
 
 // ── Immutable cache for hashed static assets ──
 app.use('/assets/*', async (c, next) => {
@@ -195,6 +197,11 @@ if (process.env.DATABASE_URL) {
     }
   })
 }
+
+// Eagerly start gateway WS at boot so it's ready before first client poll
+import('./ws/openclaw').then(({ getGatewayWs }) => {
+  try { getGatewayWs() } catch { /* will retry via reconnect logic */ }
+}).catch(() => { /* module load failure — gateway features degraded */ })
 
 // eslint-disable-next-line no-console -- startup log is intentional
 console.log(`Laura Dashboard listening on port ${port}`)
