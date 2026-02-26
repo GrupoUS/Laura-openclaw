@@ -3,9 +3,10 @@ import { eq, sql } from 'drizzle-orm'
 import { router, publicProcedure } from '../trpc-init'
 import { db } from '../db/client'
 import { products } from '../db/schema'
-import { writeFile } from 'node:fs/promises'
+import { writeFile, mkdir } from 'node:fs/promises'
 import { join } from 'node:path'
 import { neon } from '@neondatabase/serverless'
+import { eventBus } from '../events/emitter'
 
 const rawSql = neon(process.env.DATABASE_URL ?? '')
 
@@ -19,6 +20,99 @@ async function syncProductsToAgentFiles(markdown: string): Promise<void> {
           updated_at = NOW(),
           updated_by = 'dashboard'
   `
+}
+
+/** Write produtos.md to SDR agent dir + publish file:updated event */
+async function syncProductsToDisk(markdown: string): Promise<boolean> {
+  const sdrDir = process.env.SDR_AGENT_DIR
+  if (!sdrDir) return false
+  try {
+    await writeFile(join(sdrDir, 'produtos.md'), markdown, 'utf-8')
+    eventBus.publish({
+      type: 'file:updated',
+      taskId: 0,
+      payload: { name: 'produtos', content: markdown, source: 'dashboard' },
+      agent: 'dashboard',
+      ts: new Date().toISOString(),
+    })
+    return true
+  } catch {
+    return false
+  }
+}
+
+const PRODUCTS_DIR = '/Users/mauricio/.openclaw/products'
+
+function slugify(name: string): string {
+  return name
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '')
+}
+
+function generateSingleProductMarkdown(p: ProductRow): string {
+  const details = (p.details ?? {}) as Record<string, unknown>
+  const now = new Date().toLocaleDateString('pt-BR')
+  let md = `# Produto: ${p.name}`
+  if (p.category) md += ` (${p.category})`
+  md += `\n\n`
+
+  if (p.description) {
+    md += `## Resumo\n${p.description}\n\n`
+  }
+
+  const meta: string[] = []
+  if (p.format) meta.push(`- **Formato:** ${p.format}`)
+  if (p.category) meta.push(`- **Categoria:** ${p.category}`)
+  if (p.price) meta.push(`- **Preço:** R$ ${p.price}`)
+  if (details.requirements) meta.push(`- **Requisito:** ${details.requirements}`)
+  if (details.turmas) meta.push(`- **Turmas:** ${details.turmas}`)
+  if (details.bonuses) meta.push(`- **Bônus:** ${details.bonuses}`)
+  if (details.site) meta.push(`- **Site:** ${details.site}`)
+  if (details.paymentLink) meta.push(`- **Link de venda:** ${details.paymentLink}`)
+  if (details.tagline) meta.push(`- **Tagline:** *"${details.tagline}"*`)
+
+  if (meta.length > 0) {
+    md += `## Informações\n${meta.join('\n')}\n\n`
+  }
+
+  // If details has a fullContent field, append it as the full body
+  if (typeof details.fullContent === 'string' && details.fullContent) {
+    md += `---\n\n${details.fullContent}\n\n`
+  }
+
+  md += `---\n\n*Última atualização: ${now} (sync automático do Dashboard)*\n`
+  return md
+}
+
+/** Write individual product .md files to /products/ directory */
+async function syncProductsToLocalFiles(rows: ProductRow[]): Promise<{ synced: number; errors: string[] }> {
+  const errors: string[] = []
+  let synced = 0
+
+  try {
+    await mkdir(PRODUCTS_DIR, { recursive: true })
+  } catch {
+    return { synced: 0, errors: ['Failed to create products directory'] }
+  }
+
+  const results = await Promise.allSettled(
+    rows.map((p) => {
+      const slug = slugify(p.name)
+      const filePath = join(PRODUCTS_DIR, `${slug}.md`)
+      const content = generateSingleProductMarkdown(p)
+      return writeFile(filePath, content, 'utf-8').then(() => slug)
+    })
+  )
+
+  for (const r of results) {
+    if (r.status === 'fulfilled') synced++
+    else errors.push(r.reason instanceof Error ? r.reason.message : String(r.reason))
+  }
+
+  return { synced, errors }
 }
 
 const AGENT_MEMORY_DIRS = [
@@ -96,9 +190,12 @@ export const productsRouter = router({
           .set({ ...data, updatedAt: new Date() })
           .where(eq(products.id, id))
           .returning()
-        // Auto-sync markdown to agent_files after any edit
+        // Auto-sync markdown to agent_files + local disk after any edit
         const all = await db.query.products.findMany({ orderBy: (t, { asc: a }) => [a(t.name)] })
-        void syncProductsToAgentFiles(generateProductsMarkdown(all))
+        const md = generateProductsMarkdown(all)
+        void syncProductsToAgentFiles(md)
+        void syncProductsToDisk(md)
+        void syncProductsToLocalFiles(all)
         return updated
       }
 
@@ -106,9 +203,12 @@ export const productsRouter = router({
         .insert(products)
         .values(data)
         .returning()
-      // Auto-sync markdown to agent_files after new product
+      // Auto-sync markdown to agent_files + local disk after new product
       const all = await db.query.products.findMany({ orderBy: (t, { asc: a }) => [a(t.name)] })
-      void syncProductsToAgentFiles(generateProductsMarkdown(all))
+      const md = generateProductsMarkdown(all)
+      void syncProductsToAgentFiles(md)
+      void syncProductsToDisk(md)
+      void syncProductsToLocalFiles(all)
       return created
     }),
 
@@ -116,9 +216,12 @@ export const productsRouter = router({
     .input(z.object({ id: z.number() }))
     .mutation(async ({ input }) => {
       await db.delete(products).where(eq(products.id, input.id))
-      // Auto-sync markdown to agent_files after deletion
+      // Auto-sync markdown to agent_files + local disk + /products/ after deletion
       const all = await db.query.products.findMany({ orderBy: (t, { asc: a }) => [a(t.name)] })
-      void syncProductsToAgentFiles(generateProductsMarkdown(all))
+      const md = generateProductsMarkdown(all)
+      void syncProductsToAgentFiles(md)
+      void syncProductsToDisk(md)
+      void syncProductsToLocalFiles(all)
       return { success: true }
     }),
 
@@ -132,8 +235,11 @@ export const productsRouter = router({
     // Always sync to NeonDB agent_files (works in cloud + local)
     await syncProductsToAgentFiles(markdown)
 
+    // Sync individual product files to /products/ directory
+    const localResult = await syncProductsToLocalFiles(rows)
+
     const baseDir = process.env.OPENCLAW_DIR ?? ''
-    if (!baseDir) return { success: true, synced: 0, total: 0, errors: [], note: 'Synced to NeonDB. OPENCLAW_DIR not set — skipping local files.' }
+    if (!baseDir) return { success: localResult.errors.length === 0, synced: localResult.synced, total: localResult.synced, errors: localResult.errors }
 
     const results = await Promise.allSettled(
       AGENT_MEMORY_DIRS.map((dir) =>

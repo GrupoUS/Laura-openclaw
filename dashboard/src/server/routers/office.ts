@@ -2,7 +2,7 @@ import { router, publicProcedure } from '../trpc-init'
 import { gatewayCall } from '../ws/openclaw'
 import { db } from '../db/client'
 import { tasks, subtasks } from '../db/schema'
-import { eq, inArray } from 'drizzle-orm'
+import { eq } from 'drizzle-orm'
 import { eventBus } from '../events/emitter'
 import { z } from 'zod'
 
@@ -73,7 +73,7 @@ export const officeRouter = router({
         hasActiveTask || hasDoingSubtask
           ? 'active'
           : hasSession
-            ? (session!.isActive ? 'active' : 'standby')
+            ? (session?.isActive ? 'active' : 'standby')
             : 'idle'
 
       const currentTask = agentDoingSubtask.get(agent.id)

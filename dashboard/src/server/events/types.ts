@@ -9,6 +9,7 @@ export type TaskEventType =
   | 'sdr_generic'
   | 'agent:status'
   | 'agent:skill_used'
+  | 'file:updated'
 
 export interface TaskEvent {
   type:    TaskEventType

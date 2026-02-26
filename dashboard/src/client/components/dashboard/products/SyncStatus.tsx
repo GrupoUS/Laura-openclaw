@@ -1,11 +1,19 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { trpc } from '@/client/trpc'
 
 export function SyncStatus() {
   const [syncing, setSyncing] = useState(false)
   const [result, setResult] = useState<{ synced: number; total: number; errors: string[] } | null>(null)
+  const [diskAvailable, setDiskAvailable] = useState<boolean | null>(null)
 
   const syncMutation = trpc.products.syncToAgents.useMutation()
+
+  // Check if local disk sync is available
+  useEffect(() => {
+    fetch('/api/files')
+      .then((res) => setDiskAvailable(res.ok))
+      .catch(() => setDiskAvailable(false))
+  }, [])
 
   const handleSync = async () => {
     setSyncing(true)
@@ -37,6 +45,13 @@ export function SyncStatus() {
           'Sincronizar com Agentes'
         )}
       </button>
+
+      {diskAvailable && (
+        <span className="flex items-center gap-1 text-[10px] text-sky-600">
+          <span className="w-1.5 h-1.5 rounded-full bg-sky-500" />
+          Sync disco ativo
+        </span>
+      )}
 
       {result && (
         <span className={`text-xs ${result.errors.length > 0 ? 'text-amber-600' : 'text-emerald-600'}`}>

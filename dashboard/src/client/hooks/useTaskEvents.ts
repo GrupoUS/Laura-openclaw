@@ -87,6 +87,13 @@ export function useTaskEvents() {
       } catch { /* ignore parsing errors */ }
     })
 
+    es.addEventListener('file:updated', (e) => {
+      try {
+        const event = JSON.parse(e.data)
+        window.dispatchEvent(new CustomEvent('file:updated', { detail: event.payload }))
+      } catch { /* ignore parsing errors */ }
+    })
+
     es.addEventListener('heartbeat', () => setConnected(true))
 
     es.addEventListener('message', (e) => {

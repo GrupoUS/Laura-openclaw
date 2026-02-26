@@ -18,6 +18,7 @@ import { preferencesRouter } from './routes/preferences'
 import { sseRoutes } from './routes/events'
 import { apiTasksRoutes } from './routes/api-tasks'
 import { sdrApiRoutes } from './routes/api-sdr'
+import { fileSyncRoutes } from './routes/file-sync'
 
 import { secureHeaders } from 'hono/secure-headers'
 import { etag } from 'hono/etag'
@@ -65,6 +66,7 @@ app.route('/api/preferences', preferencesRouter)
 // SSE + Health (public paths with their own auth)
 // ────────────────────────────────────────────────────────────────────
 app.route('/api/events', sseRoutes)
+app.route('/api/files', fileSyncRoutes)
 
 // Health check MUST be registered before apiTasksRoutes (which has auth middleware on /api/*)
 app.get('/api/health', async (c) => {
@@ -206,6 +208,11 @@ if (process.env.DATABASE_URL) {
 import('./ws/openclaw').then(({ getGatewayWs }) => {
   try { getGatewayWs() } catch { /* will retry via reconnect logic */ }
 }).catch(() => { /* module load failure — gateway features degraded */ })
+
+// Start file watcher for SDR agent workspace
+import('./file-watcher').then(({ startFileWatcher }) => {
+  startFileWatcher()
+}).catch(() => { /* file watcher disabled */ })
 
 // eslint-disable-next-line no-console -- startup log is intentional
 console.log(`Laura Dashboard listening on port ${port}`)

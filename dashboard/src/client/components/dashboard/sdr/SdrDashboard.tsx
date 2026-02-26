@@ -2,6 +2,7 @@ import { KpiCards } from './KpiCards'
 import { ObjectionsPanel } from './ObjectionsPanel'
 import { LeadsTable } from './LeadsTable'
 import { AgentFilesEditor } from './AgentFilesEditor'
+import { SSE_ENABLED } from '@/client/hooks/useTaskEvents'
 
 interface KpiData {
   leadsContacted: number
@@ -55,6 +56,12 @@ export function SdrDashboard({ kpis }: Props) {
           <section className="bg-white border border-slate-200 rounded-xl p-5">
             <h2 className="text-sm font-semibold text-slate-700 mb-4 flex items-center gap-2">
               <span className="text-base">📝</span> Arquivos do Agente SDR
+              {SSE_ENABLED && (
+                <span className="ml-2 flex items-center gap-1 text-[10px] text-emerald-600 font-normal">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                  live
+                </span>
+              )}
             </h2>
             <AgentFilesEditor />
           </section>
