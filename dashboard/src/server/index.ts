@@ -31,7 +31,8 @@ app.route('/api/preferences', preferencesRouter)
 // SSE + Health (public paths with their own auth)
 // ────────────────────────────────────────────────────────────────────
 app.route('/api/events', sseRoutes)
-app.route('/api', apiTasksRoutes)
+
+// Health check MUST be registered before apiTasksRoutes (which has auth middleware on /api/*)
 app.get('/api/health', async (c) => {
   // Merged health: basic + dashboard
   const { db } = await import('./db/client')
@@ -50,6 +51,9 @@ app.get('/api/health', async (c) => {
     ts: new Date().toISOString(),
   })
 })
+
+// REST API for agents (auth via x-laura-secret header) — after health to avoid blocking it
+app.route('/api', apiTasksRoutes)
 
 // ────────────────────────────────────────────────────────────────────
 // SECONDARY: Gateway Admin endpoints (under /api/admin/*)
