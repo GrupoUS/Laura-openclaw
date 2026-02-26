@@ -1,27 +1,4 @@
 {
   "version": 2,
-  "runs": {
-    "a77c00d9-5e1e-4505-9ad2-2b5c2411a3cd": {
-      "runId": "a77c00d9-5e1e-4505-9ad2-2b5c2411a3cd",
-      "childSessionKey": "agent:coder:subagent:46eec6af-ee0b-446c-af25-012b9c740654",
-      "requesterSessionKey": "agent:main:whatsapp:direct:+556299776996",
-      "requesterOrigin": {
-        "channel": "whatsapp",
-        "to": "+556299776996",
-        "accountId": "default"
-      },
-      "requesterDisplayKey": "agent:main:whatsapp:direct:+556299776996",
-      "task": "## Tasks: Dashboard — 3 Novas Features (IDs: 19, 20, 21)\n**Projeto:** `/Users/mauricio/.openclaw/dashboard/`\n**Stack:** Bun + React 19 + TypeScript + TanStack Router + tRPC 11 + Hono + Drizzle ORM + NeonDB + Tailwind CSS 4 + @dnd-kit\n\n### Importante: Use o Claude Code CLI para implementar\nExecute claude CLI no workdir do dashboard:\n```\nexec(command=\"claude --dangerously-skip-permissions -p '<prompt>'\", workdir=\"/Users/mauricio/.openclaw/dashboard/\", pty=true, background=true)\n```\nMonitore com `process(action=log, sessionId=...)` até terminar.\n\n### Prompts completos em:\n- Task #19 Office: `/Users/mauricio/.openclaw/agents/main/workspace/tasks/office-screen-prompt.md`\n- Task #20 Calendar: `/Users/mauricio/.openclaw/agents/main/workspace/tasks/calendar-prompt.md`\n- Task #21 Content Pipeline: `/Users/mauricio/.openclaw/agents/main/workspace/tasks/content-pipeline-prompt.md`\n\nLeia cada arquivo de prompt e passe o conteúdo para o claude CLI implementar, uma task por vez.\nQuality gates após cada task: `bun run type-check && bun run lint:check` (zero erros).\n\nNeonDB para atualizar subtasks: `postgresql://neondb_owner:npg_P0ljy3pWNTYc@ep-falling-morning-acpph9w8-pooler.sa-east-1.aws.neon.tech/neondb`\nSkill neondb-tasks: `/Users/mauricio/.openclaw/skills/neondb-tasks/SKILL.md`",
-      "cleanup": "keep",
-      "expectsCompletionMessage": true,
-      "spawnMode": "run",
-      "label": "dashboard-3-features-v2",
-      "model": "claude-cli/claude-sonnet-4-5",
-      "runTimeoutSeconds": 600,
-      "createdAt": 1772108442308,
-      "startedAt": 1772108442308,
-      "archiveAtMs": 1772112042308,
-      "cleanupHandled": false
-    }
-  }
+  "runs": {}
 }

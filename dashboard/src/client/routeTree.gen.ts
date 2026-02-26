@@ -46,7 +46,7 @@ const OrchestrationRoute = OrchestrationRouteImport.update({
   id: '/orchestration',
   path: '/orchestration',
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any).lazy(() => import('./routes/orchestration.lazy').then((d) => d.Route))
 const OfficeRoute = OfficeRouteImport.update({
   id: '/office',
   path: '/office',
@@ -61,7 +61,7 @@ const EvolutionRoute = EvolutionRouteImport.update({
   id: '/evolution',
   path: '/evolution',
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any).lazy(() => import('./routes/evolution.lazy').then((d) => d.Route))
 const DashAgentsRoute = DashAgentsRouteImport.update({
   id: '/dash-agents',
   path: '/dash-agents',
@@ -76,7 +76,7 @@ const ContentRoute = ContentRouteImport.update({
   id: '/content',
   path: '/content',
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any).lazy(() => import('./routes/content.lazy').then((d) => d.Route))
 const ConfigRoute = ConfigRouteImport.update({
   id: '/config',
   path: '/config',
@@ -101,7 +101,7 @@ const AnalyticsRoute = AnalyticsRouteImport.update({
   id: '/analytics',
   path: '/analytics',
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any).lazy(() => import('./routes/analytics.lazy').then((d) => d.Route))
 const AgentsRoute = AgentsRouteImport.update({
   id: '/agents',
   path: '/agents',

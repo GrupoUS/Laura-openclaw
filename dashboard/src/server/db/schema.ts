@@ -246,7 +246,10 @@ export const tasks = pgTable('tasks', {
   agent:       text('agent'),
   createdAt:   timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
   updatedAt:   timestamp('updated_at', { withTimezone: true }).defaultNow().notNull(),
-})
+}, (table) => [
+  index('tasks_status_idx').on(table.status),
+  index('tasks_agent_idx').on(table.agent),
+])
 
 export const subtasks = pgTable('subtasks', {
   id:          serial('id').primaryKey(),
@@ -269,7 +272,8 @@ export const taskEvents = pgTable('task_events', {
   payload:   jsonb('payload'),
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
 }, (table) => [
-  index('task_events_task_idx').on(table.taskId)
+  index('task_events_task_idx').on(table.taskId),
+  index('task_events_type_idx').on(table.eventType),
 ])
 
 // ── Dashboard Relations ──

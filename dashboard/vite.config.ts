@@ -24,6 +24,24 @@ export default defineConfig({
       '/api': 'http://localhost:3000'
     }
   },
-  build: { outDir: 'dist/public' }
+  build: {
+    outDir: 'dist/public',
+    target: 'esnext',
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'vendor-charts': ['recharts'],
+          'vendor-dnd': ['@dnd-kit/core', '@dnd-kit/sortable', '@dnd-kit/utilities'],
+          'vendor-radix': [
+            '@radix-ui/react-scroll-area',
+            '@radix-ui/react-select',
+            '@radix-ui/react-tooltip',
+            '@radix-ui/react-dialog',
+          ],
+          'vendor-query': ['@tanstack/react-query', '@trpc/client', '@trpc/react-query'],
+        },
+      },
+    },
+  }
 })
 

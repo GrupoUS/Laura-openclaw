@@ -6,18 +6,27 @@ import { Hono } from 'hono'
 import { setCookie, getCookie, deleteCookie } from 'hono/cookie'
 import { sealData, unsealData } from 'iron-session'
 import { SESSION_OPTIONS, type SessionData } from '@/server/session'
+import { checkRateLimit } from '@/server/middleware/rate-limit'
 
 const dashboardAuth = new Hono()
 
 const COOKIE_NAME = SESSION_OPTIONS.cookieName
 const SEAL_PASSWORD = SESSION_OPTIONS.password
 
-const DASHBOARD_PWD = process.env.DASHBOARD_PASSWORD || '947685'
+const DASHBOARD_PWD = process.env.DASHBOARD_PASSWORD
+if (!DASHBOARD_PWD && process.env.NODE_ENV === 'production') {
+  throw new Error('DASHBOARD_PASSWORD is required in production')
+}
 
 
 
 // POST /api/auth/login
 dashboardAuth.post('/login', async (c) => {
+  const ip = c.req.header('x-forwarded-for') || c.req.header('x-real-ip') || 'unknown'
+  if (!checkRateLimit(ip)) {
+    return c.json({ ok: false, error: 'Muitas tentativas. Tente novamente em 1 minuto.' }, 429)
+  }
+
   const { password } = await c.req.json<{ password: string }>()
 
   if (!password || password !== DASHBOARD_PWD) {

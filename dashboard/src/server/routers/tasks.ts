@@ -40,7 +40,7 @@ export const tasksRouter = router({
       eventBus.publish({
         type: 'task:created',
         taskId: task.id,
-        payload: task as unknown as Record<string, unknown>,
+        payload: { ...task },
         agent: input.agent,
         ts: new Date().toISOString(),
       })
@@ -61,7 +61,7 @@ export const tasksRouter = router({
       eventBus.publish({
         type: 'task:updated',
         taskId: task.id,
-        payload: task as unknown as Record<string, unknown>,
+        payload: { ...task },
         agent: input.agent,
         ts: new Date().toISOString(),
       })
@@ -80,7 +80,7 @@ export const tasksRouter = router({
       eventBus.publish({
         type: 'subtask:created',
         taskId: input.taskId,
-        payload: subtask as unknown as Record<string, unknown>,
+        payload: { ...subtask },
         agent: input.agent,
         ts: new Date().toISOString(),
       })
@@ -99,7 +99,7 @@ export const tasksRouter = router({
       eventBus.publish({
         type: 'subtask:updated',
         taskId: input.taskId,
-        payload: subtask as unknown as Record<string, unknown>,
+        payload: { ...subtask },
         ts: new Date().toISOString(),
       })
       return { data: subtask }

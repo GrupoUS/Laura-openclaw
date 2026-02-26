@@ -31,7 +31,14 @@ const log = (...args: unknown[]) => console.log('[gateway-ws]', ...args)
 const logErr = (...args: unknown[]) => console.error('[gateway-ws]', ...args)
 const logWarn = (...args: unknown[]) => console.warn('[gateway-ws]', ...args)
 /* eslint-enable no-console */
-const RECONNECT_DELAY_MS = 5_000
+let reconnectAttempts = 0
+const MAX_RECONNECT_DELAY_MS = 60_000
+
+function getReconnectDelay(): number {
+  const base = Math.min(1000 * Math.pow(2, reconnectAttempts), MAX_RECONNECT_DELAY_MS)
+  const jitter = Math.random() * 1000
+  return base + jitter
+}
 const CONNECTING_TIMEOUT_MS = 10_000
 const PROTOCOL_VERSION = 3
 
@@ -261,6 +268,7 @@ export function getGatewayWs(url = GATEWAY_WS_URL): WebSocket {
         // Handshake accepted
         log('✓ handshake complete')
         handshakeComplete = true
+        reconnectAttempts = 0
         for (const cb of pendingHandshakeCallbacks) {
           cb.resolve()
         }
@@ -290,12 +298,15 @@ export function getGatewayWs(url = GATEWAY_WS_URL): WebSocket {
       }
       pendingHandshakeCallbacks = []
       ws = null
-      // Schedule auto-reconnect (single timer guard)
+      // Schedule auto-reconnect with exponential backoff + jitter
       if (!reconnectTimer) {
+        const delay = getReconnectDelay()
+        reconnectAttempts++
+        log(`reconnecting in ${Math.round(delay / 1000)}s (attempt ${reconnectAttempts})`)
         reconnectTimer = setTimeout(() => {
           reconnectTimer = null
           getGatewayWs(url)
-        }, RECONNECT_DELAY_MS)
+        }, delay)
       }
     })
   }

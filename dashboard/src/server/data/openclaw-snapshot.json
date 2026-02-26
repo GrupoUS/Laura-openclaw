@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-02-22T20:36:34.273Z",
+  "generatedAt": "2026-02-26T13:45:47.132Z",
   "agents": [
     {
       "id": "mauricio",
@@ -290,7 +290,6 @@
     "webapp-testing",
     "gog-workspace",
     "voice-calling",
-    "frontend-design",
     "tailwind-patterns",
     "task-planning",
     "ai-data-analyst",

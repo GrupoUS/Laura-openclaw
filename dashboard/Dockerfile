@@ -13,12 +13,8 @@ COPY . .
 ARG VITE_SSE_READ_TOKEN
 ENV VITE_SSE_READ_TOKEN=${VITE_SSE_READ_TOKEN}
 
-# Build Vite frontend and Bun backend
-RUN bun vite build
-RUN bun build src/server/index.ts --outdir dist/server --target bun
-
-# Copy server data files (snapshot, etc.)
-RUN cp -r src/server/data dist/data
+# Build using the project's build script (snapshot + vite + server + data copy)
+RUN bun run build
 
 # Runner Stage
 FROM oven/bun:latest AS runner

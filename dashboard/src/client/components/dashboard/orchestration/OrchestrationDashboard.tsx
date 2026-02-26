@@ -39,7 +39,7 @@ export function OrchestrationDashboard({
   const totalCost = tokenCosts.reduce((sum, c) => sum + c.cost, 0)
 
   return (
-    <div className="flex flex-col flex-1 overflow-hidden">
+    <div className="flex flex-col flex-1 min-h-0">
       {/* Header */}
       <header className="h-14 border-b border-slate-200 flex items-center justify-between px-6 shrink-0">
         <div className="flex items-center gap-3">
@@ -60,7 +60,7 @@ export function OrchestrationDashboard({
       </header>
 
       {/* 6-Panel Grid */}
-      <div className="flex-1 overflow-y-auto p-6">
+      <div className="flex-1 min-h-0 overflow-y-auto p-6">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 max-w-[1400px] mx-auto">
 
           {/* Panel 1 — Hierarchy Tree (full width) */}

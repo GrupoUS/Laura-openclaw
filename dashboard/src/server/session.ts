@@ -1,6 +1,9 @@
 import type { SessionOptions } from 'iron-session'
 
-const rawPassword = process.env.IRON_SESSION_PASSWORD || ''
+const rawPassword = process.env.IRON_SESSION_PASSWORD ?? ''
+if (rawPassword.length < 32 && process.env.NODE_ENV === 'production') {
+  throw new Error('IRON_SESSION_PASSWORD must be >= 32 chars in production')
+}
 const defaultFallback = 'fallback_password_for_build_step_only_32_chars'
 const finalPassword = rawPassword.length >= 32 ? rawPassword : defaultFallback
 
