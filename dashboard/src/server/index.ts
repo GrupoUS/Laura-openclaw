@@ -18,6 +18,7 @@ import { preferencesRouter } from './routes/preferences'
 import { sseRoutes } from './routes/events'
 import { apiTasksRoutes } from './routes/api-tasks'
 import { sdrApiRoutes } from './routes/api-sdr'
+import { contentApiRoutes } from './routes/api-content'
 import { fileSyncRoutes } from './routes/file-sync'
 
 import { secureHeaders } from 'hono/secure-headers'
@@ -95,6 +96,7 @@ app.route('/api/tasks', apiTasksRoutes)
 
 // SDR real-time sync endpoints for Laura agent
 app.route('/api/laura/sdr', sdrApiRoutes)
+app.route('/api/laura/content', contentApiRoutes)
 
 // ────────────────────────────────────────────────────────────────────
 // SECONDARY: Gateway Admin endpoints (under /api/admin/*)

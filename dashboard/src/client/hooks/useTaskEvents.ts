@@ -94,6 +94,18 @@ export function useTaskEvents() {
       } catch { /* ignore parsing errors */ }
     })
 
+    es.addEventListener('content:card_created', () => {
+      window.dispatchEvent(new CustomEvent('content:invalidate'))
+    })
+
+    es.addEventListener('content:card_updated', () => {
+      window.dispatchEvent(new CustomEvent('content:invalidate'))
+    })
+
+    es.addEventListener('content:card_moved', () => {
+      window.dispatchEvent(new CustomEvent('content:invalidate'))
+    })
+
     es.addEventListener('heartbeat', () => setConnected(true))
 
     es.addEventListener('message', (e) => {

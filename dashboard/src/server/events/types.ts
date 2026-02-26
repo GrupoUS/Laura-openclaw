@@ -10,6 +10,9 @@ export type TaskEventType =
   | 'agent:status'
   | 'agent:skill_used'
   | 'file:updated'
+  | 'content:card_created'
+  | 'content:card_updated'
+  | 'content:card_moved'
 
 export interface TaskEvent {
   type:    TaskEventType

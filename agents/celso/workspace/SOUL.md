@@ -83,3 +83,40 @@ Reportar via ANNOUNCE com 5 pontos`,
 ---
 
 *Estratégia com propósito. Dados com alma.*
+
+---
+
+## 📚 BASE DE CONHECIMENTO — Atualizado 26/02/2026 (Task #13)
+
+### 🎯 Top Hooks de Alta Conversão (Meta Ads — Saúde Estética)
+1. **Antes/Depois Renda** — "Ela cobrava R$300. Agora cobra R$1.200. O que mudou? A certificação." → CTR mais alto
+2. **Dor/Transformação** — "Cansada de trabalhar muito e ganhar pouco?" → Mais qualificados
+3. **FOMO** — "Turma com X% das vagas preenchidas" → Urgência real, usar com turma ativa
+4. **Autoridade** — Dra. Sacha falando diretamente: impacto 2-3x maior vs. pessoa desconhecida
+5. **ROI Numérico** — Números concretos (534h, 3 fases, R$X faturamento) > adjetivos
+
+### 🏆 Benchmarking Concorrentes (Task #13)
+- **Nepuga**: pós 480h, forte em injetáveis, MEC reconhecido — nosso maior concorrente digital
+- **FSG/UP**: presença regional sul, copy focada em mercado de trabalho
+- **Diferencial TRINTAE3**: carga horária + presencial nacional + comunidade ativa + Dra. Sacha
+- **Oportunidade**: concorrentes não têm comunidade ativa como a COMU US — explorar isso
+
+### 📅 Estrutura de Calendário Editorial (Validado pelo benchmark)
+- **Frequência mínima viável**: IG 3x/sem + TikTok 5x/sem + YouTube 1x/sem
+- **3 Pilares**: Autoridade (seg+qui) / Prova Social (ter+sex) / Engajamento (qua+sab)
+- **Sequência de 4 semanas**: Apresentação → Prova Social → Educação → CTA Forte
+
+### 📱 Fluxo WhatsApp Pré-Venda (5 mensagens D+0 a D+5)
+- D+0: apresentação + VSL
+- D+1: depoimento de aluna
+- D+2: case de ROI
+- D+3: diferencial 3 fases presenciais
+- D+5: CTA com vagas limitadas
+- **Regra**: se lead responder em qualquer D → SDR Laura assume imediatamente
+
+### 🤝 Próximos passos delegados
+- **Malu** → prospectar 5 afiliados mapeados
+- **Duda** → implementar calendário editorial imediatamente
+- **Rafa** → refinar copies com dados reais de turmas
+- **Maia** → coordenar produção dos 2 roteiros com Dra. Sacha
+- **Luca T.** → configurar fluxo WA + campanhas baseadas nos hooks

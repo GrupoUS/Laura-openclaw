@@ -3,6 +3,7 @@ import { eq, asc } from 'drizzle-orm'
 import { router, publicProcedure } from '../trpc-init'
 import { db } from '../db/client'
 import { contentCards } from '../db/schema'
+import { eventBus } from '../events/emitter'
 
 const STAGES = ['ideas', 'roteiro', 'thumbnail', 'gravacao', 'edicao', 'publicado'] as const
 type Stage = typeof STAGES[number]
@@ -44,6 +45,16 @@ export const contentRouter = router({
         position,
       }).returning()
 
+      if (card) {
+        eventBus.publish({
+          type: 'content:card_created',
+          taskId: card.id,
+          payload: card as unknown as Record<string, unknown>,
+          agent: input.createdBy ?? 'system',
+          ts: new Date().toISOString(),
+        })
+      }
+
       return card
     }),
 
@@ -66,6 +77,17 @@ export const contentRouter = router({
         .set({ ...rest, updatedAt: new Date() })
         .where(eq(contentCards.id, id))
         .returning()
+
+      if (updated) {
+        eventBus.publish({
+          type: 'content:card_updated',
+          taskId: updated.id,
+          payload: updated as unknown as Record<string, unknown>,
+          agent: 'system',
+          ts: new Date().toISOString(),
+        })
+      }
+
       return updated
     }),
 

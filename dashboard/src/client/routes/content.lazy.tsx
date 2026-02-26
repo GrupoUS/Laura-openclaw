@@ -1,5 +1,5 @@
 import { createLazyFileRoute } from '@tanstack/react-router'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import {
   DndContext,
   closestCenter,
@@ -29,6 +29,14 @@ function ContentPage() {
   })
 
   const utils = trpc.useUtils()
+
+  // Auto-refresh via SSE events from agents
+  useEffect(() => {
+    const handler = () => void utils.content.list.invalidate()
+    window.addEventListener('content:invalidate', handler)
+    return () => window.removeEventListener('content:invalidate', handler)
+  }, [utils])
+
   const reorderMutation = trpc.content.reorder.useMutation({
     onSuccess: () => void utils.content.list.invalidate(),
   })

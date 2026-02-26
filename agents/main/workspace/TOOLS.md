@@ -254,4 +254,19 @@ node /Users/mauricio/.openclaw/scripts/voice/outbound-caller.js status
 
 ---
 
-*Última atualização: 2026-02-22*
+## 📋 Content Pipeline — Criar card via API
+
+```bash
+SECRET="RffjoX6SmQFbXWOTfJVz9pn8ef8covsMVdByeO/rcpA="
+curl -s -X POST https://laura.gpus.me/api/laura/content/card \
+  -H "x-laura-secret: $SECRET" -H "Content-Type: application/json" \
+  -d '{"title":"Nome do conteúdo","description":"...","stage":"ideas","assignedTo":"rafa","createdBy":"celso","tags":["marketing"]}'
+```
+
+Stages válidos: `ideas` → `roteiro` → `thumbnail` → `gravacao` → `edicao` → `publicado`
+
+O card aparece automaticamente no Kanban em `/content` via SSE real-time.
+
+---
+
+*Última atualização: 2026-02-26*
