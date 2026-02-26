@@ -19,13 +19,12 @@ import { sseRoutes } from './routes/events'
 import { apiTasksRoutes } from './routes/api-tasks'
 
 import { secureHeaders } from 'hono/secure-headers'
-import { compress } from 'hono/compress'
 import { etag } from 'hono/etag'
 
 const app = new Hono()
 
-// ── Compression (gzip) for all responses ──
-app.use('*', compress())
+// NOTE: hono/compress removed — uses Node.js zlib internally, crashes on Bun runtime.
+// Railway proxy handles gzip at the edge layer.
 
 // ── ETag for conditional requests ──
 app.use('*', etag())
@@ -66,13 +65,14 @@ app.route('/api/events', sseRoutes)
 
 // Health check MUST be registered before apiTasksRoutes (which has auth middleware on /api/*)
 app.get('/api/health', async (c) => {
-  // Merged health: basic + dashboard
-  const { db } = await import('./db/client')
-  const { sql } = await import('drizzle-orm')
   let dbStatus = 'not_configured'
   try {
-    await db.execute(sql`SELECT 1`)
-    dbStatus = 'connected'
+    if (process.env.DATABASE_URL) {
+      const { db } = await import('./db/client')
+      const { sql } = await import('drizzle-orm')
+      await db.execute(sql`SELECT 1`)
+      dbStatus = 'connected'
+    }
   } catch {
     dbStatus = process.env.DATABASE_URL ? 'disconnected' : 'not_configured'
   }
@@ -84,8 +84,9 @@ app.get('/api/health', async (c) => {
   })
 })
 
-// REST API for agents (auth via x-laura-secret header) — after health to avoid blocking it
-app.route('/api', apiTasksRoutes)
+// REST API for agents (auth via x-laura-secret header)
+// Mounted at /api/tasks to avoid wildcard middleware intercepting /api/health
+app.route('/api/tasks', apiTasksRoutes)
 
 // ────────────────────────────────────────────────────────────────────
 // SECONDARY: Gateway Admin endpoints (under /api/admin/*)

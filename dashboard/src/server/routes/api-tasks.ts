@@ -57,7 +57,7 @@ const patchSubtaskSchema = z.object({
 })
 
 // ── GET /api/tasks — List tasks with optional filters ───────────────
-api.get('/tasks', async (c) => {
+api.get('/', async (c) => {
   const status = c.req.query('status') as
     | 'backlog'
     | 'in_progress'
@@ -73,7 +73,7 @@ api.get('/tasks', async (c) => {
 })
 
 // ── POST /api/tasks — Create a new task ─────────────────────────────
-api.post('/tasks', async (c) => {
+api.post('/', async (c) => {
   const body = await c.req.json().catch(() => null)
   const parsed = createTaskSchema.safeParse(body)
   if (!parsed.success) {
@@ -94,7 +94,7 @@ api.post('/tasks', async (c) => {
 })
 
 // ── GET /api/tasks/:id — Get task detail with subtasks + events ─────
-api.get('/tasks/:id', async (c) => {
+api.get('/:id', async (c) => {
   const id = Number(c.req.param('id'))
   if (Number.isNaN(id)) return c.json({ error: 'Invalid ID' }, 400)
 
@@ -104,7 +104,7 @@ api.get('/tasks/:id', async (c) => {
 })
 
 // ── PATCH /api/tasks/:id — Update task status/priority/agent ────────
-api.patch('/tasks/:id', async (c) => {
+api.patch('/:id', async (c) => {
   const id = Number(c.req.param('id'))
   if (Number.isNaN(id)) return c.json({ error: 'Invalid ID' }, 400)
 
@@ -131,7 +131,7 @@ api.patch('/tasks/:id', async (c) => {
 })
 
 // ── POST /api/tasks/:id/subtasks — Create subtask ───────────────────
-api.post('/tasks/:id/subtasks', async (c) => {
+api.post('/:id/subtasks', async (c) => {
   const taskId = Number(c.req.param('id'))
   if (Number.isNaN(taskId)) return c.json({ error: 'Invalid task ID' }, 400)
 
@@ -156,7 +156,7 @@ api.post('/tasks/:id/subtasks', async (c) => {
 })
 
 // ── PATCH /api/tasks/:id/subtasks/:sid — Update subtask status ──────
-api.patch('/tasks/:id/subtasks/:sid', async (c) => {
+api.patch('/:id/subtasks/:sid', async (c) => {
   const sid = Number(c.req.param('sid'))
   if (Number.isNaN(sid))
     return c.json({ error: 'Invalid subtask ID' }, 400)
@@ -190,7 +190,7 @@ api.patch('/tasks/:id/subtasks/:sid', async (c) => {
   return c.json({ data: subtask })
 })
 
-// ── GET /api/agents — Agent summary panel ───────────────────────────
+// ── GET /api/tasks/agents — Agent summary panel ─────────────────────
 api.get('/agents', async (c) => {
   const rows = await getAgentsSummary()
   const agents: Record<
