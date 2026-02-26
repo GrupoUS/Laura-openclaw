@@ -1,4 +1,56 @@
 {
   "version": 2,
-  "runs": {}
+  "runs": {
+    "b1a71257-d43f-46bb-9cd3-1d6eb732f5b7": {
+      "runId": "b1a71257-d43f-46bb-9cd3-1d6eb732f5b7",
+      "childSessionKey": "agent:coder:subagent:5e43453c-0e4d-4bfe-bc09-103b3a3be55e",
+      "requesterSessionKey": "agent:main:whatsapp:direct:+556299776996",
+      "requesterOrigin": {
+        "channel": "whatsapp",
+        "to": "+556299776996",
+        "accountId": "default"
+      },
+      "requesterDisplayKey": "agent:main:whatsapp:direct:+556299776996",
+      "task": "## Task: Dashboard — Endpoint Real-Time Sync SDR + Produtos\n**Projeto:** `/Users/mauricio/.openclaw/dashboard/`\n**Prioridade:** 🔴 Alta\n\n### Contexto\nO dashboard em `https://laura.gpus.me` precisa receber eventos em tempo real da Laura (agente SDR). Sempre que Laura contata um lead, faz handoff ou trata uma objeção, o dashboard deve atualizar via SSE instantaneamente.\n\nJá existe:\n- SSE endpoint: `/api/events` (com auth via `SSE_READ_TOKEN`)\n- eventBus: `src/server/events/emitter.ts`\n- Auth para agentes: `x-laura-secret` header (`LAURA_API_SECRET` env)\n- `/api/tasks` route com auth já funcionando\n- Tabelas: `laura_memories`, `lead_handoffs`, `products` (todas existem no NeonDB)\n\n### O que implementar\n\n#### 1. Novo endpoint REST: `/api/laura/sdr`\nCriar `src/server/routes/api-sdr.ts` e montar em `src/server/index.ts`.\n\n**POST `/api/laura/sdr/lead-contact`** — Laura contatou um lead\n```ts\nBody: { phone: string, name?: string, product?: string, message?: string }\n```\nAções: INSERT em `laura_memories` com `metadata: {type:'lead_interaction', lead: phone}` + publicar evento SSE `lead_contacted`.\n\n**POST `/api/laura/sdr/handoff`** — Laura passou lead para closer\n```ts\nBody: { phone: string, name?: string, product?: string, closerPhone: string, closerName: string, notes?: string }\n```\nAções: INSERT em `lead_handoffs` + publicar evento SSE `lead_handoff`.\n\n**POST `/api/laura/sdr/objection`** — Laura tratou uma objeção\n```ts\nBody: { phone: string, objection: string, resolution?: string }\n```\nAções: INSERT em `laura_memories` com `metadata: {type:'sdr_action', objection, action:'objection_handled'}` + evento SSE `objection_handled`.\n\n**POST `/api/laura/sdr/event`** — Evento genérico\n```ts\nBody: { type: string, payload: Record<string, unknown> }\n```\nAções: publicar evento SSE diretamente via eventBus.\n\nAuth igual ao `/api/tasks`: header `x-laura-secret` validado contra `process.env.LAURA_API_SECRET`.\n\n#### 2. Atualizar SSE event types em `src/server/events/types.ts`\nAdicionar os novos tipos: `lead_contacted`, `lead_handoff`, `objection_handled`, `sdr_generic`.\n\n#### 3. Atualizar `src/server/index.ts`\nImportar e montar: `app.route('/api/laura', sdrApiRoutes)`\n\n#### 4. Quality gates\n- `bun run type-check` — zero erros\n- `bun run lint:check` — zero warnings\n\n#### 5. Deploy\nApós passar os quality gates, fazer `railway up --detach` no workdir `/Users/mauricio/.openclaw/dashboard/`.\n\n### Handoff ao concluir\n1. Listar arquivos criados/modificados\n2. URL do endpoint: `https://laura.gpus.me/api/laura/sdr/lead-contact`\n3. Curl de teste para validar\n4. Issues conhecidas\n\n**LAURA_API_SECRET:** `m7N3mwuueFz7f9aptRh9EIbt2AioxYRe3U+J+Q3byUM=`\n**NeonDB:** `postgresql://neondb_owner:npg_P0ljy3pWNTYc@ep-falling-morning-acpph9w8-pooler.sa-east-1.aws.neon.tech/neondb`",
+      "cleanup": "keep",
+      "expectsCompletionMessage": true,
+      "spawnMode": "run",
+      "label": "dashboard-sdr-realtime-sync",
+      "model": "anthropic/claude-sonnet-4-6",
+      "runTimeoutSeconds": 480,
+      "createdAt": 1772118652462,
+      "startedAt": 1772119003561,
+      "archiveAtMs": 1772122252462,
+      "cleanupHandled": true,
+      "endedAt": 1772119001521,
+      "outcome": {
+        "status": "timeout"
+      },
+      "endedReason": "subagent-complete",
+      "endedHookEmittedAt": 1772119006415,
+      "cleanupCompletedAt": 1772119006415
+    },
+    "ca5c1096-3f9a-4a2b-8766-56409ee9e1ce": {
+      "runId": "ca5c1096-3f9a-4a2b-8766-56409ee9e1ce",
+      "childSessionKey": "agent:coder:subagent:fe176093-5f0e-4014-88dc-dd159d1b5bed",
+      "requesterSessionKey": "agent:main:whatsapp:direct:+556299776996",
+      "requesterOrigin": {
+        "channel": "whatsapp",
+        "to": "+556299776996",
+        "accountId": "default"
+      },
+      "requesterDisplayKey": "agent:main:whatsapp:direct:+556299776996",
+      "task": "## Task: Dashboard — Arquivos do Agente SDR via NeonDB (editável + sync local)\n\n**Projeto:** `/Users/mauricio/.openclaw/dashboard/`\n**NeonDB URL:** `postgresql://neondb_owner:npg_P0ljy3pWNTYc@ep-falling-morning-acpph9w8-pooler.sa-east-1.aws.neon.tech/neondb`\n**Prioridade:** 🔴 Alta\n\n---\n\n### Contexto\n\nO dashboard em `https://laura.gpus.me/sdr` mostra \"Nenhum arquivo encontrado. Defina SDR_AGENT_DIR\" porque o Railway (cloud) não tem acesso ao sistema de arquivos local do Mac mini. \n\n**Solução:** NeonDB como ponte — arquivos vivem no banco, dashboard edita, Laura sincroniza para o arquivo local via heartbeat.\n\n---\n\n### O que implementar\n\n#### 1. Criar tabela `agent_files` no NeonDB (SQL direto — sem migration Drizzle)\n\nRodar este SQL via script node usando `@neondatabase/serverless`:\n\n```sql\nCREATE TABLE IF NOT EXISTS agent_files (\n  id SERIAL PRIMARY KEY,\n  name TEXT NOT NULL UNIQUE,\n  content TEXT NOT NULL DEFAULT '',\n  description TEXT,\n  is_editable BOOLEAN DEFAULT true,\n  updated_at TIMESTAMPTZ DEFAULT NOW(),\n  updated_by TEXT DEFAULT 'system'\n);\n```\n\n#### 2. Seed: Importar arquivos .md do workspace para o NeonDB\n\nLer os seguintes arquivos de `/Users/mauricio/.openclaw/agents/main/workspace/` e inserir/upsert na tabela `agent_files`:\n\n| name | description | is_editable |\n|------|-------------|-------------|\n| `SOUL.md` | Identidade e missão da Laura SDR | true |\n| `OBJECOES.md` | Base de rebatidas de objeções | true |\n| `SDR_PLAYBOOK.md` | Playbook completo SDR | true |\n| `HEARTBEAT.md` | Checklist de heartbeat | true |\n| `RULES.md` | Regras absolutas de operação | true |\n| `AGENTS.md` | Hierarquia e configuração de agentes | false |\n| `MEMORY.md` | Memória de longo prazo | false |\n\n#### 3. Atualizar `src/server/routers/sdr.ts`\n\nSubstituir os 3 procedures que usam filesystem (`agentFiles`, `readFile`, `writeFile`) por versões que leem/escrevem no NeonDB:\n\n```typescript\n// agentFiles → listar registros da tabela agent_files\nagentFiles: publicProcedure.query(async () => {\n  const rows = await rawSql`SELECT id, name, description, is_editable, updated_at, updated_by,\n    length(content) as size_bytes FROM agent_files ORDER BY name`\n  return rows.map(r => ({\n    name: r.name,\n    path: r.name, // usado como key para readFile/writeFile\n    sizeKb: Math.round((r.size_bytes as number) / 1024),\n    lastModified: (r.updated_at as Date).toISOString(),\n    isEditable: r.is_editable as boolean,\n    description: r.description as string | null,\n  }))\n})\n\n// readFile → buscar conteúdo pelo nome\nreadFile: input({ filePath: z.string() }).query(async ({ input }) => {\n  const rows = await rawSql`SELECT content FROM agent_files WHERE name = ${input.filePath}`\n  if (!rows[0]) return { content: '', error: 'File not found' }\n  return { content: rows[0].content as string, error: null }\n})\n\n// writeFile → salvar no NeonDB (somente se is_editable = true)\nwriteFile: input({ filePath: z.string(), content: z.string() }).mutation(async ({ input }) => {\n  const rows = await rawSql`\n    UPDATE agent_files SET content = ${input.content}, updated_at = NOW(), updated_by = 'dashboard'\n    WHERE name = ${input.filePath} AND is_editable = true\n    RETURNING id`\n  if (!rows[0]) return { success: false, error: 'File not found or not editable' }\n  return { success: true, error: null }\n})\n```\n\nUsar `neon` do `@neondatabase/serverless` diretamente (importar de `'../db/client'` ou criar instância local com `process.env.DATABASE_URL`).\n\n#### 4. Criar script de sync local: `scripts/sync_agent_files.js`\n\nEm `/Users/mauricio/.openclaw/agents/main/workspace/scripts/sync_agent_files.js`:\n\n```javascript\n#!/usr/bin/env node\n// Sync agent_files from NeonDB to local workspace\n// Run via: node scripts/sync_agent_files.js\n// Called by Laura's heartbeat to keep local files in sync with dashboard edits\n\nimport { neon } from '@neondatabase/serverless'\nimport { writeFile, mkdir } from 'node:fs/promises'\nimport { join } from 'node:path'\n\nconst DB_URL = process.env.NEON_DATABASE_URL || 'postgresql://neondb_owner:npg_P0ljy3pWNTYc@ep-falling-morning-acpph9w8-pooler.sa-east-1.aws.neon.tech/neondb'\nconst WORKSPACE = '/Users/mauricio/.openclaw/agents/main/workspace'\n\nconst sql = neon(DB_URL)\n\nconst rows = await sql`SELECT name, content, updated_by FROM agent_files WHERE is_editable = true`\nlet synced = 0\nfor (const row of rows) {\n  const path = join(WORKSPACE, row.name)\n  await writeFile(path, row.content, 'utf-8')\n  if (row.updated_by === 'dashboard') synced++\n}\nconsole.log(JSON.stringify({ synced, total: rows.length }))\n```\n\n#### 5. Atualizar HEARTBEAT.md\n\nAdicionar ao checklist de heartbeat (arquivo `/Users/mauricio/.openclaw/agents/main/workspace/HEARTBEAT.md`):\n\n```markdown\n### 3. Sync de arquivos do Dashboard (a cada 10 ciclos)\n- Se algum arquivo foi editado pelo dashboard → sincronizar para local\n- `node /Users/mauricio/.openclaw/agents/main/workspace/scripts/sync_agent_files.js`\n- Log: reportar se houve mudanças\n```\n\n#### 6. Quality gates e deploy\n\n```bash\ncd /Users/mauricio/.openclaw/dashboard\nbun run type-check   # zero erros\nbun run lint:check   # zero warnings (--max-warnings=0)\ngit add -A\ngit commit -m \"feat: agent files via NeonDB — editable from dashboard, syncs to local\"\ngit push origin main\n```\n\n---\n\n### Handoff ao concluir\n\n1. Confirmar que `agent_files` table foi criada e populada (quantos arquivos)\n2. Confirmar que o tRPC `agentFiles` retorna os arquivos no dashboard\n3. Confirmar que `writeFile` funciona (teste com curl ou chamada tRPC)\n4. Path do script de sync: `/Users/mauricio/.openclaw/agents/main/workspace/scripts/sync_agent_files.js`\n5. Issues conhecidas\n\n**LAURA_API_SECRET Railway:** `RffjoX6SmQFbXWOTfJVz9pn8ef8covsMVdByeO/rcpA=`",
+      "cleanup": "keep",
+      "expectsCompletionMessage": true,
+      "spawnMode": "run",
+      "label": "dashboard-agent-files-neondb",
+      "model": "anthropic/claude-sonnet-4-6",
+      "runTimeoutSeconds": 600,
+      "createdAt": 1772121689180,
+      "startedAt": 1772121689255,
+      "archiveAtMs": 1772125289180,
+      "cleanupHandled": false
+    }
+  }
 }

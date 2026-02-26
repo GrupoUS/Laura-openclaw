@@ -15,6 +15,11 @@ python3 /Users/mauricio/.openclaw/agents/main/workspace/scripts/check_leads_pend
 - Se `hours_ago >= 2` e última mensagem foi minha (assistente) → sem ação
 - Se `hours_ago >= 2` e última mensagem é do lead → enviar follow-up com meme
 
+### 3. Sync de arquivos do Dashboard (a cada 10 ciclos)
+- Se algum arquivo foi editado pelo dashboard → sincronizar para local
+- `node /Users/mauricio/.openclaw/agents/main/workspace/scripts/sync_agent_files.js`
+- Log: reportar se houve mudanças
+
 ### Regras de silêncio
 - Não enviar nada entre 23:00 e 08:00 (horário Brasília)
 - Finais de semana: leads novos = responder; follow-up proativo = não

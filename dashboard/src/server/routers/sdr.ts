@@ -3,8 +3,10 @@ import { router, publicProcedure } from '../trpc-init'
 import { db } from '../db/client'
 import { leadHandoffs, lauraMemories } from '../db/schema'
 import { desc, eq, sql, count } from 'drizzle-orm'
-import { readdir, readFile, writeFile, stat } from 'node:fs/promises'
-import { join, resolve, extname } from 'node:path'
+import { neon } from '@neondatabase/serverless'
+
+const databaseUrl = process.env.DATABASE_URL ?? ''
+const rawSql = neon(databaseUrl)
 
 export const sdrRouter = router({
   kpis: publicProcedure.query(async () => {
@@ -99,49 +101,25 @@ export const sdrRouter = router({
     }),
 
   agentFiles: publicProcedure.query(async () => {
-    const agentDir = process.env.SDR_AGENT_DIR
-    if (!agentDir) return []
-
-    try {
-      const entries = await readdir(agentDir)
-      const mdFiles = entries.filter((f) => extname(f) === '.md')
-
-      const results = await Promise.all(
-        mdFiles.map(async (name) => {
-          const fullPath = join(agentDir, name)
-          const info = await stat(fullPath)
-          return {
-            name,
-            path: fullPath,
-            sizeKb: Math.round(info.size / 1024),
-            lastModified: info.mtime.toISOString(),
-          }
-        })
-      )
-      return results
-    } catch {
-      return []
-    }
+    const rows = await rawSql`
+      SELECT id, name, description, is_editable, updated_at, updated_by,
+        length(content) as size_bytes FROM agent_files ORDER BY name`
+    return rows.map((r) => ({
+      name: r.name as string,
+      path: r.name as string,
+      sizeKb: Math.round((r.size_bytes as number) / 1024),
+      lastModified: (r.updated_at as Date).toISOString(),
+      isEditable: r.is_editable as boolean,
+      description: r.description as string | null,
+    }))
   }),
 
   readFile: publicProcedure
     .input(z.object({ filePath: z.string() }))
     .query(async ({ input }) => {
-      const agentDir = process.env.SDR_AGENT_DIR
-      if (!agentDir) return { content: '', error: 'SDR_AGENT_DIR not set' }
-
-      // Path traversal guard
-      const resolved = resolve(input.filePath)
-      if (!resolved.startsWith(resolve(agentDir))) {
-        return { content: '', error: 'Access denied' }
-      }
-
-      try {
-        const content = await readFile(resolved, 'utf-8')
-        return { content, error: null }
-      } catch {
-        return { content: '', error: 'File not found' }
-      }
+      const rows = await rawSql`SELECT content FROM agent_files WHERE name = ${input.filePath}`
+      if (!rows[0]) return { content: '', error: 'File not found' }
+      return { content: rows[0].content as string, error: null }
     }),
 
   writeFile: publicProcedure
@@ -152,25 +130,11 @@ export const sdrRouter = router({
       })
     )
     .mutation(async ({ input }) => {
-      const agentDir = process.env.SDR_AGENT_DIR
-      if (!agentDir) return { success: false, error: 'SDR_AGENT_DIR not set' }
-
-      // Path traversal guard
-      const resolved = resolve(input.filePath)
-      if (!resolved.startsWith(resolve(agentDir))) {
-        return { success: false, error: 'Access denied' }
-      }
-
-      // Only allow .md files
-      if (extname(resolved) !== '.md') {
-        return { success: false, error: 'Only .md files allowed' }
-      }
-
-      try {
-        await writeFile(resolved, input.content, 'utf-8')
-        return { success: true, error: null }
-      } catch (err) {
-        return { success: false, error: (err as Error).message }
-      }
+      const rows = await rawSql`
+        UPDATE agent_files SET content = ${input.content}, updated_at = NOW(), updated_by = 'dashboard'
+        WHERE name = ${input.filePath} AND is_editable = true
+        RETURNING id`
+      if (!rows[0]) return { success: false, error: 'File not found or not editable' }
+      return { success: true, error: null }
     }),
 })
