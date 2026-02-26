@@ -27,21 +27,26 @@ export default defineConfig({
   build: {
     outDir: 'dist/public',
     target: 'esnext',
+    cssCodeSplit: true,
     rollupOptions: {
       output: {
         manualChunks: {
-          'vendor-charts': ['recharts'],
-          'vendor-dnd': ['@dnd-kit/core', '@dnd-kit/sortable', '@dnd-kit/utilities'],
+          'vendor-router': ['@tanstack/react-router'],
+          'vendor-query': ['@tanstack/react-query', '@trpc/client', '@trpc/react-query'],
           'vendor-radix': [
             '@radix-ui/react-scroll-area',
             '@radix-ui/react-select',
             '@radix-ui/react-tooltip',
             '@radix-ui/react-dialog',
+            '@radix-ui/react-progress',
+            '@radix-ui/react-slot',
           ],
-          'vendor-query': ['@tanstack/react-query', '@trpc/client', '@trpc/react-query'],
+          'vendor-charts': ['recharts'],
+          'vendor-dnd': ['@dnd-kit/core', '@dnd-kit/sortable', '@dnd-kit/utilities'],
+          'vendor-date': ['date-fns'],
+          'vendor-state': ['zustand', 'immer'],
         },
       },
     },
   }
 })
-

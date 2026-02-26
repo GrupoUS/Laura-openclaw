@@ -334,6 +334,24 @@ export const products = pgTable("products", {
   updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow(),
 })
 
+// ── Lead Handoffs (SDR pipeline) ──
+
+export const leadHandoffs = pgTable('lead_handoffs', {
+  id: serial('id').primaryKey(),
+  leadPhone: text('lead_phone').notNull(),
+  leadName: text('lead_name'),
+  product: text('product'),
+  closerPhone: text('closer_phone'),
+  closerName: text('closer_name'),
+  groupId: text('group_id'),
+  status: text('status').default('pending'),
+  handoffAt: timestamp('handoff_at', { withTimezone: true }).defaultNow(),
+  notes: text('notes'),
+}, (table) => [
+  index('lead_handoffs_status_idx').on(table.status),
+  index('lead_handoffs_handoff_at_idx').on(table.handoffAt),
+])
+
 // ── Content Pipeline ──
 
 export const contentStageEnum = pgEnum('content_stage', [

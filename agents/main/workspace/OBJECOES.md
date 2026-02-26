@@ -1,7 +1,7 @@
 # 📋 BASE DE OBJEÇÕES — GRUPO US
 *Consultar SEMPRE que um lead apresentar uma objeção.*
 *Alimentar continuamente com novas objeções e rebatidas.*
-*Última atualização: 26/02/2026*
+*Última atualização: 27/02/2026*
 
 ---
 
@@ -57,6 +57,23 @@ Adicionar nota abaixo da rebatida com formato:
 **Se disser "tá caro":**
 > "Caro em relação a quê? Comparado com o que você perderia ficando mais 12 meses sem a certificação?"
 → Monetizar o custo de NÃO investir.
+
+### 💰 TABELA DE RETORNO REAL (Dra. Sacha — 27/02/2026) ⚠️ FONTE OFICIAL
+> *"O que a gente ensina é que o aluno tem retorno nos primeiros 3 meses já para pagar toda a pós."*
+
+| Procedimento | Ticket Médio |
+|---|---|
+| Toxina botulínica | R$ 1.500 |
+| Preenchimento labial | R$ 1.600 – R$ 2.000 |
+| Harmonização facial / corporal / glútea | R$ 2.000 – R$ 3.000 |
+| Procedimentos básicos de estética | R$ 300 – R$ 600 *(não é o foco)* |
+
+**Posicionamento correto:** *"Menos carga horária de trabalho, mais ganhos financeiros. A estética é cara — e é isso que a gente ensina a entregar."*
+
+**Script ROI validado (usar com "tá caro"):**
+> "[Nome], a Dra. Sacha sempre fala que a maioria das nossas alunas paga a pós inteira nos primeiros 3 meses de prática. Uma toxina botulínica vende por R$1.500, um preenchimento labial até R$2.000. Com 2 procedimentos por semana você já está no lucro. O investimento é alto, mas o retorno é ainda mais alto — e rápido."
+
+⚠️ ATENÇÃO: Valor de R$300-500/procedimento usado anteriormente estava ERRADO. Usar apenas a tabela acima (fonte: Dra. Sacha, áudio 27/02/2026).
 
 ---
 

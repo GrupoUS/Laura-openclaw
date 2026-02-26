@@ -1,15 +1,11 @@
 import type {
   AgentNode,
   SkillEntry,
-  ToolEntry,
-  TokenCost,
   WorkflowCycle,
   AlertItem,
 } from '@/shared/types/orchestration'
 import { HierarchyTree } from './HierarchyTree'
 import { SkillsMap } from './SkillsMap'
-import { ToolsMap } from './ToolsMap'
-import { TokenCosts } from './TokenCosts'
 import { WorkflowCycles } from './WorkflowCycles'
 import { AlertsPanel } from './AlertsPanel'
 import type { LiveAgentState } from '@/client/hooks/useOrchestrationEvents'
@@ -17,9 +13,6 @@ import type { LiveAgentState } from '@/client/hooks/useOrchestrationEvents'
 interface Props {
   hierarchy: AgentNode[]
   skillsMap: SkillEntry[]
-  toolsMap: ToolEntry[]
-  tokenCosts: TokenCost[]
-  budget: number
   workflowCycles: WorkflowCycle[]
   alerts: AlertItem[]
   liveAgentMap?: Map<string, LiveAgentState>
@@ -28,15 +21,11 @@ interface Props {
 export function OrchestrationDashboard({
   hierarchy,
   skillsMap,
-  toolsMap,
-  tokenCosts,
-  budget,
   workflowCycles,
   alerts,
   liveAgentMap,
 }: Props) {
   const activeCount = hierarchy.filter((n) => n.status === 'active' || n.status === 'in_workflow').length
-  const totalCost = tokenCosts.reduce((sum, c) => sum + c.cost, 0)
 
   return (
     <div className="flex flex-col flex-1 min-h-0">
@@ -47,9 +36,6 @@ export function OrchestrationDashboard({
           <span className="text-xs text-slate-400 bg-slate-100 px-2 py-0.5 rounded-full">
             {hierarchy.length} agentes · {activeCount} ativo{activeCount !== 1 ? 's' : ''}
           </span>
-          <span className="text-xs text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full font-medium">
-            R$ {totalCost.toLocaleString('pt-BR')} / {budget.toLocaleString('pt-BR')}
-          </span>
         </div>
         <div className="flex items-center gap-2">
           <span className="text-xs text-slate-400">{alerts.length} alerta{alerts.length !== 1 ? 's' : ''}</span>
@@ -59,7 +45,7 @@ export function OrchestrationDashboard({
         </div>
       </header>
 
-      {/* 6-Panel Grid */}
+      {/* 4-Panel Grid */}
       <div className="flex-1 min-h-0 overflow-y-auto p-6">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 max-w-[1400px] mx-auto">
 
@@ -80,25 +66,7 @@ export function OrchestrationDashboard({
             <SkillsMap skills={skillsMap} />
           </section>
 
-          {/* Panel 3 — Tools Map */}
-          <section className="bg-white border border-slate-200 rounded-xl p-5">
-            <h2 className="text-sm font-semibold text-slate-700 mb-4 flex items-center gap-2">
-              <span className="text-base">🔧</span> Tools Map
-              <span className="text-xs text-slate-400 font-normal">({toolsMap.length} tools)</span>
-            </h2>
-            <ToolsMap tools={toolsMap} />
-          </section>
-
-          {/* Panel 4 — Token Costs */}
-          <section className="bg-white border border-slate-200 rounded-xl p-5">
-            <h2 className="text-sm font-semibold text-slate-700 mb-4 flex items-center gap-2">
-              <span className="text-base">💰</span> Custo de Tokens
-              <span className="text-xs text-amber-600 bg-amber-50 px-1.5 py-0.5 rounded font-normal">mock</span>
-            </h2>
-            <TokenCosts costs={tokenCosts} budget={budget} />
-          </section>
-
-          {/* Panel 5 — Workflow Cycles */}
+          {/* Panel 3 — Workflow Cycles */}
           <section className="bg-white border border-slate-200 rounded-xl p-5">
             <h2 className="text-sm font-semibold text-slate-700 mb-4 flex items-center gap-2">
               <span className="text-base">📅</span> Ciclos Semanais
@@ -106,7 +74,7 @@ export function OrchestrationDashboard({
             <WorkflowCycles cycles={workflowCycles} />
           </section>
 
-          {/* Panel 6 — Alerts (full width) */}
+          {/* Panel 4 — Alerts (full width) */}
           <section className="lg:col-span-2 bg-white border border-slate-200 rounded-xl p-5">
             <h2 className="text-sm font-semibold text-slate-700 mb-4 flex items-center gap-2">
               <span className="text-base">🚨</span> Alertas

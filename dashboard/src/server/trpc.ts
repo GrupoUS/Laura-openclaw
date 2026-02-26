@@ -10,6 +10,7 @@ import { calendarRouter } from './routers/calendar'
 import { orchestrationRouter } from './routers/orchestration'
 import { officeRouter } from './routers/office'
 import { contentRouter } from './routers/content'
+import { sdrRouter } from './routers/sdr'
 
 // Re-export primitives so existing imports from './trpc' still work
 export { router, publicProcedure } from './trpc-init'
@@ -130,6 +131,7 @@ export const appRouter = router({
   orchestration: orchestrationRouter,
   office: officeRouter,
   content: contentRouter,
+  sdr: sdrRouter,
 })
 
 export type AppRouter = typeof appRouter

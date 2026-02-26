@@ -19,8 +19,22 @@ import { sseRoutes } from './routes/events'
 import { apiTasksRoutes } from './routes/api-tasks'
 
 import { secureHeaders } from 'hono/secure-headers'
+import { compress } from 'hono/compress'
+import { etag } from 'hono/etag'
 
 const app = new Hono()
+
+// ── Compression (gzip) for all responses ──
+app.use('*', compress())
+
+// ── ETag for conditional requests ──
+app.use('*', etag())
+
+// ── Immutable cache for hashed static assets ──
+app.use('/assets/*', async (c, next) => {
+  await next()
+  c.header('Cache-Control', 'public, max-age=31536000, immutable')
+})
 
 app.use('*', secureHeaders({
   xFrameOptions: 'DENY',

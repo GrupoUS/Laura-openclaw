@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as ToolsRouteImport } from './routes/tools'
 import { Route as SessionsRouteImport } from './routes/sessions'
+import { Route as SdrRouteImport } from './routes/sdr'
 import { Route as ProvidersRouteImport } from './routes/providers'
 import { Route as OrchestrationRouteImport } from './routes/orchestration'
 import { Route as OfficeRouteImport } from './routes/office'
@@ -31,17 +32,22 @@ const ToolsRoute = ToolsRouteImport.update({
   id: '/tools',
   path: '/tools',
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any).lazy(() => import('./routes/tools.lazy').then((d) => d.Route))
 const SessionsRoute = SessionsRouteImport.update({
   id: '/sessions',
   path: '/sessions',
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any).lazy(() => import('./routes/sessions.lazy').then((d) => d.Route))
+const SdrRoute = SdrRouteImport.update({
+  id: '/sdr',
+  path: '/sdr',
+  getParentRoute: () => rootRouteImport,
+} as any).lazy(() => import('./routes/sdr.lazy').then((d) => d.Route))
 const ProvidersRoute = ProvidersRouteImport.update({
   id: '/providers',
   path: '/providers',
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any).lazy(() => import('./routes/providers.lazy').then((d) => d.Route))
 const OrchestrationRoute = OrchestrationRouteImport.update({
   id: '/orchestration',
   path: '/orchestration',
@@ -51,12 +57,12 @@ const OfficeRoute = OfficeRouteImport.update({
   id: '/office',
   path: '/office',
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any).lazy(() => import('./routes/office.lazy').then((d) => d.Route))
 const ListRoute = ListRouteImport.update({
   id: '/list',
   path: '/list',
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any).lazy(() => import('./routes/list.lazy').then((d) => d.Route))
 const EvolutionRoute = EvolutionRouteImport.update({
   id: '/evolution',
   path: '/evolution',
@@ -66,12 +72,12 @@ const DashAgentsRoute = DashAgentsRouteImport.update({
   id: '/dash-agents',
   path: '/dash-agents',
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any).lazy(() => import('./routes/dash-agents.lazy').then((d) => d.Route))
 const CronsRoute = CronsRouteImport.update({
   id: '/crons',
   path: '/crons',
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any).lazy(() => import('./routes/crons.lazy').then((d) => d.Route))
 const ContentRoute = ContentRouteImport.update({
   id: '/content',
   path: '/content',
@@ -81,22 +87,22 @@ const ConfigRoute = ConfigRouteImport.update({
   id: '/config',
   path: '/config',
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any).lazy(() => import('./routes/config.lazy').then((d) => d.Route))
 const ChannelsRoute = ChannelsRouteImport.update({
   id: '/channels',
   path: '/channels',
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any).lazy(() => import('./routes/channels.lazy').then((d) => d.Route))
 const CalendarRoute = CalendarRouteImport.update({
   id: '/calendar',
   path: '/calendar',
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any).lazy(() => import('./routes/calendar.lazy').then((d) => d.Route))
 const BoardRoute = BoardRouteImport.update({
   id: '/board',
   path: '/board',
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any).lazy(() => import('./routes/board.lazy').then((d) => d.Route))
 const AnalyticsRoute = AnalyticsRouteImport.update({
   id: '/analytics',
   path: '/analytics',
@@ -106,7 +112,7 @@ const AgentsRoute = AgentsRouteImport.update({
   id: '/agents',
   path: '/agents',
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any).lazy(() => import('./routes/agents.lazy').then((d) => d.Route))
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -129,6 +135,7 @@ export interface FileRoutesByFullPath {
   '/office': typeof OfficeRoute
   '/orchestration': typeof OrchestrationRoute
   '/providers': typeof ProvidersRoute
+  '/sdr': typeof SdrRoute
   '/sessions': typeof SessionsRoute
   '/tools': typeof ToolsRoute
 }
@@ -148,6 +155,7 @@ export interface FileRoutesByTo {
   '/office': typeof OfficeRoute
   '/orchestration': typeof OrchestrationRoute
   '/providers': typeof ProvidersRoute
+  '/sdr': typeof SdrRoute
   '/sessions': typeof SessionsRoute
   '/tools': typeof ToolsRoute
 }
@@ -168,6 +176,7 @@ export interface FileRoutesById {
   '/office': typeof OfficeRoute
   '/orchestration': typeof OrchestrationRoute
   '/providers': typeof ProvidersRoute
+  '/sdr': typeof SdrRoute
   '/sessions': typeof SessionsRoute
   '/tools': typeof ToolsRoute
 }
@@ -189,6 +198,7 @@ export interface FileRouteTypes {
     | '/office'
     | '/orchestration'
     | '/providers'
+    | '/sdr'
     | '/sessions'
     | '/tools'
   fileRoutesByTo: FileRoutesByTo
@@ -208,6 +218,7 @@ export interface FileRouteTypes {
     | '/office'
     | '/orchestration'
     | '/providers'
+    | '/sdr'
     | '/sessions'
     | '/tools'
   id:
@@ -227,6 +238,7 @@ export interface FileRouteTypes {
     | '/office'
     | '/orchestration'
     | '/providers'
+    | '/sdr'
     | '/sessions'
     | '/tools'
   fileRoutesById: FileRoutesById
@@ -247,6 +259,7 @@ export interface RootRouteChildren {
   OfficeRoute: typeof OfficeRoute
   OrchestrationRoute: typeof OrchestrationRoute
   ProvidersRoute: typeof ProvidersRoute
+  SdrRoute: typeof SdrRoute
   SessionsRoute: typeof SessionsRoute
   ToolsRoute: typeof ToolsRoute
 }
@@ -265,6 +278,13 @@ declare module '@tanstack/react-router' {
       path: '/sessions'
       fullPath: '/sessions'
       preLoaderRoute: typeof SessionsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sdr': {
+      id: '/sdr'
+      path: '/sdr'
+      fullPath: '/sdr'
+      preLoaderRoute: typeof SdrRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/providers': {
@@ -391,6 +411,7 @@ const rootRouteChildren: RootRouteChildren = {
   OfficeRoute: OfficeRoute,
   OrchestrationRoute: OrchestrationRoute,
   ProvidersRoute: ProvidersRoute,
+  SdrRoute: SdrRoute,
   SessionsRoute: SessionsRoute,
   ToolsRoute: ToolsRoute,
 }

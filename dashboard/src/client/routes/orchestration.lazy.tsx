@@ -16,12 +16,10 @@ function OrchestrationPage() {
   const queryOpts = { refetchInterval: 10000, staleTime: 0 }
   const { data: hierarchy, isLoading: loadingH } = trpc.orchestration.hierarchy.useQuery(undefined, queryOpts)
   const { data: skillsMap, isLoading: loadingS } = trpc.orchestration.skillsMap.useQuery(undefined, queryOpts)
-  const { data: toolsMap, isLoading: loadingT } = trpc.orchestration.toolsMap.useQuery(undefined, queryOpts)
-  const { data: tokenData, isLoading: loadingC } = trpc.orchestration.tokenCosts.useQuery(undefined, queryOpts)
   const { data: workflows, isLoading: loadingW } = trpc.orchestration.workflowCycles.useQuery(undefined, queryOpts)
   const { data: alerts, isLoading: loadingA } = trpc.orchestration.alerts.useQuery(undefined, queryOpts)
 
-  const isLoading = loadingH || loadingS || loadingT || loadingC || loadingW || loadingA
+  const isLoading = loadingH || loadingS || loadingW || loadingA
 
   if (isLoading) {
     return (
@@ -40,9 +38,6 @@ function OrchestrationPage() {
         <OrchestrationDashboard
           hierarchy={hierarchy ?? []}
           skillsMap={skillsMap ?? []}
-          toolsMap={toolsMap ?? []}
-          tokenCosts={tokenData?.costs ?? []}
-          budget={tokenData?.budget ?? 10_000}
           workflowCycles={workflows ?? []}
           alerts={alerts ?? []}
           liveAgentMap={liveAgentMap}
