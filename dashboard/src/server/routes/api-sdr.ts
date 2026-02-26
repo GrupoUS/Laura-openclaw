@@ -7,8 +7,10 @@ import { Hono } from 'hono'
 import { z } from 'zod'
 import { db } from '../db/client'
 import { lauraMemories } from '../db/schema'
-import { sql as drizzleSql } from 'drizzle-orm'
+import { neon } from '@neondatabase/serverless'
 import { eventBus } from '../events/emitter'
+
+const rawSql = neon(process.env.DATABASE_URL ?? '')
 
 const sdr = new Hono()
 
@@ -85,13 +87,12 @@ sdr.post('/handoff', async (c) => {
 
   // Use raw SQL to match actual DB schema (phone, name, context, notes, status)
   const context = [closerPhone, closerName].filter(Boolean).join(' | ')
-  const [row] = await db.execute(
-    drizzleSql`INSERT INTO lead_handoffs (phone, name, product, context, notes, status)
-               VALUES (${phone}, ${name ?? null}, ${product ?? null}, ${context}, ${notes ?? null}, 'pending')
-               RETURNING id`
-  ) as unknown as Array<{ id: number }>
-
-  const handoffId = row?.id ?? 0
+  const rows = await rawSql`
+    INSERT INTO lead_handoffs (phone, name, product, context, notes, status)
+    VALUES (${phone}, ${name ?? null}, ${product ?? null}, ${context}, ${notes ?? null}, 'pending')
+    RETURNING id
+  `
+  const handoffId = (rows[0]?.id as number) ?? 0
 
   eventBus.publish({
     type: 'lead_handoff',
