@@ -1,29 +1,53 @@
 # TOOLS.md - Ferramentas e Configurações do Coder
 
-## Quick Reference
+## ⭐ PRIMARY CODING TOOL — Claude Code (claude)
 
-### OpenCode (AI Coding Agent via ACP)
+> **Claude Code está instalado e configurado.** Use-o como ferramenta principal para todas as tarefas de desenvolvimento.
+
+```bash
+# Verificar versão
+claude --version
+
+# One-shot — tarefa rápida
+claude -p "Refatora a função X para usar async/await" --workdir /path/to/project
+
+# Modo interativo (PTY obrigatório!)
+exec(command="claude", workdir="/path/to/project", pty=true)
+
+# Background — tarefas longas
+exec(command='claude -p "Implementa feature Y completa"', workdir="/path/to/project", pty=true, background=true)
+# → retorna sessionId para monitorar
+process(action="log", sessionId="XXX")   # ver progresso
+process(action="poll", sessionId="XXX")  # aguardar conclusão
+```
+
+### ⚠️ REGRAS OBRIGATÓRIAS para Claude Code
+1. **SEMPRE** usar `pty=true` — Claude Code é interativo e precisa de terminal
+2. **NUNCA** rodar sem PTY — output quebrado ou o agente trava
+3. Tarefas > 30s → usar `background=true` + monitorar com `process`
+4. Workdir = raiz do projeto (onde está o `package.json` / `bun.lockb`)
+
+### Skill de referência
+**Path:** `/Users/mauricio/.openclaw/workspace/.agents/skills/coding-agent/SKILL.md`
+(instalado por steipete/clawdis — autor do OpenClaw)
+
+### Skill de Frontend Design
+**Path:** `/Users/mauricio/.openclaw/workspace/.agents/skills/frontend-design/SKILL.md`
+(instalado por anthropics/claude-code — Anthropic oficial)
+Usar em TODAS as tarefas de UI para garantir qualidade premium (sem "AI slop").
+
+---
+
+### OpenCode (legado — usar Claude Code preferencialmente)
 ```bash
 # Verificar versão
 opencode --version
 
 # Iniciar sessão ACP (background)
 opencode acp  # → retorna processSessionId
-
-# Listar sessões anteriores
-opencode session list
 ```
 
-**Workflow completo:** Ver skill `opencode-acp-control`
-**Path:** `/Users/mauricio/.openclaw/workspace/skills/opencode-acp-control/SKILL.md`
-
-**Uso típico:**
-1. `bash(command: "opencode acp", background: true, workdir: "/path/to/project")`
-2. Enviar `initialize` via JSON-RPC
-3. Criar sessão com `session/new`
-4. Enviar prompts com `session/prompt`
-5. Poll a cada 2s até `stopReason`
-6. `process.kill(sessionId)` quando terminar
+**Skill legada:** `/Users/mauricio/.openclaw/workspace/skills/opencode-acp-control/SKILL.md`
 
 ### Gemini CLI (geração rápida)
 ```bash
