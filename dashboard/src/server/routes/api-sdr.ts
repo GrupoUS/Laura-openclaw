@@ -6,7 +6,8 @@
 import { Hono } from 'hono'
 import { z } from 'zod'
 import { db } from '../db/client'
-import { lauraMemories, leadHandoffs } from '../db/schema'
+import { lauraMemories } from '../db/schema'
+import { sql as drizzleSql } from 'drizzle-orm'
 import { eventBus } from '../events/emitter'
 
 const sdr = new Hono()
@@ -82,25 +83,25 @@ sdr.post('/handoff', async (c) => {
   }
   const { phone, name, product, closerPhone, closerName, notes } = parsed.data
 
-  const [row] = await db.insert(leadHandoffs).values({
-    leadPhone:   phone,
-    leadName:    name,
-    product,
-    closerPhone,
-    closerName,
-    notes,
-    status:      'pending',
-  }).returning()
+  // Use raw SQL to match actual DB schema (phone, name, context, notes, status)
+  const context = [closerPhone, closerName].filter(Boolean).join(' | ')
+  const [row] = await db.execute(
+    drizzleSql`INSERT INTO lead_handoffs (phone, name, product, context, notes, status)
+               VALUES (${phone}, ${name ?? null}, ${product ?? null}, ${context}, ${notes ?? null}, 'pending')
+               RETURNING id`
+  ) as unknown as Array<{ id: number }>
+
+  const handoffId = row?.id ?? 0
 
   eventBus.publish({
     type: 'lead_handoff',
-    taskId: row?.id ?? 0,
-    payload: { phone, name, product, closerPhone, closerName, notes, handoffId: row?.id },
+    taskId: handoffId,
+    payload: { phone, name, product, closerPhone, closerName, notes, handoffId },
     agent: 'laura',
     ts: new Date().toISOString(),
   })
 
-  return c.json({ ok: true, id: row?.id }, 201)
+  return c.json({ ok: true, id: handoffId }, 201)
 })
 
 // ── POST /sdr/objection ────────────────────────────────────────────
