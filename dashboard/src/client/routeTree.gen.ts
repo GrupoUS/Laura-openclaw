@@ -13,6 +13,8 @@ import { Route as ToolsRouteImport } from './routes/tools'
 import { Route as SessionsRouteImport } from './routes/sessions'
 import { Route as ProvidersRouteImport } from './routes/providers'
 import { Route as OrchestrationRouteImport } from './routes/orchestration'
+import { Route as OfficeRouteImport } from './routes/office'
+import { Route as ContentRouteImport } from './routes/content'
 import { Route as ListRouteImport } from './routes/list'
 import { Route as EvolutionRouteImport } from './routes/evolution'
 import { Route as DashAgentsRouteImport } from './routes/dash-agents'
@@ -43,6 +45,16 @@ const ProvidersRoute = ProvidersRouteImport.update({
 const OrchestrationRoute = OrchestrationRouteImport.update({
   id: '/orchestration',
   path: '/orchestration',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OfficeRoute = OfficeRouteImport.update({
+  id: '/office',
+  path: '/office',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContentRoute = ContentRouteImport.update({
+  id: '/content',
+  path: '/content',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ListRoute = ListRouteImport.update({
@@ -109,10 +121,12 @@ export interface FileRoutesByFullPath {
   '/calendar': typeof CalendarRoute
   '/channels': typeof ChannelsRoute
   '/config': typeof ConfigRoute
+  '/content': typeof ContentRoute
   '/crons': typeof CronsRoute
   '/dash-agents': typeof DashAgentsRoute
   '/evolution': typeof EvolutionRoute
   '/list': typeof ListRoute
+  '/office': typeof OfficeRoute
   '/orchestration': typeof OrchestrationRoute
   '/providers': typeof ProvidersRoute
   '/sessions': typeof SessionsRoute
@@ -126,10 +140,12 @@ export interface FileRoutesByTo {
   '/calendar': typeof CalendarRoute
   '/channels': typeof ChannelsRoute
   '/config': typeof ConfigRoute
+  '/content': typeof ContentRoute
   '/crons': typeof CronsRoute
   '/dash-agents': typeof DashAgentsRoute
   '/evolution': typeof EvolutionRoute
   '/list': typeof ListRoute
+  '/office': typeof OfficeRoute
   '/orchestration': typeof OrchestrationRoute
   '/providers': typeof ProvidersRoute
   '/sessions': typeof SessionsRoute
@@ -144,10 +160,12 @@ export interface FileRoutesById {
   '/calendar': typeof CalendarRoute
   '/channels': typeof ChannelsRoute
   '/config': typeof ConfigRoute
+  '/content': typeof ContentRoute
   '/crons': typeof CronsRoute
   '/dash-agents': typeof DashAgentsRoute
   '/evolution': typeof EvolutionRoute
   '/list': typeof ListRoute
+  '/office': typeof OfficeRoute
   '/orchestration': typeof OrchestrationRoute
   '/providers': typeof ProvidersRoute
   '/sessions': typeof SessionsRoute
@@ -163,10 +181,12 @@ export interface FileRouteTypes {
     | '/calendar'
     | '/channels'
     | '/config'
+    | '/content'
     | '/crons'
     | '/dash-agents'
     | '/evolution'
     | '/list'
+    | '/office'
     | '/orchestration'
     | '/providers'
     | '/sessions'
@@ -180,10 +200,12 @@ export interface FileRouteTypes {
     | '/calendar'
     | '/channels'
     | '/config'
+    | '/content'
     | '/crons'
     | '/dash-agents'
     | '/evolution'
     | '/list'
+    | '/office'
     | '/orchestration'
     | '/providers'
     | '/sessions'
@@ -197,10 +219,12 @@ export interface FileRouteTypes {
     | '/calendar'
     | '/channels'
     | '/config'
+    | '/content'
     | '/crons'
     | '/dash-agents'
     | '/evolution'
     | '/list'
+    | '/office'
     | '/orchestration'
     | '/providers'
     | '/sessions'
@@ -215,10 +239,12 @@ export interface RootRouteChildren {
   CalendarRoute: typeof CalendarRoute
   ChannelsRoute: typeof ChannelsRoute
   ConfigRoute: typeof ConfigRoute
+  ContentRoute: typeof ContentRoute
   CronsRoute: typeof CronsRoute
   DashAgentsRoute: typeof DashAgentsRoute
   EvolutionRoute: typeof EvolutionRoute
   ListRoute: typeof ListRoute
+  OfficeRoute: typeof OfficeRoute
   OrchestrationRoute: typeof OrchestrationRoute
   ProvidersRoute: typeof ProvidersRoute
   SessionsRoute: typeof SessionsRoute
@@ -227,6 +253,20 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/office': {
+      id: '/office'
+      path: '/office'
+      fullPath: '/office'
+      preLoaderRoute: typeof OfficeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/content': {
+      id: '/content'
+      path: '/content'
+      fullPath: '/content'
+      preLoaderRoute: typeof ContentRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/tools': {
       id: '/tools'
       path: '/tools'
@@ -343,10 +383,12 @@ const rootRouteChildren: RootRouteChildren = {
   CalendarRoute: CalendarRoute,
   ChannelsRoute: ChannelsRoute,
   ConfigRoute: ConfigRoute,
+  ContentRoute: ContentRoute,
   CronsRoute: CronsRoute,
   DashAgentsRoute: DashAgentsRoute,
   EvolutionRoute: EvolutionRoute,
   ListRoute: ListRoute,
+  OfficeRoute: OfficeRoute,
   OrchestrationRoute: OrchestrationRoute,
   ProvidersRoute: ProvidersRoute,
   SessionsRoute: SessionsRoute,

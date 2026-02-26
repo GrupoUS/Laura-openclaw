@@ -8,6 +8,8 @@ import { analyticsRouter } from './routers/analytics'
 import { activityRouter } from './routers/activity'
 import { calendarRouter } from './routers/calendar'
 import { orchestrationRouter } from './routers/orchestration'
+import { officeRouter } from './routers/office'
+import { contentRouter } from './routers/content'
 
 // Re-export primitives so existing imports from './trpc' still work
 export { router, publicProcedure } from './trpc-init'
@@ -122,6 +124,8 @@ export const appRouter = router({
   activity: activityRouter,
   calendar: calendarRouter,
   orchestration: orchestrationRouter,
+  office: officeRouter,
+  content: contentRouter,
 })
 
 export type AppRouter = typeof appRouter

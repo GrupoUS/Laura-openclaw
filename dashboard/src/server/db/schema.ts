@@ -330,4 +330,30 @@ export const products = pgTable("products", {
   updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow(),
 })
 
+// ── Content Pipeline ──
+
+export const contentStageEnum = pgEnum('content_stage', [
+  'ideas', 'roteiro', 'thumbnail', 'gravacao', 'edicao', 'publicado'
+])
+
+export const contentCards = pgTable('content_cards', {
+  id:           serial('id').primaryKey(),
+  title:        text('title').notNull(),
+  description:  text('description'),
+  script:       text('script'),
+  stage:        contentStageEnum('stage').notNull().default('ideas'),
+  position:     integer('position').default(0),
+  assignedTo:   text('assigned_to'),
+  thumbnailUrl: text('thumbnail_url'),
+  videoUrl:     text('video_url'),
+  publishedUrl: text('published_url'),
+  tags:         text('tags').array().default([]),
+  createdBy:    text('created_by').notNull().default('main'),
+  createdAt:    timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
+  updatedAt:    timestamp('updated_at', { withTimezone: true }).defaultNow().notNull(),
+}, (table) => [
+  index('content_cards_stage_idx').on(table.stage),
+  index('content_cards_position_idx').on(table.position),
+])
+
 
