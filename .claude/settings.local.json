@@ -5,7 +5,9 @@
       "Bash(bun run:*)",
       "Bash(bunx tsc:*)",
       "Bash(bunx biome check:*)",
-      "Bash(git checkout:*)"
+      "Bash(git checkout:*)",
+      "Bash(tail:*)",
+      "Bash(test:*)"
     ],
     "deny": [],
     "ask": []

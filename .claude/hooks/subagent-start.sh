@@ -15,14 +15,29 @@ case "$AGENT_TYPE" in
     frontend-specialist)
         echo '{"hookSpecificOutput":{"hookEventName":"SubagentStart","additionalContext":"Bun | semantic colors | AGENTS.md"}}'
         ;;
+    database-architect)
+        echo '{"hookSpecificOutput":{"hookEventName":"SubagentStart","additionalContext":"Schema+indexes+FK safety | drizzle conventions"}}'
+        ;;
     debugger)
         echo '{"hookSpecificOutput":{"hookEventName":"SubagentStart","additionalContext":"Debug: systematic | check+test | logs in .claude/logs/"}}'
         ;;
-    test-engineer)
-        echo '{"hookSpecificOutput":{"hookEventName":"SubagentStart","additionalContext":"Test: *.test.ts | bun test | TDD"}}'
+    performance-optimizer)
+        echo '{"hookSpecificOutput":{"hookEventName":"SubagentStart","additionalContext":"Perf/Sec/SEO: measure-first | OWASP+CWV+meta"}}'
+        ;;
+    explorer-agent)
+        echo '{"hookSpecificOutput":{"hookEventName":"SubagentStart","additionalContext":"Explore broadly | return paths+evidence only"}}'
+        ;;
+    project-planner)
+        echo '{"hookSpecificOutput":{"hookEventName":"SubagentStart","additionalContext":"D.R.P.I.V plan | atomic tasks | dependencies"}}'
+        ;;
+    mobile-developer)
+        echo '{"hookSpecificOutput":{"hookEventName":"SubagentStart","additionalContext":"Mobile-first flows | touch+performance+offline"}}'
+        ;;
+    oracle)
+        echo '{"hookSpecificOutput":{"hookEventName":"SubagentStart","additionalContext":"Read-only consultant | analysis only | no edits"}}'
         ;;
     orchestrator)
-        echo '{"hookSpecificOutput":{"hookEventName":"SubagentStart","additionalContext":"Orchestrate: TaskCreate/Update | coordinate team"}}'
+        echo '{"hookSpecificOutput":{"hookEventName":"SubagentStart","additionalContext":"Orchestrate: classify → delegate → verify → close"}}'
         ;;
     *)
         exit 0

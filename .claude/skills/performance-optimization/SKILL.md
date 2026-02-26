@@ -1,352 +1,327 @@
 ---
 name: performance-optimization
-description: Use when optimizing application performance, improving Core Web Vitals, reducing bundle size, profiling slow operations, fixing memory leaks, improving runtime speed, or addressing Neon cold starts. Triggers on performance, optimize, speed, slow, memory, cpu, benchmark, lighthouse, bundle, LCP, INP, CLS, profiling, tRPC slow, Drizzle N+1, Neon cold start, re-render, react-scan.
+description: Use when optimizing runtime and build performance, running security baseline checks, or improving SEO/GEO readiness in one workflow. Triggers on slow pages, poor LCP/INP/CLS, large bundles, high API latency, vulnerability checks, headers, robots/sitemap, and search visibility regressions.
 ---
 
-# Performance Optimization Skill
+# Performance Optimization
 
-Systematic performance optimization for NeonDash (React 19 + Vite 7 + Hono + tRPC 11 + Drizzle + Neon).
+Single performance skill for three goals: speed, security baseline, and SEO/GEO baseline.
 
-## When to Use
+## Core Rules
 
-> Run this skill **after** `super-audit` to address P2/performance issues.
+1. Measure before changing code.
+2. Change one bottleneck at a time.
+3. Re-measure with the same tool and scenario.
+4. Keep fixes minimal (KISS) and only for active issues (YAGNI).
 
-### Trigger Symptoms
+## Packs
 
-- Poor Core Web Vitals scores (Lighthouse < 90)
-- Dashboard load > 2.0s, API p95 > 200ms
-- Neon cold start on first request
-- Large bundle (main chunk > 200KB)
-- React excessive re-renders (react-scan warnings)
-- tRPC procedures timing out
-- N+1 query patterns in Drizzle
+Pick one pack per run:
 
-### Use ESPECIALLY when:
+| Pack                | Use When                                                      | Minimum Output                               |
+| ------------------- | ------------------------------------------------------------- | -------------------------------------------- |
+| `performance-core`  | Slow load, sluggish interaction, high API p95, large bundle   | before/after metrics + exact fixes           |
+| `security-baseline` | Release hardening, OWASP sanity, dependency and header checks | findings by severity + mitigation            |
+| `seo-geo-baseline`  | Search visibility, crawlability, AI citation readiness        | indexability/schema/CWV report + action list |
 
-- `bun run build` reveals chunks > 500KB
-- `ANALYZE=true bun run build` shows unexpected large deps
-- `react-scan` shows re-render hotspots
-- Drizzle queries hitting same table repeatedly in a loop
-
-### When NOT to Use
-
-- Bug investigation → use `debugger` skill
-- Full regression audit → use `super-audit` skill first
-- Security issues → use `security-audit` skill
-
----
-
-## Core Principle
-
-> "Measure first, optimize second. Profile, don't guess."
-
----
-
-## NeonDash Performance Targets
-
-| Metric | Current (Audit) | Target | Tool |
-|--------|----------------|--------|------|
-| Dashboard Load | 3.2s | ≤ 1.4s | Lighthouse |
-| API p95 | 450ms | ≤ 140ms | tRPC devtools |
-| LCP | — | ≤ 2.5s | DevTools |
-| INP | — | ≤ 200ms | DevTools |
-| CLS | — | ≤ 0.1 | DevTools |
-| Main bundle | — | ≤ 200KB | Vite |
-
----
-
-## Core Web Vitals
-
-| Metric | Good | Needs Improvement | Poor |
-|--------|------|-------------------|------|
-| LCP | ≤ 2.5s | 2.5–4.0s | > 4.0s |
-| INP | ≤ 200ms | 200–500ms | > 500ms |
-| CLS | ≤ 0.1 | 0.1–0.25 | > 0.25 |
-
----
-
-## Analysis Commands
+## Baseline Commands
 
 ```bash
-# Bundle analysis
-ANALYZE=true bun run build          # Vite bundle visualizer
-
-# Type check + lint (establish baseline)
 bun run check
 bun run lint:check
-
-# Memory heap + CPU profiling
-# → Chrome DevTools → Performance / Memory tabs (open staging URL)
-```
-
----
-
-## Optimization Decision Tree
-
-```
-What's slow?
-│
-├── Initial page load
-│   ├── LCP high → Optimize critical rendering path
-│   ├── Large bundle → Route code splitting, lazy() for heavy pages
-│   └── Neon cold start → Ensure connection pooling (PgBouncer)
-│
-├── Interaction sluggish (INP high)
-│   ├── Re-renders → react-scan → useMemo/useCallback/memo
-│   ├── Long tRPC calls → Add DB index / use select() not *
-│   └── Layout thrashing → Batch DOM reads/writes
-│
-├── API p95 high
-│   ├── N+1 queries → Batch with with() or Promise.all
-│   ├── Missing index → see Database Performance section
-│   └── Neon cold start → connection pooling
-│
-└── Memory issues
-    ├── Leaks → Clean up listeners, refs on unmount
-    └── Growth → Profile heap, reduce state retention
-```
-
----
-
-## Bundle Optimization
-
-### Analysis Commands
-
-```bash
-# Vite bundle analyzer
+bun run build
 ANALYZE=true bun run build
-
-# Check chunk sizes
-du -sh dist/assets/*.js | sort -h | tail -20
 ```
 
-### Strategies
+## Pack Commands
 
-| Problem | Solution |
-|---------|----------|
-| Large main bundle | Route-based code splitting |
-| Unused code | Tree shaking, remove dead imports |
-| Big libraries | Import only needed parts (e.g., `date-fns/format`) |
-| Duplicate deps | `bun dedupe` |
-
-### Code Splitting Pattern
-
-```typescript
-// Route-based splitting (already used in NeonDash)
-const DashboardPage = lazy(() => import('./DashboardPage'));
-const SettingsPage = lazy(() => import('./SettingsPage'));
-
-// Conditional heavy feature
-const HeavyChart = lazy(() => import('./HeavyChart'));
-```
-
----
-
-## Rendering Performance
-
-### React Optimization (NeonDash Stack)
-
-| Problem | Detection | Solution |
-|---------|-----------|----------|
-| Unnecessary re-renders | react-scan | `React.memo` for expensive components |
-| Expensive calculations | Profiler | `useMemo` with specific deps |
-| Unstable callbacks | react-scan | `useCallback` for child props |
-| Large lists | Visual lag | `@tanstack/virtual` |
-
-### Anti-Patterns to Avoid
-
-```typescript
-// ❌ Inline function in render
-<Child onClick={() => doSomething()} />
-
-// ✅ Stable callback
-const handleClick = useCallback(() => doSomething(), [deps]);
-<Child onClick={handleClick} />
-
-// ❌ Inline object creation
-<Child style={{ margin: 10 }} />
-
-// ✅ Stable reference
-const style = useMemo(() => ({ margin: 10 }), []);
-<Child style={style} />
-```
-
----
-
-## Database Performance (NeonDash Specifics)
-
-### N+1 Detection (tRPC + Drizzle)
+### `performance-core`
 
 ```bash
-# Find N+1 patterns: loops with db queries inside
-grep -rn "for.*await db\.\|\.map.*async.*db\.\|forEach.*await db\." apps/api/src --include="*.ts"
+CHROME_PATH=/usr/bin/google-chrome npx lighthouse https://staging.neondash.com.br --preset=desktop --port=9222 --chrome-flags="--headless=new --disable-gpu --no-first-run --no-default-browser-check --disable-background-networking --disable-extensions"
+CHROME_PATH=/usr/bin/google-chrome npx lighthouse https://neondash.com.br --preset=desktop --port=9333 --chrome-flags="--headless=new --disable-gpu --no-first-run --no-default-browser-check --disable-background-networking --disable-extensions"
+npx -y react-doctor@latest . --yes --verbose
 ```
 
-**N+1 Anti-pattern:**
-```typescript
-// ❌ N+1 — one query per lead
-const leads = await db.select().from(leads).limit(50);
-const leadsWithClients = await Promise.all(
-  leads.map(async (lead) => {
-    const client = await db.select().from(clients)
-      .where(eq(clients.id, lead.clientId)).limit(1);
-    return { ...lead, client: client[0] };
-  })
-);
+React Doctor remediation loop (required in `performance-core`):
 
-// ✅ Single query with join
-const leadsWithClients = await db
-  .select({ lead: leads, client: clients })
-  .from(leads)
-  .leftJoin(clients, eq(clients.id, leads.clientId))
-  .limit(50);
-```
+1. Run `npx -y react-doctor@latest . --yes --verbose` and capture diagnostics.
+2. Fix `error` severity suggestions first (correctness/security/performance).
+3. Fix high-impact `warning` suggestions (render churn, dead code, bundle bloat).
+4. Re-run `npx -y react-doctor@latest . --yes --score`.
+5. Repeat until score reaches target for the sprint (recommended: `>= 75`).
 
-### FK Index Audit
-
-Before optimizing any query, verify Foreign Key columns have indexes:
+Use `--project` for monorepos when needed:
 
 ```bash
-# See all FK references
-grep -n "\.references(" apps/api/drizzle/schema*.ts | head -40
-
-# See existing indexes
-grep -n "index(" apps/api/drizzle/schema.ts | head -40
+npx -y react-doctor@latest . --yes --project @neondash/web --verbose
 ```
 
-**Index Template:**
-```typescript
-// In table definition
-fkNameIdx: index("table_column_idx").on(table.columnName),
+Optional auto-fix assistant mode:
+
+```bash
+npx -y react-doctor@latest . --yes --fix
 ```
 
-### Neon Cold Starts
+Always review generated changes before keeping them.
 
-If the first request after idle takes > 1s:
-- Verify connection is going through **PgBouncer** (pooling)
-- Check Neon connection string ends with `-pooler.neon.tech`
-- Avoid direct connections in serverless/edge paths
+Common React Doctor fixes to apply immediately:
 
-### Query Optimization
+- `React Hook called conditionally`: move hook calls to top-level and guard inside effect/body.
+- `Import "m" with LazyMotion`: replace `motion` import with `LazyMotion` + `m` to reduce bundle size.
+- `heavy library (recharts)`: lazy-load chart modules with `React.lazy` and `Suspense`.
+- `component too large`: split into focused subcomponents and move logic to hooks/services.
+- `useState initialized from prop`: derive value in render or sync explicitly with guarded effect.
+- `array index as key`: use stable IDs (`id`, `slug`, `uuid`) to avoid list bugs.
+- `default [] prop`: hoist default arrays/objects to module-level constants for stable references.
 
-```sql
--- Explain plan (run via Neon Console or drizzle)
-EXPLAIN ANALYZE SELECT ...;
+After each batch of fixes, run:
 
--- Add missing index
-CREATE INDEX CONCURRENTLY idx_table_column ON table(column);
+```bash
+npx -y react-doctor@latest . --yes --score
+bun run check && bun run lint:check && bun run test
 ```
 
----
+Use DevTools Performance/Memory and `react-scan` for render hotspots.
 
-## Memory Leak Detection
+### `security-baseline`
 
-### Common Causes in NeonDash
-
-| Cause | Detection | Fix |
-|-------|-----------|-----|
-| tRPC subscriptions | Growing heap | Cleanup on component unmount |
-| Event listeners | DevTools Event Listeners panel | Remove in useEffect cleanup |
-| Intervals | Heap snapshots | `clearInterval` on unmount |
-| WebSocket / SSE | Network tab | Close connection on cleanup |
-
-### Prevention Pattern
-
-```typescript
-useEffect(() => {
-  const timer = setInterval(callback, 1000);
-  const handler = () => {};
-  window.addEventListener('resize', handler);
-
-  return () => {
-    clearInterval(timer);
-    window.removeEventListener('resize', handler);
-  };
-}, []);
+```bash
+bun audit
+gitleaks detect --source .
+curl -I https://staging.neondash.com.br
 ```
 
----
+Check at least: access control, injection resistance, auth flows, misconfiguration, secrets.
 
-## Profiling Workflow
+### `seo-geo-baseline`
 
-**Step 1: Measure**
+```bash
+CHROME_PATH=/usr/bin/google-chrome npx lighthouse https://staging.neondash.com.br --preset=desktop --port=9222 --chrome-flags="--headless=new --disable-gpu --no-first-run --no-default-browser-check --disable-background-networking --disable-extensions"
+CHROME_PATH=/usr/bin/google-chrome npx lighthouse https://neondash.com.br --preset=desktop --port=9333 --chrome-flags="--headless=new --disable-gpu --no-first-run --no-default-browser-check --disable-background-networking --disable-extensions"
+curl https://staging.neondash.com.br/robots.txt
+curl https://neondash.com.br/robots.txt
+```
 
-| Tool | What It Measures |
-|------|-----------------|
-| Lighthouse (Staging) | Core Web Vitals, opportunities |
-| Chrome DevTools → Performance | Runtime, CPU, re-renders |
-| Chrome DevTools → Memory | Heap snapshots, leaks |
-| react-scan | React re-render hotspots |
-| `ANALYZE=true bun run build` | Bundle composition |
+Use distinct explicit ports for sequential runs (`9222` for staging, `9333` for production).
+If you run in WSL, prefer Linux Chrome via `CHROME_PATH=/usr/bin/google-chrome` to avoid Windows temp permission cleanup errors.
 
-**Step 2: Identify**
+Check at least: metadata, structured data, canonical links, robots, sitemap, CWV.
 
-1. Find the biggest bottleneck (usually: bundle size OR N+1 OR missing index)
-2. Quantify the expected improvement
-3. Prioritize by user-perceived impact
+## SEO Optimization Playbook (Robots + Sitemap)
 
-**Step 3: Fix & Validate**
+Use this playbook when improving indexability for `neondash.com.br`.
 
-1. Make one targeted change
-2. Re-measure (same tool, same conditions)
-3. Confirm improvement (check metric moved)
-4. Document in PR description
+### Phase 0 - Discover First
 
----
+Always confirm stack before implementation:
 
-## Quick Wins Checklist
+- frontend framework and router (`Next.js App Router` vs `Vite + TanStack Router`)
+- existing robots/sitemap files and runtime endpoints
+- private and dynamic routes that must not be indexed
+- metadata strategy (global + route-level)
 
-### Database
+Current project baseline (verified):
 
-- [ ] Every FK column has a named index (see `super-audit` Phase 3)
-- [ ] No `SELECT *` — use `select({ col: table.col })`
-- [ ] Lists always have `limit` (never unbounded)
-- [ ] N+1 patterns replaced with single join query
+- frontend is `Vite + React + TanStack Router` (not Next.js App Router)
+- no `app/robots.ts` or `app/sitemap.ts` structure exists
+- no `apps/web/public/robots.txt` and no `apps/web/public/sitemap.xml`
+- `https://neondash.com.br/robots.txt` and `/sitemap.xml` currently return SPA HTML (`text/html`), not real robots/sitemap content
+
+### Findings Table Template
+
+Use this table in every SEO execution report:
+
+| #   | Finding                                  | Confidence (1-5) | Source                                                    | Impact |
+| --- | ---------------------------------------- | ---------------- | --------------------------------------------------------- | ------ |
+| 1   | Current robots.txt status                | 5                | `apps/web/public` + curl response                         | High   |
+| 2   | Sitemap generation strategy              | 5                | `apps/web/public` + curl response                         | High   |
+| 3   | Existing metadata patterns               | 5                | `apps/web/index.html`                                     | Medium |
+| 4   | Dynamic/private routes needing exclusion | 5                | `apps/web/src/routeTree.gen.ts` + `routes/_dashboard.tsx` | High   |
+| 5   | Core Web Vitals current state            | 4                | Lighthouse run artifacts                                  | High   |
+
+### Edge Cases to Check (Minimum)
+
+1. Authenticated routes indexed by accident (`/meu-dashboard`, `/clientes`, `/pacientes`, `/workspace`, `/configuracoes`).
+2. Tokenized routes indexed (`/unsubscribe/$token`).
+3. Missing canonical for public legal/onboarding pages.
+4. Missing `og:image` absolute URL for public sharing.
+5. Sitemap present but serving HTML fallback instead of XML.
+6. robots/sitemap returning 200 with wrong content-type (`text/html` instead of `text/plain`/`application/xml`).
+
+### Implementation Strategy by Stack
+
+#### A) Next.js App Router projects (reference pattern)
+
+Use native metadata files:
+
+- `app/robots.ts`
+- `app/sitemap.ts`
+- `metadataBase` in `app/layout.tsx`
+
+For robots policy, always disallow private routes and keep crawler allowlist behavior safe:
+
+- disallow at least: `/api/`, `/dashboard/`, `/admin/`, `/_next/`, `/auth/`
+- include `sitemap` and `host`
+- do not globally block all crawlers
+
+#### B) Current NeonDash stack (Vite + TanStack Router + Hono)
+
+Use static assets served by frontend build output:
+
+- create `apps/web/public/robots.txt`
+- create `apps/web/public/sitemap.xml`
+
+Recommended `robots.txt` policy for this repo:
+
+```txt
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /dashboard/
+Disallow: /meu-dashboard/
+Disallow: /configuracoes/
+Disallow: /clientes/
+Disallow: /pacientes/
+Disallow: /workspace/
+Disallow: /chat/
+Disallow: /financeiro/
+Disallow: /crm/
+Disallow: /ai-agents/
+Disallow: /admin/
+Disallow: /unsubscribe/
+
+User-agent: GPTBot
+Disallow: /
+
+User-agent: CCBot
+Disallow: /
+
+User-agent: anthropic-ai
+Disallow: /
+
+Sitemap: https://neondash.com.br/sitemap.xml
+Host: https://neondash.com.br
+```
+
+Sitemap rules for this repo:
+
+- include only public pages (for example: `/`, `/termos`, `/privacidade`, `/comece-aqui`, `/primeiro-acesso`, `/account-deletion`)
+- exclude private/authenticated and tokenized routes
+- include `<lastmod>` for every URL
+
+### Metadata Rules
+
+For Next.js projects:
+
+- always set `metadataBase`
+- always use title template (`%s | NeonDash`)
+- always set canonical and OG/Twitter image metadata
+
+For current Vite project:
+
+- maintain base metadata in `apps/web/index.html`
+- add route-level title/description/canonical management for public pages only
+- ensure meaningful images do not use empty `alt` text
+
+### Core Web Vitals Targets
+
+- `LCP < 2.5s`
+- `INP < 200ms`
+- `CLS < 0.1`
+- `TTFB < 600ms`
+
+### Validation Commands
+
+```bash
+# Robots and sitemap must be real files (not SPA HTML)
+curl -I https://neondash.com.br/robots.txt
+curl -I https://neondash.com.br/sitemap.xml
+
+# Verify content type + payload start
+python3 - <<'PY'
+import urllib.request
+for u in ['https://neondash.com.br/robots.txt','https://neondash.com.br/sitemap.xml']:
+    with urllib.request.urlopen(u, timeout=30) as r:
+        body = r.read(80).decode('utf-8', errors='replace')
+        print(u, r.status, r.headers.get('content-type'), repr(body))
+PY
+
+# Lighthouse SEO/Performance
+CHROME_PATH=/usr/bin/google-chrome npx lighthouse https://neondash.com.br --preset=desktop --port=9333 --chrome-flags="--headless=new --disable-gpu --no-first-run --no-default-browser-check --disable-background-networking --disable-extensions" --output json --output-path=/tmp/lh-prod-seo.json
+```
+
+### Non-Negotiable Constraints
+
+- Never index private areas (`/api/`, `/dashboard/`, `/admin/`, `/auth/`, and equivalent private business paths).
+- Never apply Next.js `app/robots.ts` guidance to non-Next stacks.
+- Never ship sitemap entries without `lastmod`.
+- Never block all crawlers globally.
+- Never skip post-deploy curl validation.
+
+### Success Criteria
+
+- `/robots.txt` returns 200 with `text/plain` and expected disallow rules.
+- `/sitemap.xml` returns 200 with XML content-type and valid URL set.
+- URLs in sitemap return 200 and are public pages.
+- Lighthouse SEO score reaches `>= 0.95` on production.
+- Public pages have unique and stable title/description/canonical strategy.
+
+## Targets
+
+| Metric      | Target   |
+| ----------- | -------- |
+| LCP         | <= 2.5s  |
+| INP         | <= 200ms |
+| CLS         | <= 0.1   |
+| API p95     | <= 140ms |
+| Main bundle | <= 200KB |
+
+## Bottleneck Routing
+
+- Initial load slow -> inspect critical rendering path and bundle split.
+- Interaction slow -> inspect re-renders and long handlers.
+- API slow -> inspect N+1 patterns and missing indexes.
+- Memory growth -> inspect subscription/listener/interval cleanup.
+
+## High-Value Fixes
 
 ### Frontend
 
-- [ ] Route-based code splitting with `lazy()`
-- [ ] Heavy modals/drawers loaded lazily
-- [ ] react-scan: 0 re-render hotspots on main flows
-- [ ] Images: lazy loading + correct dimensions + WebP
+- Route-level lazy loading for heavy pages and modals.
+- Remove unstable props/callbacks causing unnecessary re-renders.
+- Virtualize long lists.
 
-### JavaScript
+### Backend/DB
 
-- [ ] No unused dependencies (`bun dedupe`)
-- [ ] Dead code removed (tree shaking helps but explicit removal is better)
+- Remove N+1 queries with joins or batch strategy.
+- Ensure FK columns are indexed.
+- Avoid unbounded list queries.
 
-### Caching
+## Guardrails
 
-- [ ] Static assets have long-term cache headers (Vite adds content hash)
-- [ ] `/api/health` cached at CDN or proxy level
+- Do not optimize based on intuition only.
+- Do not over-memoize cheap operations.
+- Do not expand scope to unrelated refactors.
+- Do not claim improvement without before/after evidence.
 
----
-
-## Anti-Patterns
-
-| Don't | Do |
-|-------|-----|
-| Optimize without measuring | Profile first with real data |
-| Premature optimization | Fix real bottlenecks first |
-| Over-memoize | Memoize only expensive (> 1ms) calculations |
-| Ignore perceived performance | Prioritize UX, not just metrics |
-| Guess the bottleneck | Use react-scan + Lighthouse + EXPLAIN ANALYZE |
-
----
-
-## Reporting Template
+## Report Template
 
 ```markdown
-## Performance Audit — [Date]
+## Optimization Report
 
-| Metric | Before | After | Improvement |
-|--------|--------|-------|-------------|
-| Dashboard Load | X s | Y s | Z% |
-| API p95 | X ms | Y ms | Z% |
-| LCP | X ms | Y ms | Z% |
-| Bundle (main) | X KB | Y KB | Z% |
+Pack: [performance-core|security-baseline|seo-geo-baseline]
 
-### Changes Made
-1. [Change → Metric improved]
-2. [Change → Metric improved]
+| Metric | Before | After | Delta |
+| ------ | ------ | ----- | ----- |
+| ...    | ...    | ...   | ...   |
+
+### Changes
+
+1. [change] -> [impact]
+2. [change] -> [impact]
+
+### Risks / Follow-up
+
+- [remaining risk]
 ```

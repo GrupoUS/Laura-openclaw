@@ -1,340 +1,443 @@
 ---
 name: baileys-integration
-description: Use when configuring Baileys WhatsApp Web integration, running QR authentication flows, diagnosing disconnects or stale sessions, recovering from session corruption, planning provider transitions, or working with WhatsApp message handling, session management, and webhooks.
+description: Use when diagnosing Baileys disconnect loops, reconnect storms, stale QR/session state, message delivery latency, auth state corruption, or when implementing WhatsApp realtime/session/webhook changes in the Baileys service layer.
 ---
 
 # Baileys Integration Skill
 
-> **Purpose:** Operate the self-hosted Baileys provider with conservative defaults, stable QR onboarding, low-risk recovery procedures, and production-grade patterns from official Baileys documentation.
+Operate Baileys in production with explicit disconnect handling, durable auth persistence, controlled reconnect policy, and realtime-first delivery.
 
----
-
-## When to Use This Skill
+## When to Use
 
 Use this skill when:
 
-- Configuring or validating Baileys environment/runtime setup
-- Running QR-based WhatsApp connection flow for mentorados
-- Diagnosing disconnects, stale sessions, or missing QR updates
-- Recovering from session corruption while preserving history
-- Planning provider transitions between Z-API, Meta Cloud API, and Baileys
-- Creating or modifying any file in the Baileys service layer
-- Working with WhatsApp message handling, session management, or webhooks
+- Editing any Baileys backend file under `apps/api/src/services`, `apps/api/src`, or `apps/api/src/webhooks`
+- Investigating session drops after page refresh/navigation
+- Hardening reconnection strategy, socket configuration, or auth persistence
+- Implementing/validating realtime delivery paths for Baileys chat events
+- Running provider transition work involving Baileys compatibility
 
-**Always load:** `.agent/skills/baileys-integration/references/architecture.md` for the full file map.
+Do not use this skill for Meta Cloud API-only work or Z-API-only work.
 
----
+## Mandatory References
 
-## Architecture Overview
+Always load:
+
+- `.claude/skills/baileys-integration/references/architecture.md`
+- `.claude/skills/baileys-integration/references/best-practices.md`
+
+Load on demand:
+
+- `.claude/skills/baileys-integration/references/consolidation-roadmap.md`
+
+## Architecture Overview (Current Repository)
 
 ### File Inventory
 
-| File                                                       | Purpose                                                                                                            | Layer    |
-| ---------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ | -------- |
-| `server/services/baileysService.ts`                        | Core singleton — socket lifecycle, connect/disconnect/reconnect, message extraction, event emission                | Service  |
-| `server/services/baileysAuthState.ts`                      | PostgreSQL-backed auth state persistence (creds + signal keys)                                                     | Service  |
-| `server/services/baileysSessionManager.ts`                 | Singleton session manager — wraps `baileysService` with managed session tracking + auto-restore                    | Service  |
-| `server/baileysRouter.ts`                                  | tRPC router — connect, disconnect, status, send message, conversations, messages                                   | Router   |
-| `server/webhooks/baileysWebhook.ts`                        | Event listeners — persists messages/contacts to DB, broadcasts SSE, manages connection state in `mentorados` table | Webhook  |
-| `drizzle/schema_baileys.ts`                                | `baileys_sessions` table — stores auth credentials per mentorado                                                   | Schema   |
-| `client/src/components/whatsapp/BaileysConnectionCard.tsx` | QR code display, connect/disconnect UI                                                                             | Frontend |
-| `client/src/hooks/useWhatsAppProvider.ts`                  | Multi-provider hook (Meta > Baileys > Z-API priority)                                                              | Frontend |
+| File | Purpose | Layer |
+| --- | --- | --- |
+| `apps/api/src/services/baileys-service.ts` | Core singleton, socket lifecycle, reconnect, event emission | Service |
+| `apps/api/src/services/baileys-auth-state.ts` | PostgreSQL auth state persistence (creds + keys) | Service |
+| `apps/api/src/services/baileys-session-manager.ts` | Session manager and persisted-session restore | Service |
+| `apps/api/src/baileys-router.ts` | tRPC procedures for connect/disconnect/status/send/messages | Router |
+| `apps/api/src/webhooks/baileys-webhook.ts` | Persists Baileys events, broadcasts realtime events | Webhook |
+| `apps/api/drizzle/schema-baileys.ts` | `baileys_sessions` schema and types | Schema |
+| `apps/web/src/components/whatsapp/baileys-connection-card.tsx` | Baileys connection UI and QR flow | Frontend |
+| `apps/web/src/hooks/use-whats-app-provider.ts` | Provider selection and shared message/conversation hooks | Frontend |
 
 ### Data Flow
 
+```text
+UI connect -> trpc.baileys.connect -> baileysSessionManager.connect()
+-> baileysService.connect() -> makeWASocket()
+-> connection.update / creds.update / messages.upsert
+-> baileys-webhook persistence + realtime broadcast
+-> frontend receives realtime events (SSE today, WS target with SSE fallback)
 ```
-User clicks Connect → tRPC baileys.connect → BaileysSessionManager.connect()
-→ BaileysService.connect() → makeWASocket() → connection.update event
-→ QR emitted → SSE → BaileysConnectionCard renders QR
-→ User scans → connection.update status="connected"
-→ baileysWebhook persists state to mentorados table
-→ Messages arrive via messages.upsert → saved to whatsapp_messages table
+
+### Multi-Provider Priority (Runtime Truth)
+
+Provider priority is:
+
+1. `baileys`
+2. `zapi`
+3. `meta` (admin only)
+
+This priority is defined in `apps/web/src/hooks/use-whats-app-provider.ts`.
+
+## Canonical Blocks
+
+### baileys/connection-stability
+
+Always handle all relevant `DisconnectReason` values explicitly.
+
+| Reason | Code | Action |
+| --- | --- | --- |
+| `loggedOut` | 401 | Clear session state and require re-authentication |
+| `restartRequired` | 515 | Recreate socket asynchronously (`setTimeout(..., 0)`) |
+| `connectionClosed` | 428 | Exponential backoff reconnect with jitter |
+| `connectionLost` / `timedOut` | 408 | Exponential backoff reconnect with jitter |
+| `badSession` | 500 | Clear session state and force re-authentication |
+| `connectionReplaced` | 440 | Clear/recover session and force re-authentication |
+| `multideviceMismatch` | 411 | Clear session state and force re-authentication |
+| `forbidden` | 403 | Controlled backoff + operational alert |
+| `unavailableService` | 503 | Controlled backoff + operational alert |
+
+Rules:
+
+- Never reconnect blindly in a tight loop.
+- Track reconnect attempts and reset the counter on stable `open`.
+- Do not call connect synchronously inside `connection.update`.
+- Remove socket listeners before replacing socket instances.
+
+### baileys/session-persistence
+
+Production policy:
+
+- Never use `useMultiFileAuthState` in production.
+- Use PostgreSQL-backed auth state.
+- Persist creds and keys atomically and fail loudly on unrecoverable write errors.
+- Use read fallback strategy during migrations (dual-read).
+- Preserve message history (`whatsapp_messages`) during session recovery.
+
+Dual-write migration policy (progressive):
+
+1. Write both legacy key-value session rows and snapshot JSONB representation.
+2. Read snapshot first, fallback to legacy rows.
+3. Cut over only after successful backfill and runtime validation.
+4. Keep rollback path until post-cutover stability criteria are met.
+
+### baileys/socket-config-optimal
+
+Target baseline for stability/performance:
+
+```ts
+keepAliveIntervalMs: 25_000
+connectTimeoutMs: 60_000
+defaultQueryTimeoutMs: 60_000
+retryRequestDelayMs: 250
+maxMsgRetryCount: 5
+markOnlineOnConnect: true
+browser: Browsers.macOS("Desktop")
+syncFullHistory: false
 ```
 
-### Multi-Provider System
+Notes:
 
-The project supports 3 WhatsApp providers with priority: **Meta > Baileys > Z-API**.
+- Official defaults may differ; this baseline is the project target for the Baileys stability overhaul.
+- Validate changes against actual runtime behavior and reconnect telemetry before full rollout.
 
-- `useWhatsAppProvider.ts` queries all 3 status endpoints and selects the first connected
-- Each provider has its own router (`metaApiRouter`, `baileysRouter`, `zapiRouter`)
-- Shared tables: `whatsapp_messages`, `whatsapp_contacts`, `leads`
+### baileys/reconnection-strategy
 
----
+Use exponential backoff with jitter:
 
-## Setup Flow (Conservative)
+- `baseDelayMs = 1000`
+- `multiplier = 2`
+- `maxDelayMs = 30000`
+- `maxAttempts = 10`
+- `jitterMs = random(0..1000)`
+
+Formula:
+
+```text
+delay = min(baseDelayMs * (multiplier ^ attempt) + jitterMs, maxDelayMs)
+```
+
+Rules:
+
+- Reset attempts on successful and stable `open`.
+- After `maxAttempts`, emit terminal failure event and require manual re-auth.
+- Add reason-aware behavior (`loggedOut` and `restartRequired` are not treated as generic retries).
+
+### baileys/disconnect-reason-persistence
+
+**CRITICAL**: `lastDisconnectReason` must persist across session deletions.
+
+**Problem**: When `disconnect()` is called, the session is deleted from memory. If `getSessionStatusSync()` is called afterward (e.g., when user clicks "Gerar QR Code"), it returns a status WITHOUT `lastDisconnectReason`, preventing proper reset detection.
+
+**Solution**: Use a separate `persistentLastDisconnectReason` Map that survives session deletions:
+
+```typescript
+class BaileysService {
+  // Persists lastDisconnectReason across session deletions
+  private readonly persistentLastDisconnectReason = new Map<number, string>();
+
+  // In disconnect():
+  if (session.lastDisconnectReason) {
+    this.persistentLastDisconnectReason.set(mentoradoId, session.lastDisconnectReason);
+  }
+  if (options?.clearAuth) {
+    this.persistentLastDisconnectReason.delete(mentoradoId);
+  }
+
+  // In getSessionStatusSync():
+  if (!session) {
+    const persistedReason = this.persistentLastDisconnectReason.get(mentoradoId);
+    return { ..., lastDisconnectReason: persistedReason };
+  }
+
+  // On successful connection ("open"):
+  this.persistentLastDisconnectReason.delete(mentoradoId);
+}
+```
+
+**Why this matters**: The `shouldResetAuthBeforeConnect` check in `baileys-router.ts` relies on `lastDisconnectReason` to decide whether to clear stale auth state before reconnecting. Without persistence, this check fails and stale auth causes reconnect loops.
+
+### baileys/realtime-frontend
+
+Realtime strategy:
+
+- Primary channel: WebSocket for Baileys events.
+- Fallback channel: SSE when WS is unavailable.
+
+Event contract (target):
+
+- `message:new`
+- `connection:status`
+- `connection:qr`
+- `connection:error`
+
+Compatibility rules:
+
+- Keep existing message payload shape to avoid UI/API regressions.
+- Frontend realtime reconnect is independent from Baileys socket reconnect.
+- Debounce high-frequency presence/typing events to avoid UI thrash.
+
+### baileys/health-monitoring
+
+Operational health policy:
+
+- Ping/pong cycle every 60s.
+- Consider socket unhealthy if no pong within 5s.
+- On unhealthy socket, recycle socket and enter reconnect flow.
+- Track:
+  - `lastMessageAt`
+  - `lastConnectedAt`
+  - `reconnectCount`
+  - `currentStatus`
+- Expose health endpoint (target): `/api/whatsapp/health`.
+- Alert when reconnect count exceeds threshold in short window (for example: >3 in 5 min).
+
+## Setup and Runtime Baseline
 
 1. Confirm `@whiskeysockets/baileys` dependency in `package.json`.
-2. Verify database has `baileys_sessions` table (from `schema_baileys.ts`).
-3. No filesystem session directory needed — sessions are stored in PostgreSQL.
-4. Start backend with Bun (`bun dev`) and confirm no startup errors.
-5. Open settings and initiate Baileys connection **one mentorado at a time** during first-time setup.
+2. Confirm `baileys_sessions` schema is present and exported.
+3. Start backend with Bun and verify no startup errors.
+4. Connect one mentorado at a time during first auth.
+5. Confirm reconnect and message flow before enabling broader traffic.
 
-### Environment Variables
+Relevant environment variables:
 
-| Variable                 | Default | Purpose                                             |
-| ------------------------ | ------- | --------------------------------------------------- |
-| `BAILEYS_ENABLE_LOGGING` | `false` | Enable pino logging (set `true` only for debugging) |
-
----
-
-## QR Authentication Flow
-
-1. Trigger connect from the Baileys settings card.
-2. Wait for QR payload emission via `connection.update` event.
-3. QR is sent through SSE to the frontend `BaileysConnectionCard`.
-4. Scan QR from the correct WhatsApp account/device.
-5. Confirm status transition sequence: `connecting` → QR → `connected`.
-6. Credentials persist automatically via `usePostgresAuthState` on `creds.update`.
-7. After connected state, verify message reception before any bulk usage.
-
-### Pairing Code (Alternative to QR)
-
-Baileys supports phone number pairing via `sock.requestPairingCode(phoneNumber)` as an alternative to QR scanning. This is **not yet implemented** in the project but documented for future use:
-
-```typescript
-// When QR is available but user prefers pairing code:
-if (qr && !sock.authState.creds.registered) {
-  const code = await sock.requestPairingCode(phoneNumber);
-  // Display code to user → enter in WhatsApp > Linked Devices
-}
-```
-
----
-
-## Session Persistence (PostgreSQL)
-
-### How It Works
-
-Auth state is stored in the `baileys_sessions` table via `baileysAuthState.ts`:
-
-- **Creds**: Stored under key `"creds"` — contains device identity
-- **Signal keys**: Stored under keys like `"pre-key-{id}"`, `"session-{id}"`, etc.
-- **Upsert pattern**: Check existing → update or insert (per key per mentorado)
-- **Unique constraint**: `(mentorado_id, key)` prevents duplicates
-
-### Best Practice: `makeCacheableSignalKeyStore`
-
-> ✅ **Implemented.** Already used in `baileysService.ts`.
-
-Baileys provides `makeCacheableSignalKeyStore()` which wraps the signal key store with an in-memory cache layer, reducing database reads during message decryption.
-
-**Impact**: Reduces DB queries significantly during high-volume message decryption.
-
----
-
-## Reconnection Strategy
-
-The project implements exponential backoff with jitter in `baileysService.ts`:
-
-- **Default delay**: 3000ms (exponential: `3000 * 2^attempts`)
-- **Max delay**: 30000ms
-- **Max attempts**: 10
-- **Jitter**: ±30% randomization to prevent thundering herd
-- **Logic**: On `connection === 'close'`, check `DisconnectReason`:
-  - `loggedOut` (401) → **Do NOT reconnect** — clear auth state
-  - `restartRequired` (515) → Immediate reconnect (reset attempts to 0)
-  - Other codes → Schedule reconnect with exponential backoff + jitter
-
-### QR Timeout
-
-- **Timeout**: 90 seconds (`QR_TIMEOUT_MS`)
-- If QR is not scanned within the deadline, the session emits `qr_timeout` event and disconnects
-- Timer is cleared when `connection === "open"` or on explicit `disconnect()`
-
-### Session Restore Staggering
-
-- On server restart, `restorePersistedSessions()` restores sessions sequentially with **3s delay** between each
-- Prevents WhatsApp rate-limiting from simultaneous reconnections
-- Errors during restore are logged and skipped (no `disconnect()` call which could clear auth state)
-
-### Key Disconnect Reasons
-
-| Code | Reason               | Action                                           |
-| ---- | -------------------- | ------------------------------------------------ |
-| 401  | `loggedOut`          | Clear session, require new QR                    |
-| 408  | `timedOut`           | Auto-reconnect                                   |
-| 440  | `connectionReplaced` | Another device took over — auto-reconnect        |
-| 515  | `restartRequired`    | Immediate reconnect (reset attempts, no backoff) |
-
----
-
-## Recovery Procedure (History-Safe)
-
-1. **Detect scope**: Single mentorado vs global service issue.
-2. **Attempt soft reconnect** first (without deleting session artifacts).
-3. If reconnect fails repeatedly, backup affected session data before any cleanup.
-4. Re-authenticate via QR only for the affected mentorado.
-5. **Preserve database message history** — NEVER delete existing `whatsapp_messages` rows.
-6. Record recovery action and timestamp for auditability.
-
----
-
-## Best Practices from Official Documentation
-
-### 1. Socket Configuration
-
-> ✅ **Implemented.** All options below are set in `baileysService.ts`.
-
-```typescript
-import { Browsers, makeCacheableSignalKeyStore } from "@whiskeysockets/baileys";
-
-const sock = makeWASocket({
-  browser: Browsers.macOS("Desktop"), // Stable desktop identity
-  markOnlineOnConnect: false, // Don't auto-mark online
-  connectTimeoutMs: 120_000, // 2 min max connect wait
-  keepAliveIntervalMs: 25_000, // 25s WebSocket heartbeat
-  retryRequestDelayMs: 250, // 250ms between internal retries
-  emitOwnEvents: true, // Receive own sent messages
-});
-```
-
-### 2. Batch Event Processing with `ev.process()`
-
-> ⚠️ **Not yet used in the project.** Recommended for production.
-
-Instead of registering individual `sock.ev.on()` listeners, use `ev.process()` for efficient batch processing:
-
-```typescript
-sock.ev.process(async events => {
-  if (events["connection.update"]) {
-    /* handle */
-  }
-  if (events["creds.update"]) {
-    await saveCreds();
-  }
-  if (events["messages.upsert"]) {
-    /* handle messages */
-  }
-  if (events["contacts.update"]) {
-    /* handle contacts */
-  }
-});
-```
-
-**Benefits**: Processes all pending events in a single batch, reducing race conditions.
-
-### 3. `getMessage()` Callback
-
-> ✅ **Implemented.** DB-backed lookup from `whatsapp_messages` table.
-
-Required for poll vote decryption and resending missing messages. The implementation queries by `zapiMessageId` and returns `undefined` on failure (never throws).
-
-### 4. History Sync
-
-When `syncFullHistory: true` is enabled, Baileys receives `messaging-history.set` events with historical chats, messages, and contacts. Handle cautiously:
-
-```typescript
-if (events["messaging-history.set"]) {
-  const { chats, messages, contacts, isLatest } =
-    events["messaging-history.set"];
-  // Bulk upsert to database — use transactions for consistency
-}
-```
-
----
+| Variable | Default | Purpose |
+| --- | --- | --- |
+| `BAILEYS_ENABLE_LOGGING` | `false` | Toggle structured Baileys logger |
+| `BAILEYS_LOG_LEVEL` | `warn`/`silent` | Controls pino verbosity |
 
 ## Troubleshooting
 
 ### QR Not Appearing
 
-1. Confirm connect mutation succeeds (check tRPC response).
-2. Confirm SSE channel is active (check browser DevTools → EventSource).
-3. Confirm no stale lock in session — try clearing the mentorado's session from `baileys_sessions` table.
-4. Temporarily enable `BAILEYS_ENABLE_LOGGING=true` only for diagnosis.
-5. Check if another device already has the session — WhatsApp allows limited linked devices.
+1. Verify `trpc.baileys.connect` succeeds.
+2. Verify realtime channel (SSE/WS) is connected.
+3. Verify there is no stale in-memory connect lock.
+4. Enable temporary Baileys logging for diagnosis only.
+5. Verify no competing active client replaced the session.
+6. **CRITICAL**: Check CORS configuration for SSE credentials mismatch (see below).
+7. **CRITICAL (UUID path)**: If using multi-connection flow, verify `createConnectionByUUID` has full DisconnectReason handlers — see below.
 
-### Frequent Disconnects / Status Flapping
+### SSE Not Receiving Events (QR/Status Updates)
 
-1. Verify network stability and host clock/time sync.
-2. Inspect close reasons in logs — look for specific `DisconnectReason` codes.
-3. Confirm `keepAliveIntervalMs` is set (25s heartbeat detects silent drops).
-4. Avoid reconnect storms — jitter is applied automatically via exponential backoff.
-5. Check if `connectionReplaced` (440) — another client may be competing.
-6. Verify `browser` config uses `Browsers.macOS('Desktop')` (not a custom array).
-7. Check if `markOnlineOnConnect` is `false` — prevents notification interference.
+**Root Cause Pattern**: SSE requires `withCredentials: true` for authenticated requests, but CORS wildcard (`origin: "*"`) silently disables credentials.
 
-### QR Timeout
+**Symptoms**:
+- Browser console: No explicit error (silent failure)
+- Network tab: SSE connection closes immediately or returns 401/403
+- QR code never appears despite backend generating it
+- `onStatusUpdate` callback never fires
 
-- If QR doesn't appear within 10s, check SSE channel and tRPC response.
-- If QR appears but isn't scanned within 90s, session auto-disconnects with `qr_timeout`.
-- To adjust timeout, modify `QR_TIMEOUT_MS` constant in `baileysService.ts`.
+**Diagnosis**:
+1. Check backend startup logs for: `"cors_wildcard_origin"`, `"Credentials disabled"`
+2. Verify container env: `docker inspect <container> --format '{{range .Config.Env}}{{println .}}{{end}}' | grep CORS`
+3. Test SSE endpoint directly:
+   ```bash
+   curl -I -H "Origin: https://your-domain.com" https://your-domain.com/api/chat/events
+   # Should return:
+   # access-control-allow-credentials: true
+   # access-control-allow-origin: https://your-domain.com
+   ```
+
+**Fix**:
+1. Add `CORS_ORIGIN=https://your-domain.com` to `.env` file
+2. Ensure `docker-compose.deploy.yml` includes `CORS_ORIGIN: ${CORS_ORIGIN}`
+3. Recreate container: `docker compose -f docker-compose.deploy.yml up -d --force-recreate app`
+
+**Code Reference** (`apps/api/src/_core/index.ts`):
+```typescript
+const configuredCorsOrigins = (process.env.CORS_ORIGIN ?? "")
+  .split(",")
+  .map((origin) => origin.trim())
+  .filter((origin) => origin.length > 0);
+const useWildcardCors = configuredCorsOrigins.length === 0 || configuredCorsOrigins.includes("*");
+
+app.use(
+  "*",
+  cors(
+    useWildcardCors
+      ? { origin: "*", credentials: false }  // ← Problem: credentials disabled
+      : { origin: configuredCorsOrigins, credentials: true }
+  )
+);
+```
+
+**Prevention**:
+- Never use `CORS_ORIGIN=*` in production
+- Always set `CORS_ORIGIN` to the exact frontend domain
+- Verify CORS headers after any deployment
+
+### UUID Path Infinite Spinner (QR Never Appears)
+
+**Root Cause Pattern**: The UUID multi-connection path (`createConnectionByUUID`) may have incomplete `DisconnectReason` handlers. If only `loggedOut` and `restartRequired` are handled, corrupted/stale sessions will clear auth but **never reconnect**, leaving the UI in an infinite connecting spinner.
+
+**Symptoms**:
+- UI shows "Conectando..." / spinner indefinitely
+- QR code never appears even after waiting 90s
+- Restarting the server or deleting+re-adding the connection fixes it temporarily
+- Backend logs show `disconnect:500` (badSession) or `disconnect:411` (multideviceMismatch) with no subsequent reconnect
+
+**Diagnosis**:
+```bash
+# Check backend logs for disconnect reason without reconnect
+docker logs app --tail 100 | grep -E 'disconnect:|baileys\[uuid\]'
+# If you see badSession/multideviceMismatch/loggedOut without 'Generating QR' after it → UUID path handler missing
+```
+
+**Fix**: Ensure `createConnectionByUUID`'s `if (connection === "close")` block handles all reasons:
+
+```typescript
+// ❌ WRONG: Only two handlers — stale sessions cause infinite spinner
+if (statusCode === DisconnectReason.loggedOut) {
+  this.disconnectByConnectionId(connectionId, { clearAuth: true }).catch(() => {});
+  return;  // ← never reconnects! user must delete and re-add
+}
+
+// ✅ CORRECT: Full matrix + auto-reconnect after clearAuth
+if (statusCode === DisconnectReason.loggedOut) {
+  this.disconnectByConnectionId(connectionId, { clearAuth: true }).catch(() => {});
+  setTimeout(() => {
+    this.connectByConnectionId(connectionId, mentoradoId).catch(() => {});  // triggers new QR
+  }, 1000);
+  return;
+}
+// Same pattern for: badSession (500), multideviceMismatch (411)
+// Plus: 428 → rate-limit backoff, 405 → connectionReplaced, 408 → timedOut,
+//       503 → extended backoff, 403 → disconnect without clearAuth
+```
+
+**Reference**: `apps/api/src/services/baileys-service.ts` — legacy `createConnection` (mentoradoId path) is the correct template to replicate for the UUID path.
+
+### Frequent Disconnects or Status Flapping
+
+1. Inspect disconnect reason codes in logs.
+2. Verify keep-alive and timeout values applied at socket creation.
+3. Verify backoff counters are resetting only on stable open.
+4. Check for listener leaks on socket recreation.
+5. Verify no duplicate reconnect scheduler is running.
 
 ### Session Corruption Symptoms
 
-- Missing keys/creds files, JSON parse errors, permanent auth failure.
-- **Fix**: Backup session data → delete from `baileys_sessions` table → re-authenticate via QR.
-- **Always** keep message history untouched.
+Symptoms:
 
-### Messages Not Being Saved
+- Permanent auth failure after reconnect
+- Missing/invalid key material
+- Repeated `badSession` or `multideviceMismatch`
 
-1. Verify `baileysWebhook.ts` listeners are registered (`listenersRegistered` flag).
-2. Check if `content` is empty (media-only messages may not have extractable text).
-3. Verify `whatsapp_messages` table has correct `mentoradoId`.
-4. Check SSE broadcast for `new-message` events.
+Recovery:
 
----
+1. Backup affected session rows first.
+2. Attempt controlled session reset through service flow.
+3. Re-authenticate only affected mentorado if needed.
+4. Never delete `whatsapp_messages` history.
 
-## Anti-Patterns (DO NOT)
+### Messages Not Persisting
 
-| Anti-Pattern                                        | Why                                         |
-| --------------------------------------------------- | ------------------------------------------- |
-| Delete `baileys_sessions` rows without backup       | Permanent loss of auth state                |
-| Loop aggressive reconnects without backoff          | WhatsApp will ban the session               |
-| Send bulk messages without rate limiting            | Account suspension risk                     |
-| Use `SELECT *` on `baileys_sessions`                | Can return MB of signal keys                |
-| Modify `baileysService.ts` singleton pattern        | Breaks session isolation                    |
-| Share session data between mentorados               | Each mentorado = separate WhatsApp account  |
-| Use filesystem auth state (`useMultiFileAuthState`) | Project uses PostgreSQL — inconsistent data |
-| Duplicate helper functions across routers           | See consolidation roadmap                   |
+1. Verify webhook listeners are registered once.
+2. Verify `content` extraction path for message type.
+3. Verify insert path is writing correct `mentoradoId`.
+4. Verify realtime broadcast is emitted after persistence.
 
----
+### SSE QR Payload Missing connectionId (QR Delivery Latency)
 
-## Anti-Spam and Safety Guardrails
+**Root Cause Pattern**: When `BaileysQrEventPayload` and the SSE `status_update` broadcast omit `connectionId`, the frontend cannot optimistically update the TanStack Query cache. Instead it must wait for `invalidate()` + refetch round-trip (~200ms+ latency).
 
-- Require opt-in before any outbound campaign traffic.
-- Apply rate limits and jitter for outbound sends.
-- Avoid unsolicited bulk blasts and repetitive templates.
-- Keep human support path for blocked/failed numbers.
-- Prefer Meta Cloud API for compliance-sensitive or high-volume scenarios.
+**Fix**: Propagate `connectionId` through the entire chain:
 
----
+```typescript
+// 1. baileys-service.ts — add connectionId to BaileysQrEventPayload interface
+export interface BaileysQrEventPayload {
+  connectionId?: string;  // ← add this
+  qr: string;
+  // ...
+}
 
-## Known Code Duplication (Consolidation Needed)
+// 2. baileys-webhook.ts — include connectionId in SSE broadcast
+baileysSessionManager.on("qr", ({ mentoradoId, qr, status, connected, connectionId }) => {
+  sseService.broadcast(mentoradoId, "status_update", {
+    status, connected, qr, connectionId, provider: "baileys",  // ← add connectionId
+  });
+});
 
-> See [consolidation-roadmap.md](references/consolidation-roadmap.md) for details.
+// 3. use-s-s-e.ts — extend ChatSSEStatusUpdatePayload
+export interface ChatSSEStatusUpdatePayload {
+  connectionId?: string;  // ← add this
+  qr?: string;
+  // ...
+}
 
-| Function                 | Duplicated in                                            |
-| ------------------------ | -------------------------------------------------------- |
-| `linkOrphanMessages()`   | `baileysRouter.ts`, `zapiRouter.ts`, `metaApiRouter.ts`  |
-| `getMentoradoWithZapi()` | `whatsappRouter.ts`, `zapiRouter.ts`                     |
-| `buildCredentials()`     | `whatsappRouter.ts`, `zapiRouter.ts`, `metaApiRouter.ts` |
+// 4. handleStatusUpdate — optimistic cache update
+if (payload.qr && payload.connectionId) {
+  utils.baileys.getSessions.setData(undefined, (prev) => {
+    if (!prev) return prev;
+    return prev.map((conn) =>
+      conn.id === payload.connectionId
+        ? { ...conn, qr: payload.qr ?? undefined, status: "connecting" as const }
+        : conn,
+    );
+  });
+}
+utils.baileys.getSessions.invalidate();
+```
 
-**Action**: Extract to shared `server/services/whatsappShared.ts` (future task).
+## Anti-Patterns (Do Not)
 
----
+| Anti-Pattern | Why |
+| --- | --- |
+| Reconnect loops without capped backoff | Causes bans and instability |
+| Direct filesystem auth in production | Unsafe and inconsistent in distributed runtime |
+| Silent auth write failures | Corrupts session recovery |
+| Deleting session rows without backup | Irreversible auth loss |
+| Bypassing session manager layer | Breaks centralized lifecycle control |
+| Registering duplicate socket listeners | Leads to leaks and duplicated events |
+| Breaking payload contracts during realtime migration | Causes frontend regressions |
+| **UUID path with partial DisconnectReason handlers** | Stale sessions clear auth but never reconnect — infinite spinner |
+| **clearAuth without auto-reconnect in UUID path** | User stuck, must delete+re-add connection to get new QR |
+| **SSE status_update without connectionId** | Frontend cannot target correct connection in optimistic update |
 
-## Limitations
+## Before Merge Checklist
 
-- Baileys relies on unofficial WhatsApp Web protocol behavior.
-- Long-lived sessions can be less stable than official Cloud API.
-- Policy/compliance risk is higher than Meta Cloud API.
-- Operational burden is higher (self-hosting, reconnection handling, observability).
-- Maximum linked devices per WhatsApp account is limited (typically 4).
-
----
-
-## Provider Transition Notes
-
-- Prefer gradual migration by mentorado cohort.
-- Keep current provider active until replacement passes smoke tests.
-- Preserve history table and conversation linkage IDs.
-- Use dry-run migration helpers first (`scripts/migrate-whatsapp-provider.ts`).
-- Enable writes only with explicit operator approval.
-
----
+- [ ] Paths and architecture references match current repo layout (`apps/...`)
+- [ ] Provider priority documented as `Baileys > Z-API > Meta (admin)`
+- [ ] Full disconnect reason matrix documented (401, 408, 411, 428, 440, 500, 503, 515)
+- [ ] Session persistence policy includes dual-write progressive rollout
+- [ ] Realtime policy documents WS-first with SSE fallback
+- [ ] Health monitoring section includes ping/pong + reconnect counters
+- [ ] Troubleshooting avoids destructive cleanup guidance
+- [ ] `python3 .claude/skills/skill-creator/scripts/quick_validate.py .claude/skills/baileys-integration` passes
 
 ## References
 
-- [Architecture Map](references/architecture.md) — complete file inventory and data flow
-- [Best Practices](references/best-practices.md) — official Baileys patterns + project patterns
-- [Consolidation Roadmap](references/consolidation-roadmap.md) — plan to eliminate code duplication
+- [Baileys Connecting Docs](https://baileys.wiki/docs/socket/connecting/)
+- [Baileys DisconnectReason API](https://baileys.wiki/docs/api/enumerations/DisconnectReason/)
+- [Baileys Defaults Source](https://raw.githubusercontent.com/WhiskeySockets/Baileys/master/src/Defaults/index.ts)
+- [Architecture Map](references/architecture.md)
+- [Best Practices](references/best-practices.md)
+- [Consolidation Roadmap](references/consolidation-roadmap.md)

@@ -1,0 +1,28 @@
+{
+  "id": "3a06749e-a2e7-46b7-bb47-08731957510f",
+  "enqueuedAt": 1772078583415,
+  "channel": "whatsapp",
+  "to": "+556299776996",
+  "accountId": "default",
+  "payloads": [
+    {
+      "text": "💜 *Mission Control — Grupo US*\n\nAqui está a tela de equipe! 18 agentes organizados por nível:\n\n• *CEO* → Laura (eu! SDR + Orquestradora)\n• *C-Level* → Claudete (RH) + Cris (Financeiro)\n• *Diretores* → Celso, Flora, Otto, Mila\n• *Builders* → Coder, CS, Suporte\n• *Marketing Squad* → Rafa, Duda, Maia, Luca T, Luca P, Sara, Malu, Luca I\n• *Produto Squad* → Dora\n\nVerde = ativo agora 🟢 | Amarelo = standby 🟡 | Cinza = inativo/a contratar\n\nO HTML fica em: `workspace/team-structure.html` — posso ajustar design, adicionar ou remover alguém! 😊",
+      "mediaUrl": "/tmp/team-structure.png",
+      "mediaUrls": [
+        "/tmp/team-structure.png"
+      ]
+    }
+  ],
+  "threadId": null,
+  "gifPlayback": false,
+  "mirror": {
+    "sessionKey": "agent:main:whatsapp:direct:+556299776996",
+    "agentId": "main",
+    "text": "💜 *Mission Control — Grupo US*\n\nAqui está a tela de equipe! 18 agentes organizados por nível:\n\n• *CEO* → Laura (eu! SDR + Orquestradora)\n• *C-Level* → Claudete (RH) + Cris (Financeiro)\n• *Diretores* → Celso, Flora, Otto, Mila\n• *Builders* → Coder, CS, Suporte\n• *Marketing Squad* → Rafa, Duda, Maia, Luca T, Luca P, Sara, Malu, Luca I\n• *Produto Squad* → Dora\n\nVerde = ativo agora 🟢 | Amarelo = standby 🟡 | Cinza = inativo/a contratar\n\nO HTML fica em: `workspace/team-structure.html` — posso ajustar design, adicionar ou remover alguém! 😊",
+    "mediaUrls": [
+      "/tmp/team-structure.png"
+    ]
+  },
+  "retryCount": 1,
+  "lastError": "Local media path is not under an allowed directory: /tmp/team-structure.png"
+}

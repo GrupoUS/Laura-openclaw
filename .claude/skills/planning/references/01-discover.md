@@ -182,27 +182,27 @@ After design is approved and documented:
 1. Codebase → Grep/Glob/Read
    └─► Confidence: 5 (verified in code)
 
-2. Context7 → resolve-library-id → query-docs
-   └─► Confidence: 4-5 (official docs)
+2. Tavily → search/searchContext/extract
+   └─► Confidence: 4-5 (freshest web data)
 
-3. Tavily → search → extract
-   └─► Confidence: 3-4 (community)
+3. NotebookLM → ask_question (project memory)
+   └─► Confidence: 4-5 (curated validation)
 
 4. Sequential Thinking → synthesis
    └─► For complex decisions
 ```
 
-### Context7
+### Tavily (Primary)
 
 ```
-resolve-library-id → query-docs
-query: "lib_name feature"
+tavily_search → tavily_searchContext → tavily_extract
 ```
 
-### Tavily
+### NotebookLM (Validation)
 
 ```
-tavily_search → tavily_extract
+ask_question(notebook_id: "neondash-project-memory", question: "...")
+ask_question(notebook_id: "planning-prompt-engineering", question: "...")
 ```
 
 ### Sequential Thinking

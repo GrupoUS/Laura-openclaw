@@ -71,7 +71,7 @@ export function classifyComplexity(task: {
 /**
  * Main decision function - returns recommended strategy
  */
-export function decideStrategy(analysis: Pick<TaskAnalysis, "complexity" | "layers" | "parallelizable" | "requiresCoordination">): OrchestrationStrategy {
+export function decideStrategy(analysis: TaskAnalysis): OrchestrationStrategy {
   const { complexity, layers, parallelizable, requiresCoordination } = analysis;
 
   // L1-L3: Single agent for simple tasks
@@ -188,10 +188,8 @@ function generateReasoning(
 }
 
 // CLI-friendly output
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const _g = globalThis as any;
-if (_g.Bun) {
-  const args: string[] = _g.Bun.argv.slice(2);
+if (import.meta.main) {
+  const args = process.argv.slice(2);
   const task = args.join(" ");
   const result = analyzeTask({ description: task });
   console.log(JSON.stringify(result, null, 2));

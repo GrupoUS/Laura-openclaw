@@ -39,10 +39,6 @@
           {
             "type": "command",
             "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/session-context.sh"
-          },
-          {
-            "type": "command",
-            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/evolution-load.sh"
           }
         ]
       }
@@ -54,6 +50,26 @@
           {
             "type": "command",
             "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/smart-bash-approver.sh",
+            "timeout": 10
+          }
+        ]
+      },
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/protect-files.sh",
+            "timeout": 10
+          }
+        ]
+      },
+      {
+        "matcher": "Task",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/task-routing-guard.sh",
             "timeout": 10
           }
         ]
@@ -77,21 +93,7 @@
           {
             "type": "command",
             "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/ultracite-fix.sh",
-            "timeout": 30,
-            "async": true
-          }
-        ]
-      }
-    ],
-    "PostToolUseFailure": [
-      {
-        "matcher": "Bash|Edit|Write",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/evolution-error.sh",
-            "timeout": 10,
-            "async": true
+            "timeout": 30
           }
         ]
       }
@@ -112,13 +114,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/ultracite-check.sh",
-            "timeout": 60
-          },
-          {
-            "type": "command",
-            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/evolution-end.sh",
-            "async": true
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/background-cleanup.sh"
           }
         ]
       }
@@ -133,24 +129,13 @@
         ]
       }
     ],
-    "SubagentStart": [
-      {
-        "matcher": "orchestrator|backend-specialist|frontend-specialist|debugger|test-engineer",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/subagent-start.sh"
-          }
-        ]
-      }
-    ],
     "SubagentStop": [
       {
-        "matcher": "orchestrator|backend-specialist|frontend-specialist|debugger|test-engineer|database-architect|security-auditor|devops-engineer|performance-optimizer",
+        "matcher": "orchestrator|backend-specialist|frontend-specialist|database-architect|debugger|performance-optimizer",
         "hooks": [
           {
             "type": "command",
-            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/subagent-log.sh"
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/oracle-escalation.sh"
           }
         ]
       }

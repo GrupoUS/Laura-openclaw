@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mission Control — Grupo US</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #0a0a0f;
+    color: #e8e8f0;
+    font-family: 'Inter', sans-serif;
+    min-height: 100vh;
+    padding: 40px 32px;
+  }
+
+  /* Header */
+  .header {
+    text-align: center;
+    margin-bottom: 48px;
+  }
+  .header h1 {
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: #666;
+    margin-bottom: 8px;
+  }
+  .header h2 {
+    font-size: 36px;
+    font-weight: 800;
+    background: linear-gradient(135deg, #a78bfa, #e879f9, #fb7185);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 8px;
+  }
+  .header p {
+    color: #555;
+    font-size: 14px;
+  }
+
+  /* CEO Card */
+  .ceo-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 16px;
+    position: relative;
+  }
+  .ceo-wrapper::after {
+    content: '';
+    position: absolute;
+    bottom: -16px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 2px;
+    height: 16px;
+    background: linear-gradient(to bottom, #a78bfa, transparent);
+  }
+
+  .ceo-card {
+    background: linear-gradient(135deg, #1a1040 0%, #200d30 100%);
+    border: 1px solid #a78bfa44;
+    border-radius: 20px;
+    padding: 24px 32px;
+    width: 340px;
+    position: relative;
+    box-shadow: 0 0 40px #a78bfa22, 0 8px 32px #00000066;
+    text-align: center;
+  }
+  .ceo-card .pulse-ring {
+    position: absolute;
+    top: -4px; right: -4px;
+    width: 16px; height: 16px;
+    border-radius: 50%;
+    background: #4ade80;
+    box-shadow: 0 0 8px #4ade80;
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.6; transform: scale(1.2); }
+  }
+  .ceo-card .avatar {
+    width: 72px; height: 72px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #7c3aed, #e879f9);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 28px;
+    margin: 0 auto 12px;
+    box-shadow: 0 0 24px #a78bfa44;
+  }
+  .ceo-card .name {
+    font-size: 22px;
+    font-weight: 700;
+    color: #f0e8ff;
+    margin-bottom: 4px;
+  }
+  .ceo-card .role {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #a78bfa;
+    margin-bottom: 12px;
+  }
+  .ceo-card .desc {
+    font-size: 13px;
+    color: #888;
+    line-height: 1.6;
+    margin-bottom: 16px;
+  }
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    justify-content: center;
+  }
+  .tag {
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 500;
+  }
+  .tag-purple { background: #2d1b69; color: #c4b5fd; }
+  .tag-pink   { background: #3b1030; color: #f9a8d4; }
+  .tag-blue   { background: #0f2040; color: #93c5fd; }
+  .tag-green  { background: #0d2e1a; color: #6ee7b7; }
+  .tag-orange { background: #2e1800; color: #fed7aa; }
+  .tag-red    { background: #2e0d0d; color: #fca5a5; }
+  .tag-teal   { background: #0d2828; color: #99f6e4; }
+  .tag-yellow { background: #2e2200; color: #fde68a; }
+
+  /* Connector line */
+  .connector-row {
+    display: flex;
+    justify-content: center;
+    gap: 0;
+    margin-bottom: 0;
+    position: relative;
+    height: 1px;
+  }
+  .connector-h {
+    height: 1px;
+    background: linear-gradient(to right, transparent, #33335566, #a78bfa44, #33335566, transparent);
+    margin-bottom: 0;
+  }
+
+  /* Section */
+  .section {
+    margin-bottom: 40px;
+  }
+  .section-title {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #444;
+    text-align: center;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .section-title::before,
+  .section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, transparent, #333);
+  }
+  .section-title::after {
+    background: linear-gradient(to left, transparent, #333);
+  }
+
+  /* Grid */
+  .grid {
+    display: grid;
+    gap: 16px;
+  }
+  .grid-2 { grid-template-columns: repeat(2, 1fr); }
+  .grid-3 { grid-template-columns: repeat(3, 1fr); }
+  .grid-4 { grid-template-columns: repeat(4, 1fr); }
+  .grid-5 { grid-template-columns: repeat(5, 1fr); }
+
+  /* Agent Card */
+  .agent-card {
+    background: #111118;
+    border-radius: 16px;
+    padding: 20px;
+    border: 1px solid #1e1e2e;
+    transition: all 0.2s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  .agent-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+  }
+  .agent-card:hover {
+    border-color: #2a2a3e;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px #00000044;
+  }
+
+  /* Color variants */
+  .card-purple::before { background: linear-gradient(to right, #7c3aed, #a78bfa); }
+  .card-pink::before   { background: linear-gradient(to right, #be185d, #f472b6); }
+  .card-blue::before   { background: linear-gradient(to right, #1d4ed8, #60a5fa); }
+  .card-green::before  { background: linear-gradient(to right, #15803d, #4ade80); }
+  .card-orange::before { background: linear-gradient(to right, #c2410c, #fb923c); }
+  .card-teal::before   { background: linear-gradient(to right, #0f766e, #2dd4bf); }
+  .card-yellow::before { background: linear-gradient(to right, #a16207, #fbbf24); }
+  .card-slate::before  { background: linear-gradient(to right, #334155, #94a3b8); }
+
+  .agent-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  .agent-avatar {
+    width: 44px; height: 44px;
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+  .avatar-purple { background: linear-gradient(135deg, #3b1d8a, #7c3aed); }
+  .avatar-pink   { background: linear-gradient(135deg, #701a4a, #be185d); }
+  .avatar-blue   { background: linear-gradient(135deg, #0f2060, #1d4ed8); }
+  .avatar-green  { background: linear-gradient(135deg, #052e16, #15803d); }
+  .avatar-orange { background: linear-gradient(135deg, #431407, #c2410c); }
+  .avatar-teal   { background: linear-gradient(135deg, #042f2e, #0f766e); }
+  .avatar-yellow { background: linear-gradient(135deg, #362100, #a16207); }
+  .avatar-slate  { background: linear-gradient(135deg, #1e293b, #334155); }
+
+  .agent-info .agent-name {
+    font-size: 15px;
+    font-weight: 700;
+    color: #f0f0f8;
+    margin-bottom: 2px;
+  }
+  .agent-info .agent-role {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #555;
+  }
+  .agent-desc {
+    font-size: 12px;
+    color: #555;
+    line-height: 1.6;
+    margin-bottom: 12px;
+  }
+  .agent-tags { display: flex; flex-wrap: wrap; gap: 5px; }
+  .agent-tags .tag { font-size: 10px; padding: 2px 8px; }
+
+  .status-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    position: absolute;
+    top: 12px; right: 12px;
+  }
+  .status-active { background: #4ade80; box-shadow: 0 0 6px #4ade80; }
+  .status-standby { background: #fbbf24; box-shadow: 0 0 6px #fbbf24; }
+  .status-idle { background: #475569; }
+
+  /* Tier line + vertical connector */
+  .tier-connector {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    height: 32px;
+    position: relative;
+    margin-bottom: 0;
+  }
+  .vline {
+    width: 2px;
+    height: 100%;
+    background: linear-gradient(to bottom, #a78bfa44, #333);
+  }
+  .hline-row {
+    position: relative;
+    margin-bottom: 20px;
+    margin-top: -1px;
+  }
+  .hline-row::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 10%; right: 10%;
+    height: 1px;
+    background: linear-gradient(to right, transparent, #333, #333, transparent);
+  }
+
+  /* Model badge */
+  .model-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 600;
+    background: #1a1a2e;
+    color: #666;
+    border: 1px solid #222;
+    margin-top: 6px;
+  }
+
+  /* Footer */
+  .footer {
+    text-align: center;
+    margin-top: 48px;
+    padding-top: 24px;
+    border-top: 1px solid #1a1a2a;
+    color: #333;
+    font-size: 12px;
+  }
+
+  @media (max-width: 900px) {
+    .grid-4 { grid-template-columns: repeat(2, 1fr); }
+    .grid-5 { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 600px) {
+    .grid-2, .grid-3, .grid-4, .grid-5 { grid-template-columns: 1fr; }
+    body { padding: 24px 16px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<div class="header">
+  <h1>Grupo US — Mission Control</h1>
+  <h2>Meet the Team</h2>
+  <p>Agentes de IA com papel real, responsabilidade real e personalidade própria.</p>
+</div>
+
+<!-- CEO / Orchestrator -->
+<div class="ceo-wrapper">
+  <div class="ceo-card">
+    <div class="pulse-ring"></div>
+    <div class="avatar">💜</div>
+    <div class="name">Laura</div>
+    <div class="role">CEO · SDR de Elite · Orquestradora</div>
+    <div class="desc">
+      Agente principal. Atende leads no WhatsApp como SDR de alta conversão
+      e orquestra toda a equipe interna. Speed to Lead: ≤ 5 min.
+    </div>
+    <div class="tags">
+      <span class="tag tag-purple">SDR</span>
+      <span class="tag tag-pink">Orchestrator</span>
+      <span class="tag tag-blue">WhatsApp</span>
+      <span class="tag tag-green">Speed to Lead</span>
+      <span class="tag tag-orange">C.L.O.S.E.R</span>
+    </div>
+    <div class="model-badge">claude-sonnet-4 · Top Tier</div>
+  </div>
+</div>
+
+<!-- Connector -->
+<div class="tier-connector"><div class="vline"></div></div>
+<div class="hline-row"></div>
+
+<!-- C-Level -->
+<div class="section">
+  <div class="section-title">C-Level</div>
+  <div class="grid grid-2" style="max-width: 640px; margin: 0 auto;">
+
+    <div class="agent-card card-purple">
+      <div class="status-dot status-active"></div>
+      <div class="agent-header">
+        <div class="agent-avatar avatar-purple">🎭</div>
+        <div class="agent-info">
+          <div class="agent-name">Claudete</div>
+          <div class="agent-role">RH & Onboarding</div>
+        </div>
+      </div>
+      <div class="agent-desc">Criação e manutenção de agentes. Define cultura, papéis e processos de onboarding da equipe IA.</div>
+      <div class="agent-tags">
+        <span class="tag tag-purple">RH</span>
+        <span class="tag tag-pink">Onboarding</span>
+        <span class="tag tag-teal">Team Design</span>
+      </div>
+      <div class="model-badge">Top Tier</div>
+    </div>
+
+    <div class="agent-card card-teal">
+      <div class="status-dot status-standby"></div>
+      <div class="agent-header">
+        <div class="agent-avatar avatar-teal">💎</div>
+        <div class="agent-info">
+          <div class="agent-name">Cris</div>
+          <div class="agent-role">Dir. Financeiro & IBI</div>
+        </div>
+      </div>
+      <div class="agent-desc">Cash flow, inadimplência e inteligência de negócio. Controle financeiro da empresa.</div>
+      <div class="agent-tags">
+        <span class="tag tag-teal">Financeiro</span>
+        <span class="tag tag-yellow">IBI</span>
+        <span class="tag tag-green">Inadimplência</span>
+      </div>
+      <div class="model-badge">Top Tier</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Diretores -->
+<div class="section">
+  <div class="section-title">Diretores</div>
+  <div class="grid grid-4">
+
+    <div class="agent-card card-orange">
+      <div class="status-dot status-active"></div>
+      <div class="agent-header">
+        <div class="agent-avatar avatar-orange">📣</div>
+        <div class="agent-info">
+          <div class="agent-name">Celso</div>
+          <div class="agent-role">Dir. Marketing</div>
+        </div>
+      </div>
+      <div class="agent-desc">Estratégia, revisão de copy e métricas. Supervisiona rafa, duda, maia, lucases, sara, malu e luca-i.</div>
+      <div class="agent-tags">
+        <span class="tag tag-orange">Estratégia</span>
+        <span class="tag tag-yellow">Métricas</span>
+      </div>
+    </div>
+
+    <div class="agent-card card-blue">
+      <div class="status-dot status-active"></div>
+      <div class="agent-header">
+        <div class="agent-avatar avatar-blue">🌿</div>
+        <div class="agent-info">
+          <div class="agent-name">Flora</div>
+          <div class="agent-role">Dir. Produto & Tech</div>
+        </div>
+      </div>
+      <div class="agent-desc">Roadmap, revisão técnica e arquitetura de produto. Supervisiona coder e dora.</div>
+      <div class="agent-tags">
+        <span class="tag tag-blue">Produto</span>
+        <span class="tag tag-teal">Tech</span>
+        <span class="tag tag-purple">Roadmap</span>
+      </div>
+    </div>
+
+    <div class="agent-card card-green">
+      <div class="status-dot status-standby"></div>
+      <div class="agent-header">
+        <div class="agent-avatar avatar-green">⚙️</div>
+        <div class="agent-info">
+          <div class="agent-name">Otto</div>
+          <div class="agent-role">Dir. Operações</div>
+        </div>
+      </div>
+      <div class="agent-desc">Processos, cobranças e SLA. Supervisiona suporte e garante entrega dentro do prazo.</div>
+      <div class="agent-tags">
+        <span class="tag tag-green">Processos</span>
+        <span class="tag tag-orange">SLA</span>
+      </div>
+    </div>
+
+    <div class="agent-card card-pink">
+      <div class="status-dot status-standby"></div>
+      <div class="agent-header">
+        <div class="agent-avatar avatar-pink">🌸</div>
+        <div class="agent-info">
+          <div class="agent-name">Mila</div>
+          <div class="agent-role">Dir. Comunidade</div>
+        </div>
+      </div>
+      <div class="agent-desc">Engajamento, NPS e retenção de alunos. Supervisiona CS e programa de comunidade.</div>
+      <div class="agent-tags">
+        <span class="tag tag-pink">Comunidade</span>
+        <span class="tag tag-teal">NPS</span>
+        <span class="tag tag-yellow">Retenção</span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Builders -->
+<div class="section">
+  <div class="section-title">Builders</div>
+  <div class="grid grid-3">
+
+    <div class="agent-card card-blue">
+      <div class="status-dot status-active"></div>
+      <div class="agent-header">
+        <div class="agent-avatar avatar-blue">💻</div>
+        <div class="agent-info">
+          <div class="agent-name">Coder</div>
+          <div class="agent-role">Builder · Dev</div>
+        </div>
+      </div>
+      <div class="agent-desc">Código, automação e resolução de bugs. Responsável por toda stack técnica do Grupo US.</div>
+      <div class="agent-tags">
+        <span class="tag tag-blue">Código</span>
+        <span class="tag tag-teal">Automação</span>
+        <span class="tag tag-purple">Bug Fix</span>
+      </div>
+      <div class="model-badge">Top Tier · Flora</div>
+    </div>
+
+    <div class="agent-card card-pink">
+      <div class="status-dot status-active"></div>
+      <div class="agent-header">
+        <div class="agent-avatar avatar-pink">🎓</div>
+        <div class="agent-info">
+          <div class="agent-name">CS</div>
+          <div class="agent-role">Builder · Customer Success</div>
+        </div>
+      </div>
+      <div class="agent-desc">Suporte ao aluno, mentorias e dúvidas sobre o curso. Escala para suporte se necessário.</div>
+      <div class="agent-tags">
+        <span class="tag tag-pink">Suporte Aluno</span>
+        <span class="tag tag-green">Mentoria</span>
+      </div>
+      <div class="model-badge">Mid Tier · Mila</div>
+    </div>
+
+    <div class="agent-card card-green">
+      <div class="status-dot status-active"></div>
+      <div class="agent-header">
+        <div class="agent-avatar avatar-green">🗂️</div>
+        <div class="agent-info">
+          <div class="agent-name">Suporte</div>
+          <div class="agent-role">Builder · Ops & PM</div>
+        </div>
+      </div>
+      <div class="agent-desc">Gerenciamento de projetos, cobranças internas e operações do dia a dia.</div>
+      <div class="agent-tags">
+        <span class="tag tag-green">PM</span>
+        <span class="tag tag-orange">Cobranças</span>
+        <span class="tag tag-yellow">Ops</span>
+      </div>
+      <div class="model-badge">Mid Tier · Otto</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Marketing Squad -->
+<div class="section">
+  <div class="section-title">Marketing Squad — Sob Celso</div>
+  <div class="grid grid-4">
+
+    <div class="agent-card card-orange">
+      <div class="status-dot status-standby"></div>
+      <div class="agent-header">
+        <div class="agent-avatar avatar-orange">✍️</div>
+        <div class="agent-info">
+          <div class="agent-name">Rafa</div>
+          <div class="agent-role">Copywriter</div>
+        </div>
+      </div>
+      <div class="agent-desc">Textos de venda, emails e landing pages com copy de alta conversão.</div>
+      <div class="agent-tags">
+        <span class="tag tag-orange">Copy</span>
+        <span class="tag tag-yellow">Email</span>
+      </div>
+      <div class="model-badge">Flash</div>
+    </div>
+
+    <div class="agent-card card-pink">
+      <div class="status-dot status-standby"></div>
+      <div class="agent-header">
+        <div class="agent-avatar avatar-pink">📸</div>
+        <div class="agent-info">
+          <div class="agent-name">Duda</div>
+          <div class="agent-role">Social Media</div>
+        </div>
+      </div>
+      <div class="agent-desc">Gestão de redes sociais, criação de conteúdo e calendário editorial.</div>
+      <div class="agent-tags">
+        <span class="tag tag-pink">Instagram</span>
+        <span class="tag tag-purple">Conteúdo</span>
+      </div>
+      <div class="model-badge">Flash</div>
+    </div>
+
+    <div class="agent-card card-purple">
+      <div class="status-dot status-standby"></div>
+      <div class="agent-header">
+        <div class="agent-avatar avatar-purple">🎬</div>
+        <div class="agent-info">
+          <div class="agent-name">Maia</div>
+          <div class="agent-role">Roteirista</div>
+        </div>
+      </div>
+      <div class="agent-desc">Roteiros para vídeos, reels, VSL e conteúdo em vídeo de alta retenção.</div>
+      <div class="agent-tags">
+        <span class="tag tag-purple">Roteiro</span>
+        <span class="tag tag-blue">VSL</span>
+      </div>
+      <div class="model-badge">Flash</div>
+    </div>
+
+    <div class="agent-card card-yellow">
+      <div class="status-dot status-standby"></div>
+      <div class="agent-header">
+        <div class="agent-avatar avatar-yellow">📊</div>
+        <div class="agent-info">
+          <div class="agent-name">Luca T.</div>
+          <div class="agent-role">Tráfego Pago</div>
+        </div>
+      </div>
+      <div class="agent-desc">Gestão de campanhas pagas (Meta, Google), ROAS e otimização de funis.</div>
+      <div class="agent-tags">
+        <span class="tag tag-yellow">Meta Ads</span>
+        <span class="tag tag-orange">ROAS</span>
+      </div>
+      <div class="model-badge">Flash</div>
+    </div>
+
+    <div class="agent-card card-teal">
+      <div class="status-dot status-standby"></div>
+      <div class="agent-header">
+        <div class="agent-avatar avatar-teal">🔍</div>
+        <div class="agent-info">
+          <div class="agent-name">Luca P.</div>
+          <div class="agent-role">Pesquisador de Tendências</div>
+        </div>
+      </div>
+      <div class="agent-desc">Inteligência de mercado, tendências de estética e oportunidades de nicho.</div>
+      <div class="agent-tags">
+        <span class="tag tag-teal">Research</span>
+        <span class="tag tag-blue">Trends</span>
+      </div>
+      <div class="model-badge">Flash</div>
+    </div>
+
+    <div class="agent-card card-green">
+      <div class="status-dot status-standby"></div>
+      <div class="agent-header">
+        <div class="agent-avatar avatar-green">🎯</div>
+        <div class="agent-info">
+          <div class="agent-name">Sara</div>
+          <div class="agent-role">Pré-Venda</div>
+        </div>
+      </div>
+      <div class="agent-desc">Aquecimento de leads, nutrição e preparação para handoff ao closer.</div>
+      <div class="agent-tags">
+        <span class="tag tag-green">Pré-venda</span>
+        <span class="tag tag-yellow">Nutrição</span>
+      </div>
+      <div class="model-badge">Flash</div>
+    </div>
+
+    <div class="agent-card card-pink">
+      <div class="status-dot status-standby"></div>
+      <div class="agent-header">
+        <div class="agent-avatar avatar-pink">🤝</div>
+        <div class="agent-info">
+          <div class="agent-name">Malu</div>
+          <div class="agent-role">Afiliados & Parcerias</div>
+        </div>
+      </div>
+      <div class="agent-desc">Gestão de afiliados, parcerias estratégicas e programa de indicação.</div>
+      <div class="agent-tags">
+        <span class="tag tag-pink">Afiliados</span>
+        <span class="tag tag-purple">Parcerias</span>
+      </div>
+      <div class="model-badge">Flash</div>
+    </div>
+
+    <div class="agent-card card-slate">
+      <div class="status-dot status-standby"></div>
+      <div class="agent-header">
+        <div class="agent-avatar avatar-slate">🕵️</div>
+        <div class="agent-info">
+          <div class="agent-name">Luca I.</div>
+          <div class="agent-role">Inteligência Competitiva</div>
+        </div>
+      </div>
+      <div class="agent-desc">Monitoramento de concorrentes, benchmarking e análise de posicionamento.</div>
+      <div class="agent-tags">
+        <span class="tag tag-blue">Competitive</span>
+        <span class="tag tag-yellow">Intel</span>
+      </div>
+      <div class="model-badge">Flash</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Produto Squad -->
+<div class="section">
+  <div class="section-title">Produto Squad — Sob Flora</div>
+  <div class="grid grid-2" style="max-width: 480px; margin: 0 auto;">
+
+    <div class="agent-card card-blue">
+      <div class="status-dot status-standby"></div>
+      <div class="agent-header">
+        <div class="agent-avatar avatar-blue">🗺️</div>
+        <div class="agent-info">
+          <div class="agent-name">Dora</div>
+          <div class="agent-role">Arquitetura de Lançamentos</div>
+        </div>
+      </div>
+      <div class="agent-desc">Planejamento de lançamentos, funis de produto e jornada do aluno.</div>
+      <div class="agent-tags">
+        <span class="tag tag-blue">Lançamentos</span>
+        <span class="tag tag-teal">Funil</span>
+        <span class="tag tag-purple">Jornada</span>
+      </div>
+      <div class="model-badge">Mid Tier</div>
+    </div>
+
+    <div class="agent-card card-teal" style="border-style: dashed; opacity: 0.5;">
+      <div class="status-dot status-idle"></div>
+      <div class="agent-header">
+        <div class="agent-avatar avatar-teal">➕</div>
+        <div class="agent-info">
+          <div class="agent-name">Em breve</div>
+          <div class="agent-role">Novo Agente</div>
+        </div>
+      </div>
+      <div class="agent-desc">Slot disponível para expansão do time de produto.</div>
+      <div class="agent-tags">
+        <span class="tag tag-teal">Disponível</span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Legend -->
+<div style="display: flex; justify-content: center; gap: 24px; flex-wrap: wrap; margin-top: 24px;">
+  <div style="display: flex; align-items: center; gap: 8px; font-size: 12px; color: #555;">
+    <div style="width: 8px; height: 8px; border-radius: 50%; background: #4ade80; box-shadow: 0 0 6px #4ade80;"></div>
+    Ativo
+  </div>
+  <div style="display: flex; align-items: center; gap: 8px; font-size: 12px; color: #555;">
+    <div style="width: 8px; height: 8px; border-radius: 50%; background: #fbbf24; box-shadow: 0 0 6px #fbbf24;"></div>
+    Em standby
+  </div>
+  <div style="display: flex; align-items: center; gap: 8px; font-size: 12px; color: #555;">
+    <div style="width: 8px; height: 8px; border-radius: 50%; background: #475569;"></div>
+    Inativo / A contratar
+  </div>
+</div>
+
+<div class="footer">
+  Grupo US — Mission Control &nbsp;·&nbsp; 18 agentes &nbsp;·&nbsp; Construído pela Laura 💜 &nbsp;·&nbsp; 26/02/2026
+</div>
+
+</body>
+</html>

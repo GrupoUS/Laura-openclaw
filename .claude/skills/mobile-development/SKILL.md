@@ -30,9 +30,9 @@ Comprehensive mobile development for React Native and Flutter cross-platform app
 
 ### When NOT to Use
 
-- Web frontend → use `frontend-rules` or `frontend-design@claude-plugins-official` skill
-- Backend API → use `backend-design` skill
-- Database work → use `clerk-neon-auth` skill
+- Web frontend → use `debugger` frontend-debug pack or `frontend-design@claude-plugins-official`
+- Backend API → use `debugger` backend-debug pack
+- Database work → use `debugger` auth-db-debug pack
 
 ---
 
@@ -44,33 +44,33 @@ Comprehensive mobile development for React Native and Flutter cross-platform app
 
 ## Touch Target Standards
 
-| Platform | Minimum Size | Recommended | Spacing |
-|----------|--------------|-------------|---------|
-| **iOS** | 44×44 pt | 48×48 pt | 8-12 px |
-| **Android** | 48×48 dp | 48×48 dp | 8-12 dp |
+| Platform    | Minimum Size | Recommended | Spacing |
+| ----------- | ------------ | ----------- | ------- |
+| **iOS**     | 44×44 pt     | 48×48 pt    | 8-12 px |
+| **Android** | 48×48 dp     | 48×48 dp    | 8-12 dp |
 
 ---
 
 ## Performance Targets
 
-| Metric | Target | Why |
-|--------|--------|-----|
-| **Frame Rate** | 60fps | Smooth animations |
-| **JS Bundle** | < 20MB | Fast startup |
-| **Memory** | < 200MB | Prevent crashes |
-| **Cold Start** | < 3s | User retention |
+| Metric         | Target  | Why               |
+| -------------- | ------- | ----------------- |
+| **Frame Rate** | 60fps   | Smooth animations |
+| **JS Bundle**  | < 20MB  | Fast startup      |
+| **Memory**     | < 200MB | Prevent crashes   |
+| **Cold Start** | < 3s    | User retention    |
 
 ---
 
 ## Framework Selection
 
-| Scenario | Recommendation |
-|----------|----------------|
-| Cross-platform, JavaScript team | React Native |
-| Cross-platform, Dart/Flutter team | Flutter |
-| Maximum code sharing | Expo (React Native) |
-| Native iOS feel | SwiftUI (iOS only) |
-| Native Android | Kotlin (Android only) |
+| Scenario                          | Recommendation        |
+| --------------------------------- | --------------------- |
+| Cross-platform, JavaScript team   | React Native          |
+| Cross-platform, Dart/Flutter team | Flutter               |
+| Maximum code sharing              | Expo (React Native)   |
+| Native iOS feel                   | SwiftUI (iOS only)    |
+| Native Android                    | Kotlin (Android only) |
 
 ---
 
@@ -158,23 +158,23 @@ const Icon(Icons.star)
 
 ### iOS
 
-| Aspect | Guideline |
-|--------|-----------|
-| Navigation | Edge swipe back gesture |
-| Tabs | Bottom tab bar |
-| Status bar | Light/dark content |
+| Aspect     | Guideline                    |
+| ---------- | ---------------------------- |
+| Navigation | Edge swipe back gesture      |
+| Tabs       | Bottom tab bar               |
+| Status bar | Light/dark content           |
 | Safe areas | Respect notch/Dynamic Island |
-| Haptics | UIImpactFeedbackGenerator |
+| Haptics    | UIImpactFeedbackGenerator    |
 
 ### Android
 
-| Aspect | Guideline |
-|--------|-----------|
-| Navigation | Hardware/software back button |
-| Tabs | Top tabs or bottom nav |
-| Status bar | Transparent with flags |
-| Gestures | Android 10+ gesture navigation |
-| Haptics | HapticFeedbackConstants |
+| Aspect     | Guideline                      |
+| ---------- | ------------------------------ |
+| Navigation | Hardware/software back button  |
+| Tabs       | Top tabs or bottom nav         |
+| Status bar | Transparent with flags         |
+| Gestures   | Android 10+ gesture navigation |
+| Haptics    | HapticFeedbackConstants        |
 
 ---
 
@@ -182,37 +182,37 @@ const Icon(Icons.star)
 
 ### React Native
 
-| Complexity | Solution |
-|------------|----------|
-| Simple | useState + Context |
-| Medium | Zustand |
-| Complex | Redux Toolkit |
-| Server State | TanStack Query |
+| Complexity   | Solution           |
+| ------------ | ------------------ |
+| Simple       | useState + Context |
+| Medium       | Zustand            |
+| Complex      | Redux Toolkit      |
+| Server State | TanStack Query     |
 
 ### Flutter
 
-| Complexity | Solution |
-|------------|----------|
-| Simple | StatefulWidget |
-| Medium | Provider |
-| Complex | Riverpod / BLoC |
+| Complexity | Solution        |
+| ---------- | --------------- |
+| Simple     | StatefulWidget  |
+| Medium     | Provider        |
+| Complex    | Riverpod / BLoC |
 
 ---
 
 ## Secure Storage
 
-| Platform | React Native | Flutter |
-|----------|--------------|---------|
-| **iOS** | expo-secure-store | flutter_secure_storage |
-| **Android** | expo-secure-store | flutter_secure_storage |
+| Platform      | React Native            | Flutter                      |
+| ------------- | ----------------------- | ---------------------------- |
+| **iOS**       | expo-secure-store       | flutter_secure_storage       |
+| **Android**   | expo-secure-store       | flutter_secure_storage       |
 | **Never Use** | AsyncStorage for tokens | SharedPreferences for tokens |
 
 ```typescript
 // ✅ Secure token storage
-import * as SecureStore from 'expo-secure-store';
+import * as SecureStore from "expo-secure-store";
 
-await SecureStore.setItemAsync('token', userToken);
-const token = await SecureStore.getItemAsync('token');
+await SecureStore.setItemAsync("token", userToken);
+const token = await SecureStore.getItemAsync("token");
 ```
 
 ---
@@ -228,7 +228,7 @@ const queryClient = new QueryClient({
     queries: {
       staleTime: 1000 * 60 * 5, // 5 minutes
       cacheTime: 1000 * 60 * 60 * 24, // 24 hours
-      networkMode: 'offlineFirst',
+      networkMode: "offlineFirst",
     },
   },
 });
@@ -278,27 +278,27 @@ flutter build ios --release
 
 ## Debugging Tools
 
-| Tool | Use For |
-|------|---------|
-| Flipper | Network, layout, performance |
-| React DevTools | Component tree, props |
-| Chrome DevTools | Debug JS in WebView |
-| Xcode Instruments | iOS memory, CPU |
-| Android Profiler | Android memory, CPU |
-| Logcat | Android system logs |
+| Tool              | Use For                      |
+| ----------------- | ---------------------------- |
+| Flipper           | Network, layout, performance |
+| React DevTools    | Component tree, props        |
+| Chrome DevTools   | Debug JS in WebView          |
+| Xcode Instruments | iOS memory, CPU              |
+| Android Profiler  | Android memory, CPU          |
+| Logcat            | Android system logs          |
 
 ---
 
 ## Anti-Patterns
 
-| Never | Always |
-|-------|--------|
-| ScrollView for lists | FlatList / ListView.builder |
-| Inline renderItem | useCallback + React.memo |
-| AsyncStorage for tokens | SecureStore / Keychain |
-| Hardcoded API keys | Environment variables |
-| Skip platform checks | iOS = iOS feel, Android = Android feel |
-| Ignore thumb zone | Primary CTAs in reach |
+| Never                   | Always                                 |
+| ----------------------- | -------------------------------------- |
+| ScrollView for lists    | FlatList / ListView.builder            |
+| Inline renderItem       | useCallback + React.memo               |
+| AsyncStorage for tokens | SecureStore / Keychain                 |
+| Hardcoded API keys      | Environment variables                  |
+| Skip platform checks    | iOS = iOS feel, Android = Android feel |
+| Ignore thumb zone       | Primary CTAs in reach                  |
 
 ---
 

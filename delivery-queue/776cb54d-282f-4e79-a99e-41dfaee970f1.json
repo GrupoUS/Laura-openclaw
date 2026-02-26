@@ -1,0 +1,28 @@
+{
+  "id": "776cb54d-282f-4e79-a99e-41dfaee970f1",
+  "enqueuedAt": 1772056466834,
+  "channel": "whatsapp",
+  "to": "+556299776996",
+  "accountId": "default",
+  "payloads": [
+    {
+      "text": "",
+      "mediaUrl": "/tmp/relatorio_laura.ogg",
+      "mediaUrls": [
+        "/tmp/relatorio_laura.ogg"
+      ]
+    }
+  ],
+  "threadId": null,
+  "gifPlayback": false,
+  "mirror": {
+    "sessionKey": "agent:main:whatsapp:direct:+556299776996",
+    "agentId": "main",
+    "text": "",
+    "mediaUrls": [
+      "/tmp/relatorio_laura.ogg"
+    ]
+  },
+  "retryCount": 1,
+  "lastError": "Local media path is not under an allowed directory: /tmp/relatorio_laura.ogg"
+}

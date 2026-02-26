@@ -416,7 +416,7 @@
       "name": "followup-comercial-diario",
       "enabled": true,
       "createdAtMs": 1771610323090,
-      "updatedAtMs": 1771851733105,
+      "updatedAtMs": 1772025000047,
       "schedule": {
         "kind": "cron",
         "expr": "0 10 * * 1-5"
@@ -434,11 +434,71 @@
         "to": "120363361363907454@g.us"
       },
       "state": {
-        "nextRunAtMs": 1771938000000,
-        "lastRunAtMs": 1771851600023,
-        "lastStatus": "ok",
-        "lastDurationMs": 133082,
-        "consecutiveErrors": 0
+        "nextRunAtMs": 1772110800000,
+        "lastRunAtMs": 1772024400016,
+        "lastStatus": "error",
+        "lastDurationMs": 600031,
+        "consecutiveErrors": 1,
+        "lastError": "Error: cron: job execution timed out"
+      }
+    },
+    {
+      "id": "0600c155-a838-456d-9a40-1cdc2c453c80",
+      "name": "sdr-audit-leads",
+      "enabled": true,
+      "createdAtMs": 1772075193853,
+      "updatedAtMs": 1772078853883,
+      "schedule": {
+        "kind": "every",
+        "everyMs": 1800000,
+        "anchorMs": 1772075193853
+      },
+      "sessionTarget": "isolated",
+      "wakeMode": "now",
+      "payload": {
+        "kind": "agentTurn",
+        "message": "Você é a Laura, SDR do Grupo US. Tarefa de auditoria silenciosa:\n1. Execute: python3 /Users/mauricio/.openclaw/agents/main/workspace/scripts/check_leads_pending.py --json\n2. Para cada lead com hours_ago entre 0.1 e 1 (mensagem nova sem resposta): envie via message tool (channel=whatsapp, target=número): 'Oi! 💜 Sou a Laura, do Grupo US. Que bom que você chegou até a gente! Me conta: você já atua na área da saúde estética ou está pensando em entrar?'\n3. Se não houver leads: não faça nada.\nREGRAS: NUNCA notifique Maurício. NUNCA envie entre 23h-8h. NUNCA envie em grupos.",
+        "model": "google-gemini-cli/gemini-3-flash-preview",
+        "timeoutSeconds": 60
+      },
+      "delivery": {
+        "mode": "announce",
+        "channel": "last"
+      },
+      "state": {
+        "nextRunAtMs": 1772080593853,
+        "lastRunAtMs": 1772078793862,
+        "lastStatus": "error",
+        "lastDurationMs": 60021,
+        "consecutiveErrors": 2,
+        "lastError": "Error: cron: job execution timed out"
+      }
+    },
+    {
+      "id": "7646a438-2dff-4750-b62e-602284d512dd",
+      "name": "followup-pos-handoff",
+      "enabled": true,
+      "createdAtMs": 1772078147065,
+      "updatedAtMs": 1772078147065,
+      "schedule": {
+        "kind": "every",
+        "everyMs": 21600000,
+        "anchorMs": 1772078147065
+      },
+      "sessionTarget": "isolated",
+      "wakeMode": "now",
+      "payload": {
+        "kind": "agentTurn",
+        "message": "Você é a Laura, SDR do Grupo US. Execute o follow-up pós-handoff:\n\n1. Verifique leads com handoff pendente:\n   python3 /Users/mauricio/.openclaw/agents/main/workspace/scripts/followup_handoff.py check\n\n2. Para cada lead com action='followup_1': envie via message tool (whatsapp):\n   'Oi, [nome]! 💜 Passando rapidinho aqui... O [Lucas/Erika] já entrou em contato com você? Ficou alguma dúvida sobre a formação? 😊'\n   Depois: UPDATE lead_handoffs SET followup_1_at=NOW() WHERE id=X (via psycopg2/neon)\n\n3. Para cada lead com action='followup_2': envie:\n   'Oi, [nome]! Só confirmando que vi seu interesse aqui ainda em aberto. Conseguiu falar com nosso consultor? Se não, posso te reconectar agora! 💜'\n   Depois: UPDATE lead_handoffs SET followup_2_at=NOW() WHERE id=X\n\n4. REGRAS: NUNCA notifique Maurício. NUNCA envie entre 23h-8h. Respostas negativas ('não foi contactada') → notificar grupo 120363361363907454@g.us com: REATIVAÇÃO + nome + número + produto.\nNEON_DATABASE_URL=postgresql://neondb_owner:npg_P0ljy3pWNTYc@ep-falling-morning-acpph9w8-pooler.sa-east-1.aws.neon.tech/neondb",
+        "model": "google-gemini-cli/gemini-3-flash-preview",
+        "timeoutSeconds": 120
+      },
+      "delivery": {
+        "mode": "announce",
+        "channel": "last"
+      },
+      "state": {
+        "nextRunAtMs": 1772099747065
       }
     }
   ]

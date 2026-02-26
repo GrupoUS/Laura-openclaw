@@ -11,13 +11,15 @@
 | VPS authorized keys | `/root/.ssh/authorized_keys` |
 | GitHub Secret | `VPS_SSH_KEY` (private key) |
 
-### Current Deploy Key (generated 2026-02-17)
+### Current Deploy Key (generated 2026-02-26)
 
 ```
-ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAID9/Nyf5BFhPEz0/0jKA2ofiDaCIKcRqpywa0B4MNyrb github-actions-deploy
+ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGm93YRguTRxpGS3ltlv24+SN41/ayHkmQ/dRJUbSwXl github-actions-deploy
 ```
 
 > **Note**: If the key file doesn't exist at `/tmp/neondash_deploy`, regenerate it using the steps below.
+> **Local key path**: `/tmp/neondash_deploy` (regenerated 2026-02-26, after CI/CD SCP timeout incident).
+> **GitHub Secret**: `VPS_SSH_KEY` updated 2026-02-26.
 
 ### Connecting to VPS
 

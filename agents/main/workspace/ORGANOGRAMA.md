@@ -138,9 +138,10 @@
 ### Raquel Quintanilha
 - **Setor:** Coordenação
 - **Função:** Coordenadora Pedagógica
-- **Contato:** 
+- **Contato:** +55 62 98112-3150
 - **E-mail:** 
-- **Endereço:** 
+- **Endereço:**
+- **Permissões:** Acesso total a informações de alunos (adimplentes, inadimplentes, dados gerais) — autorizado por Maurício em 25/02/2026 
 
 ### Otavio Yoshiharu Badella Nagamori
 - **Setor:** Coordenação

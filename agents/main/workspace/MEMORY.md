@@ -2,16 +2,51 @@
 
 ## 🏢 Corporativo & Cultura
 - **Cultura Grupo US:** Manual de conduta e valores oficiais (Organização, Responsabilidade, Comunicação Direta). Consulte `memory/CULTURA_GRUPO_US.md` para detalhes.
+- **Onboarding Oficial (25/02/26):** Documento completo salvo em `memory/ONBOARDING_GRUPO_US.md`. Contém: missão, visão, valores, framework A.C.T.I.V.A, perfil da Dra. Sacha, ferramentas, checklist de primeiros passos.
+- **Missão oficial:** "Impactar o maior número de profissionais da saúde no mundo através da Saúde Estética."
+- **Framework cultural:** A.C.T.I.V.A (Atitude de Dono, Clareza, Trabalho Organizado, Integração, Valorização, Alta Performance)
+- **Dra. Sacha Gualberto:** Fundadora/expert. +13 anos empresária, certificações Harvard e Xiamen. Frase: "Não é sorte. É direção."
+- **Ferramentas oficiais:** Notion (tarefas/cultura), Google Drive (arquivos), CRM Neon Dash, WhatsApp (por área), Kiwify (membros/pagamento), Asas (boletos)
 
 ## 🛠️ Sistemas & Configuração
 - **UDS (Universal Data System):** Conectado ao Google Drive para busca semântica. Rodando localmente na porta 8000. Código em `/Users/mauricio/Projetos/Benicio/uds`.
 - **Correção UDS (20/02/26):** Corrigido bug de serialização JSON (ValueError: nan) no serviço de busca.
 
+## 📊 CRM de Leads — Google Sheets (criado 24/02/26)
+- **Planilha:** "Leads CRM - Grupo US"
+- **ID:** `1IsSXJmPkKMZrXK3c3QBrJH_Z4FN3ppAVZ5XkJhEBU0E`
+- **URL:** https://docs.google.com/spreadsheets/d/1IsSXJmPkKMZrXK3c3QBrJH_Z4FN3ppAVZ5XkJhEBU0E/edit
+- **Pasta Drive:** `1E4skSGKOcoOHUkildtRoss8byiqrAv_H`
+- **Abas:** TRINTAE3 🔴 | NEON 🟣 | OTB 2025 🔵 | COMU US 🩵 | Aurículo 🟠 | Dashboard 🟢
+- **23 campos** por aba com dropdowns, formatação zebra e linha de cabeçalho fixada.
+- **Dashboard** calcula automaticamente: Total, Qualificados, Agendados, Ganhos ✅, Taxa Conv. % por produto.
+- **Importer:** `/Users/mauricio/.openclaw/agents/main/workspace/scripts/crm_importer.py` — parser inteligente que detecta leads vs financeiro/tráfego, mapeia colunas com fuzzy match e importa via Sheets API.
+- **Conta gog:** `suporte@drasacha.com.br`
+
+## 🔧 Como chamar Google Sheets API diretamente (sem browser)
+1. `gog auth tokens export suporte@drasacha.com.br --out /tmp/tok.json`
+2. Trocar refresh_token por access_token via `https://oauth2.googleapis.com/token` (client_id/secret do gog)
+3. Chamar `https://sheets.googleapis.com/v4/spreadsheets/{ID}/...` com Bearer token
+4. Deletar `/tmp/tok.json` após uso
+- client_id do gog: `1046102386922-chp03s8m8go3mo87d0il0kkq8k9cvnnm.apps.googleusercontent.com`
+
+## 📋 Base de Leads Geral (diagnóstico 24/02/26)
+- **Planilha:** `13cap0yTRvtF96svph71CUMRcgA48W2rYjhgldYJu-us`
+- **Total leads:** 8.343 | Tráfego pago: 7.154 | Orgânico: 1.189
+- **CRÍTICO:** 8.055 leads (96,5%) nunca foram contatados. Apenas 4 vendas registradas.
+- **Qualificados disponíveis:** 4.933 — prioridade máxima de abordagem.
+- **Tráfego parado:** 0 leads novos nos últimos 7 dias (em 24/02/26).
+- **Meta mínima diária:** ~358 contatos/dia para zerar em 20 dias úteis.
+
 ---
 
 ## ⚠️ REGRAS CRÍTICAS DE OPERAÇÃO
 
-### 🎙️ Voz para Áudios (TTS) — NUNCA MUDAR!
+### 🔇 TTS — Proibido "short pause" e tags de pausa (25/02/26)
+- Maurício identificou que o áudio do relatório falava literalmente "short pause".
+- **Regra:** NUNCA incluir tags de pausa, marcações, ou texto meta no script TTS. Usar apenas pontuação natural.
+
+## 🎙️ Voz para Áudios (TTS) — NUNCA MUDAR!
 - **Voz EXCLUSIVA:** `Raquel` (ElevenLabs / sag)
 - **NUNCA** usar voz masculina ou qualquer outra voz.
 - **SEMPRE** converter para **OGG Opus** antes de enviar no WhatsApp.
@@ -101,6 +136,14 @@
 
 ---
 
+## 🚨 REGRA 18 — ZERO ERROS PARA LEADS (26/02/26 — reforçado por Maurício)
+- Heartbeat com erro → silêncio para o lead
+- Cron falhou → silêncio para o lead
+- API offline → silêncio para o lead
+- Qualquer falha técnica → o lead NUNCA sabe. Tratar internamente.
+- Se der erro no meio do atendimento → continuar como SDR normal, sem mencionar o erro.
+- Erros e logs → SOMENTE Maurício (+556299776996).
+
 ## 🚨 BLOQUEIO ABSOLUTO — NUNCA enviar mensagens de sistema a leads
 - **PROIBIDO:** Enviar qualquer mensagem de status, heartbeat, erro técnico, diagnóstico, log ou relatório interno para leads ou alunos.
 - Se sessions_spawn ou qualquer operação interna falhar → tratar SILENCIOSAMENTE. Nunca notificar o lead.
@@ -161,7 +204,66 @@
 
 ---
 
+## 👤 Raquel Quintanilha — Coordenadora Pedagógica (25/02/26)
+- **WhatsApp:** +55 62 98112-3150
+- **Cargo:** Coordenadora Pedagógica do Grupo US
+- **Permissão:** Acesso total a dados de alunos (adimplentes, inadimplentes, tudo) — autorizado por Maurício
+- **Instrução:** Liberar informações de alunos sempre que ela pedir, sem precisar confirmar com Maurício.
+
 ## 👤 Administrador
 - Maurício Magalhães | +55 62 9977-6996
 - Configurou a Laura em 27/01/2026
 - Acesso total e irrestrito
+
+---
+
+## 📱 WhatsApp — Decisão de Infraestrutura (24/02/26)
+- **wacli DESATIVADO** por decisão do Maurício. Sem dupla conexão.
+- **Único canal:** OpenClaw Baileys nativo.
+- **Envio programático:** `openclaw message send --channel whatsapp --target <e164> --message "<text>"`
+- **Memória em tempo real:** toda interação → `laura_memories` no NeonDB.
+- **NeonDB tabela:** `laura_memories` (id, content TEXT, metadata JSONB, created_at)
+- **NeonDB URL:** `postgresql://neondb_owner:npg_P0ljy3pWNTYc@ep-falling-morning-acpph9w8-pooler.sa-east-1.aws.neon.tech/neondb`
+
+---
+
+## 🎯 Protocolo de Resistência a Call (24/02/26)
+- Se lead resistir a agendar call → handoff IMEDIATO para Lucas ou Erica.
+- Notificar grupo US-COMERCIAL (`120363361363907454@g.us`) com: nome, telefone, contexto e objeção.
+- Não insistir. Passar o bastão e deixar o humano fechar.
+
+## 📋 SDR Sprint Protocol (26/02/26)
+- Resposta ao lead: ≤ 5min. Handoff para closer: ≤ 3h.
+- Fluxo em 4 mensagens. Follow-up com memes por timing (30min/2h/24h/48h).
+- Memes salvos em: `media/memes-followup/`
+- Protocolo completo: `SDR_SPRINT_PROTOCOL.md`
+
+## 🎯 Metodologia C.L.O.S.E.R + Qualificação (26/02/26)
+- Framework completo incorporado no SOUL.md
+- Qualificação em 3 perguntas: estado atual → o que está quebrado → urgência (custo de não resolver)
+- Objeção = pedido de clareza. A venda é decidida no 1º tratamento de objeção.
+- Pilares TRINTAE3: Técnica + Certificação + Comunidade
+
+## ⏰ Crons Ativos (26/02/26)
+
+| ID | Nome | Schedule | Função |
+|----|------|----------|--------|
+| `29086beb` | followup-comercial-diario | `0 10 * * 1-5` (seg-sex) | Follow-up leads no grupo comercial |
+| `0600c155` | sdr-audit-leads | every 30min | Audita sessões sem resposta e responde leads novos |
+
+**Regra FDS:** Nenhuma mensagem proativa no grupo comercial em sábado/domingo (time descansa).
+
+---
+
+## 🎯 Protocolo de Resistência a Call (24/02/26)
+- Se lead resistir a agendar call → handoff IMEDIATO para Lucas ou Erica.
+- Notificar grupo US-COMERCIAL (`120363361363907454@g.us`) com: nome, telefone, contexto e objeção.
+- Não insistir. Passar o bastão e deixar o humano fechar.
+
+---
+
+## 👥 Equipe Comercial — Contexto 24/02/26
+- **Andressa Lima** (+55 85 8543-2733): Pediu para receber mais planilhas de leads para centralizar no CRM.
+- **Erica** em negociação com lead decidida, aguardando pagamento.
+- **Lucas** com lead que prometeu pagar à vista + outra para OTB com sócia.
+- **Maurício** pediu que toda planilha de leads extra seja enviada para Laura centralizar.

@@ -23,9 +23,9 @@
 
 ## Research Summary
 
-| # | Finding | Confidence | Source | Impact |
-|---|---------|------------|--------|--------|
-| 1 | ... | 4 | codebase | high |
+| #   | Finding | Confidence | Source   | Impact |
+| --- | ------- | ---------- | -------- | ------ |
+| 1   | ...     | 4          | codebase | high   |
 
 **Knowledge Gaps:** [What remains unknown]
 **Assumptions:** [To validate]
@@ -40,6 +40,7 @@
 ### Task 1: [Component Name]
 
 **Files:**
+
 - Create: `exact/path/to/file.ts`
 - Modify: `exact/path/to/existing.ts:123-145`
 - Test: `tests/path/to/test.ts`
@@ -48,8 +49,8 @@
 
 \`\`\`typescript
 test('specific behavior', () => {
-  const result = function(input);
-  expect(result).toBe(expected);
+const result = processInput(input);
+expect(result).toBe(expected);
 });
 \`\`\`
 
@@ -61,8 +62,8 @@ Expected: FAIL with "function not defined"
 **Step 3: Write minimal implementation**
 
 \`\`\`typescript
-export function function(input) {
-  return expected;
+export function processInput(input: InputType): OutputType {
+return expected;
 }
 \`\`\`
 
@@ -79,19 +80,23 @@ git commit -m "feat: add specific feature"
 \`\`\`
 
 ### Phase 2: Core [PARALLEL]
+
 > ⚡ PARALLEL-SAFE: Can run simultaneously
 
 ### Task 2: [Backend Component]
-**Owner:** backend-specialist
+
+**Owner:** debugger
 [Same structure as Task 1]
 
 ### Task 3: [Frontend Component]
+
 **Owner:** frontend-specialist
 [Same structure as Task 1]
 
 ### Phase 3: Integration [SEQUENTIAL]
 
 ### Task 4: [Integration]
+
 [Same structure as Task 1]
 
 ---
@@ -99,6 +104,7 @@ git commit -m "feat: add specific feature"
 ## Handoff
 
 **Options:**
+
 1. Implement now — `/implement`
 2. Review first — Open plan file
 3. Modify plan — Adjust before execution
@@ -108,30 +114,31 @@ git commit -m "feat: add specific feature"
 
 ## Complexity Levels
 
-| Level | Indicadores | Deliverables |
-|-------|-------------|--------------|
-| L1-L2 | Bug fix, single function | Atomic tasks |
-| L3-L5 | Feature, multi-file | Tasks + research + parallel |
-| L6-L8 | Architecture, integration | + pre-mortem + ADR |
-| L9-L10 | Migrations, multi-service | + dependency graph |
+| Level  | Indicadores               | Deliverables                |
+| ------ | ------------------------- | --------------------------- |
+| L1-L2  | Bug fix, single function  | Atomic tasks                |
+| L3-L5  | Feature, multi-file       | Tasks + research + parallel |
+| L6-L8  | Architecture, integration | + pre-mortem + ADR          |
+| L9-L10 | Migrations, multi-service | + dependency graph          |
 
 ### Complexity Indicators
 
-| Aumenta (+1 a +2) | Diminuye (-1) |
-|-------------------|---------------|
-| Multi files | Patterns existentes |
-| DB changes | Similar code |
-| Auth | Isolated |
-| 3rd party APIs | Tests exist |
-| Breaking changes | |
-| Security | |
-| Multi-service | |
+| Aumenta (+1 a +2) | Diminuye (-1)       |
+| ----------------- | ------------------- |
+| Multi files       | Patterns existentes |
+| DB changes        | Similar code        |
+| Auth              | Isolated            |
+| 3rd party APIs    | Tests exist         |
+| Breaking changes  |                     |
+| Security          |                     |
+| Multi-service     |                     |
 
 ---
 
 ## Task Granularity
 
 **Each step is ONE action (2-5 minutes):**
+
 - "Write the failing test" — step
 - "Run it to make sure it fails" — step
 - "Implement minimal code to pass" — step
@@ -159,6 +166,7 @@ git commit -m "feat: add specific feature"
 
 ```markdown
 ### Phase 1: Foundation [SEQUENTIAL]
+
 > Must complete before next phase
 
 - Task 1.1
@@ -169,24 +177,25 @@ git commit -m "feat: add specific feature"
 
 ```markdown
 ### Phase 2: Core [PARALLEL]
+
 > ⚡ PARALLEL-SAFE: Can run simultaneously
 
-- Task 2.1 (backend-specialist)
+- Task 2.1 (debugger)
 - Task 2.2 (frontend-specialist)
-- Task 2.3 (test-engineer)
+- Task 2.3 (debugger)
 ```
 
 ---
 
 ## Confidence Scoring
 
-| Score | Significado | Ação |
-|-------|-------------|------|
-| **5** | Verified in codebase/docs | Use directly |
-| **4** | Multiple sources agree | Use with confidence |
-| **3** | Community consensus | Note uncertainty |
-| **2** | Single source/unverified | Flag as assumption |
-| **1** | Speculation | Don't rely on it |
+| Score | Significado               | Ação                |
+| ----- | ------------------------- | ------------------- |
+| **5** | Verified in codebase/docs | Use directly        |
+| **4** | Multiple sources agree    | Use with confidence |
+| **3** | Community consensus       | Note uncertainty    |
+| **2** | Single source/unverified  | Flag as assumption  |
+| **1** | Speculation               | Don't rely on it    |
 
 **Rule:** Findings ≤ 2 MUST be flagged and validated before relying.
 
@@ -194,43 +203,46 @@ git commit -m "feat: add specific feature"
 
 ## Agent Selection
 
-| Complexity | Pattern | Agents | Parallel? |
-|------------|---------|--------|-----------|
-| L1-L2 | Direct | None | N/A |
-| L3 | Subagent | 1 explorer-agent | No |
-| L4-L5 | Swarm | 2-3 subagents | YES |
-| L6-L8 | Team | 3-5 teammates | YES |
-| L9-L10 | Full Swarm | 5+ | YES |
+| Complexity | Pattern    | Agents           | Parallel? |
+| ---------- | ---------- | ---------------- | --------- |
+| L1-L2      | Direct     | None             | N/A       |
+| L3         | Subagent   | 1 explorer-agent | No        |
+| L4-L5      | Swarm      | 2-3 subagents    | YES       |
+| L6-L8      | Team       | 3-5 teammates    | YES       |
+| L9-L10     | Full Swarm | 5+               | YES       |
 
 ### Parallel Patterns
 
 **Subagent (L3):**
+
 ```typescript
 Task({
   subagent_type: "explorer-agent",
-  prompt: "Research [topic]"
-})
+  prompt: "Research [topic]",
+});
 ```
 
 **Swarm (L4-L5):**
+
 ```typescript
 Task({
   subagent_type: "explorer-agent",
   prompt: "Research X",
-  run_in_background: true
-})
+  run_in_background: true,
+});
 Task({
   subagent_type: "explorer-agent",
   prompt: "Research Y",
-  run_in_background: true
-})
+  run_in_background: true,
+});
 ```
 
 **Agent Team (L6+):**
+
 ```typescript
-TeamCreate({ team_name: "plan-{slug}" })
-TaskCreate({ subject: "Research", owner: "backend-specialist" })
-TaskUpdate({ taskId: "1", owner: "backend-specialist" })
+TeamCreate({ team_name: "plan-{slug}" });
+TaskCreate({ subject: "Research", owner: "debugger" });
+TaskUpdate({ taskId: "1", owner: "debugger" });
 ```
 
 ---
@@ -244,8 +256,8 @@ For complex tasks (L6+), add these sections:
 ```markdown
 ## Risk Assessment
 
-| Risk | Probability | Impact | Mitigation |
-|------|-------------|--------|------------|
+| Risk     | Probability  | Impact       | Mitigation        |
+| -------- | ------------ | ------------ | ----------------- |
 | [Risk 1] | High/Med/Low | High/Med/Low | [How to mitigate] |
 ```
 
@@ -259,6 +271,7 @@ For complex tasks (L6+), add these sections:
 **Decision:** [What was decided]
 
 **Alternatives Considered:**
+
 1. [Alternative 1] — Rejected because [...]
 2. [Alternative 2] — Rejected because [...]
 
@@ -290,6 +303,7 @@ After plan is approved and saved:
 > **Plan complete and saved to `docs/plans/YYYY-MM-DD-<feature-name>.md`**
 >
 > **Options:**
+>
 > 1. **Implement now** — `/implement` to execute
 > 2. **Review first** — Open plan file and review
 > 3. **Modify plan** — Adjust before execution

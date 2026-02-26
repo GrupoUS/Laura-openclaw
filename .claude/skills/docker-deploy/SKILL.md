@@ -43,7 +43,18 @@ Production deployment for NeonDash on Hostinger VPS with Docker, Traefik, and Gi
 ssh -i /tmp/neondash_deploy root@31.97.170.4
 ```
 
-If key missing, regenerate: see [vps-ssh-management.md](references/vps-ssh-management.md#regenerating-deploy-keys)
+If key missing or "Permission denied", use root password to setup key:
+
+```bash
+# Quick SSH key setup using root password
+sshpass -p 'ROOT_PASSWORD' ssh -o StrictHostKeyChecking=no root@31.97.170.4 \
+  "grep -q 'YOUR_PUBLIC_KEY' /root/.ssh/authorized_keys 2>/dev/null || echo 'YOUR_PUBLIC_KEY' >> /root/.ssh/authorized_keys"
+
+# Current deploy key (2026-02-25):
+# ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIARHwSF1Dnqdw3k1pz/JchN0mXD+ZsLz54jp//0OcBvr github-actions-deploy
+```
+
+For detailed steps: see [vps-ssh-management.md](references/vps-ssh-management.md#regenerating-deploy-keys)
 
 ---
 

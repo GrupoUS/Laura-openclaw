@@ -7,29 +7,40 @@ Este projeto usa hooks Claude Code para aumentar autonomia de agentes enquanto m
 ## Hooks Configurados
 
 ### SessionStart
+
 - **session-context.sh**: Injeta contexto do projeto (branch, último commit, qualidade gates)
 
 ### PreToolUse
+
 - **smart-bash-approver.sh**: Auto-aprova comandos seguros, bloqueia perigosos
 - **protect-files.sh**: Bloqueia modificação de arquivos sensíveis
+- **task-routing-guard.sh**: Bloqueia subagent inválido e reforça Task com roteamento correto
 
 ### PermissionRequest
+
 - Auto-aprova Read/Grep/Glob/Serena tools
 - Usa smart-bash-approver para Bash
 
 ### PostToolUse
+
 - **ultracite-fix.sh**: Formata (Biome) + lint fix (OXLint) após edição (async)
 
 ### Stop
+
 - **ultracite-check.sh**: Verifica lint (OXLint) antes de parar — bloqueia em erros
+- **background-cleanup.sh**: Lembra cleanup de tarefas em background e registra evento
 
 ### SubagentStop
+
 - **subagent-log.sh**: Log de eventos de subagentes para observabilidade
+- **oracle-escalation.sh**: Sinaliza escalonamento para oracle em falhas repetidas
 
 ### TeammateIdle
+
 - Auto-aprova idle (evita notificações desnecessárias)
 
 ### Notification
+
 - **notify.sh**: Notificações desktop (WSL/Linux)
 
 ---
@@ -77,12 +88,12 @@ sudo rm, truncate -s 0
 
 Estes arquivos não podem ser editados via hooks:
 
-| Pattern | Razão |
-|---------|-------|
-| `.env*` | Credenciais |
+| Pattern                              | Razão           |
+| ------------------------------------ | --------------- |
+| `.env*`                              | Credenciais     |
 | `credentials`, `secrets`, `api-keys` | Dados sensíveis |
-| `.git/` | Repositório |
-| `package-lock.json`, `bun.lockb` | Lockfiles |
+| `.git/`                              | Repositório     |
+| `package-lock.json`, `bun.lockb`     | Lockfiles       |
 
 ---
 
@@ -108,13 +119,20 @@ echo $?
 ## Logs
 
 Eventos de subagentes são logados em:
+
 ```
 .claude/logs/subagent-events.jsonl
 ```
 
 Formato:
+
 ```json
-{"timestamp": "2025-02-17T12:00:00Z", "agent": "backend-specialist", "status": "completed", "duration_ms": "5000"}
+{
+  "timestamp": "2025-02-17T12:00:00Z",
+  "agent": "debugger",
+  "status": "completed",
+  "duration_ms": "5000"
+}
 ```
 
 ---
@@ -157,9 +175,9 @@ Ctrl+O
 │                                                              │
 │  PostToolUse ───► ultracite-fix.sh (biome format + oxlint fix)  │
 │                                                              │
-│  SubagentStop ───► subagent-log.sh ──► Log events           │
+│  SubagentStop ───► subagent-log.sh + oracle-escalation.sh   │
 │                                                              │
-│  Stop ──────────► ultracite-check.sh (oxlint) ──► Quality gate│
+│  Stop ──────────► background-cleanup.sh + ultracite-check.sh │
 │                                                              │
 └─────────────────────────────────────────────────────────────┘
 ```
@@ -186,9 +204,9 @@ rm -rf .claude/logs
 
 ## Impacto
 
-| Métrica | Antes | Depois |
-|---------|-------|--------|
-| Aprovações manuais/dia | ~50 | ~10 |
-| Tempo em permissões | ~15min | ~3min |
-| Risco de comandos perigosos | Médio | Baixo |
+| Métrica                       | Antes   | Depois         |
+| ----------------------------- | ------- | -------------- |
+| Aprovações manuais/dia        | ~50     | ~10            |
+| Tempo em permissões           | ~15min  | ~3min          |
+| Risco de comandos perigosos   | Médio   | Baixo          |
 | Observabilidade de subagentes | Nenhuma | Logs completos |

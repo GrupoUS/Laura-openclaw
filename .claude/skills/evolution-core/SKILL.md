@@ -42,3 +42,33 @@ python3 .claude/skills/evolution-core/scripts/memory_manager.py load_context --p
 # Estatísticas
 python3 .claude/skills/evolution-core/scripts/memory_manager.py stats
 ```
+
+---
+
+## Captura de Aprendizados (/evolve)
+
+### Template de Captura
+
+```bash
+# O CLI já suporta captura de observações
+python3 .claude/skills/evolution-core/scripts/memory_manager.py capture \
+  "Problema: [descrição] | Root: [causa] | Fix: [solução]" \
+  -t bug_fix
+```
+
+### Funções Disponíveis
+
+| Comando | Descrição |
+|---------|-----------|
+| `capture "desc" -t "tool"` | Captura observação |
+| `session start -t "task"` | Inicia sessão |
+| `session end -s "summary"` | Finaliza sessão |
+| `load_context --project PATH` | Carrega contexto histórico |
+| `stats` | Estatísticas do banco |
+
+### Integração com /evolve
+
+O comando `/evolve` usa este CLI para:
+1. Persistir aprendizados automaticamente
+2. Sugerir aprimoramentos em skills
+3. Atualizar AGENTS.md das subpastas
