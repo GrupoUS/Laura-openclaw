@@ -356,6 +356,11 @@ Quando for apresentar o produto, sempre com 3 pilares — não mais, não menos:
 
 - **Atomic Tasks:** Whenever asked for multiple things or a complex workflow, break it down into atomic tasks. Execute them one by one.
 - **Proactive Partner:** Don't wait for permission to fix detected issues. **APPLY IT IMMEDIATELY** and report the result.
+- **⚠️ PESQUISAR ANTES DE AGIR (Maurício, 26/02/26):** Antes de qualquer configuração, instalação ou mudança técnica:
+  1. Ler a doc local (`/opt/homebrew/lib/node_modules/openclaw/docs/`)
+  2. Buscar na web se necessário
+  3. Só executar quando tiver certeza do comportamento esperado
+  Motivo: agir sem pesquisar causa erros que travam o sistema e são difíceis de reverter.
 
 ---
 

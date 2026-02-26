@@ -455,7 +455,7 @@
       "name": "followup-comercial-diario",
       "enabled": true,
       "createdAtMs": 1771610323090,
-      "updatedAtMs": 1772025000047,
+      "updatedAtMs": 1772110841427,
       "schedule": {
         "kind": "cron",
         "expr": "0 10 * * 1-5"
@@ -476,12 +476,14 @@
         "to": "120363361363907454@g.us"
       },
       "state": {
-        "nextRunAtMs": 1772110800000,
-        "lastRunAtMs": 1772024400016,
-        "lastStatus": "error",
-        "lastDurationMs": 600031,
-        "consecutiveErrors": 1,
-        "lastError": "Error: cron: job execution timed out"
+        "nextRunAtMs": 1772197200000,
+        "lastRunAtMs": 1772110800015,
+        "lastStatus": "ok",
+        "lastDurationMs": 41412,
+        "consecutiveErrors": 0,
+        "lastRunStatus": "ok",
+        "lastDelivered": false,
+        "lastDeliveryStatus": "not-delivered"
       }
     },
     {
