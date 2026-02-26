@@ -1,6 +1,7 @@
 import { createLazyFileRoute } from '@tanstack/react-router'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { KanbanBoard } from '@/client/components/dashboard/board/KanbanBoard'
+import { TaskList } from '@/client/components/dashboard/list/TaskList'
 import { useTaskStore } from '@/client/hooks/useTaskStore'
 import { trpc } from '@/client/trpc'
 import type { Task } from '@/shared/types/tasks'
@@ -12,6 +13,7 @@ export const Route = createLazyFileRoute('/board')({
 function BoardPage() {
   const setTasks = useTaskStore((s) => s.setTasks)
   const { data, isLoading } = trpc.tasks.list.useQuery()
+  const [view, setView] = useState<'kanban' | 'list'>('kanban')
 
   useEffect(() => {
     if (data?.data) {
@@ -27,5 +29,11 @@ function BoardPage() {
     )
   }
 
-  return <KanbanBoard initialTasks={data?.data as unknown as Task[] ?? []} />
+  const tasks = (data?.data as unknown as Task[]) ?? []
+
+  if (view === 'list') {
+    return <TaskList initialTasks={tasks} viewToggle={{ view, onToggle: setView }} />
+  }
+
+  return <KanbanBoard initialTasks={tasks} viewToggle={{ view, onToggle: setView }} />
 }

@@ -8,7 +8,7 @@ const defaultFallback = 'fallback_password_for_build_step_only_32_chars'
 const finalPassword = rawPassword.length >= 32 ? rawPassword : defaultFallback
 
 export interface UserPreferences {
-  defaultView:      'board' | 'list' | 'agents' | 'analytics'
+  defaultView:      'board' | 'agents'
   sidebarCollapsed: boolean
   compactMode:      boolean
 }

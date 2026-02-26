@@ -129,3 +129,31 @@ main().catch((e) => {
   // eslint-disable-next-line no-console
   console.error(e)
 })
+
+// ── SDR Agent files (bundle for Railway) ────────────────────────────────────
+async function bundleSdrAgentFiles() {
+  const SDR_AGENT_DIR = '/Users/mauricio/.openclaw/agents/main/workspace'
+  const OUT_DIR = join(dirname(OUTPUT), 'sdr-agent')
+  
+  try {
+    const { cp, mkdir: mkd } = await import('node:fs/promises')
+    await mkd(OUT_DIR, { recursive: true })
+    const entries = await readdir(SDR_AGENT_DIR)
+    const mdFiles = entries.filter(f => f.endsWith('.md'))
+    
+    for (const file of mdFiles) {
+      const src = join(SDR_AGENT_DIR, file)
+      const dst = join(OUT_DIR, file)
+      try {
+        const content = await readFile(src, 'utf-8')
+        await writeFile(dst, content)
+      } catch {}
+    }
+    console.info(`✅ SDR agent files bundled: ${mdFiles.length} .md files → ${OUT_DIR}`)
+  } catch (e) {
+    console.warn('⚠️  Could not bundle SDR agent files:', (e as Error).message)
+  }
+}
+
+// Run after main snapshot
+bundleSdrAgentFiles().catch(() => {})

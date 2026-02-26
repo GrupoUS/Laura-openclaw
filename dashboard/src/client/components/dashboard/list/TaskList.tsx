@@ -3,9 +3,19 @@ import { useEffect, useMemo } from 'react'
 import { PhaseGroup } from './PhaseGroup'
 import { useTaskStore } from '@/client/hooks/useTaskStore'
 import { ViewHeader } from '@/client/components/dashboard/layout/ViewHeader'
+import { KpiStrip } from '@/client/components/dashboard/shared/KpiStrip'
 import type { Task } from '@/shared/types/tasks'
+import type { ViewMode } from '@/client/components/dashboard/layout/ViewHeader'
 
-export function TaskList({ initialTasks }: { initialTasks: Task[] }) {
+interface TaskListProps {
+  initialTasks: Task[]
+  viewToggle?: {
+    view: ViewMode
+    onToggle: (view: ViewMode) => void
+  }
+}
+
+export function TaskList({ initialTasks, viewToggle }: TaskListProps) {
   const setTasks = useTaskStore((s) => s.setTasks)
   useEffect(() => { setTasks(initialTasks) }, [initialTasks, setTasks])
 
@@ -22,8 +32,11 @@ export function TaskList({ initialTasks }: { initialTasks: Task[] }) {
 
   return (
     <>
-      <ViewHeader title="📋 Lista de Tarefas" />
-      <div className="flex-1 overflow-y-auto p-6">
+      <ViewHeader title="Tasks" viewToggle={viewToggle} />
+      <KpiStrip tasks={tasks} />
+      <div className="flex-1 overflow-y-auto p-6
+                      bg-gradient-to-br from-slate-50 via-white to-slate-100/50
+                      dark:from-slate-900 dark:via-slate-900 dark:to-slate-800/50">
         {phases.length === 0 && (
           <div className="text-center text-slate-400 py-16">
             <p className="text-4xl mb-3">📭</p>

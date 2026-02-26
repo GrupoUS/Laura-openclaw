@@ -9,11 +9,21 @@ import { TaskCard } from './TaskCard'
 import { useTaskStore } from '@/client/hooks/useTaskStore'
 import { patchTaskStatus } from '@/client/lib/api'
 import { ViewHeader } from '@/client/components/dashboard/layout/ViewHeader'
+import { KpiStrip } from '@/client/components/dashboard/shared/KpiStrip'
 import type { Task, TaskStatus } from '@/shared/types/tasks'
+import type { ViewMode } from '@/client/components/dashboard/layout/ViewHeader'
 
 const COLUMNS: TaskStatus[] = ['backlog', 'in_progress', 'done', 'blocked']
 
-export function KanbanBoard({ initialTasks }: { initialTasks: Task[] }) {
+interface KanbanBoardProps {
+  initialTasks: Task[]
+  viewToggle?: {
+    view: ViewMode
+    onToggle: (view: ViewMode) => void
+  }
+}
+
+export function KanbanBoard({ initialTasks, viewToggle }: KanbanBoardProps) {
   const setTasks             = useTaskStore((s) => s.setTasks)
   const moveTaskOptimistic   = useTaskStore((s) => s.moveTaskOptimistic)
   const rollbackTaskStatus   = useTaskStore((s) => s.rollbackTaskStatus)
@@ -49,36 +59,39 @@ export function KanbanBoard({ initialTasks }: { initialTasks: Task[] }) {
 
     if (!COLUMNS.includes(newStatus)) return
 
-    // 1. Optimistic update
     const prevStatus = moveTaskOptimistic(taskId, newStatus)
     if (!prevStatus) return
 
     try {
-      // 2. Persist to NeonDB
       await patchTaskStatus(taskId, newStatus)
     } catch {
-      // Rollback on failure
       rollbackTaskStatus(taskId, prevStatus)
     }
   }
 
   return (
     <>
-      <ViewHeader title="🗂️ Kanban Board" />
-      <div className="flex-1 overflow-x-auto snap-x snap-mandatory">
+      <ViewHeader title="Tasks" viewToggle={viewToggle} />
+      <KpiStrip tasks={tasks} />
+      <div className="flex-1 overflow-x-auto snap-x snap-mandatory
+                      bg-gradient-to-br from-slate-50 via-white to-slate-100/50
+                      dark:from-slate-900 dark:via-slate-900 dark:to-slate-800/50">
         <DndContext
           sensors={sensors}
           collisionDetection={closestCorners}
           onDragStart={handleDragStart}
           onDragEnd={handleDragEnd}
         >
-          <div className="flex gap-4 p-4 md:p-6 h-full">
+          <div className="flex gap-3 p-4 md:px-5 md:py-4 h-full min-h-0">
             {COLUMNS.map((status) => (
               <KanbanColumn key={status} status={status} tasks={groups[status]} />
             ))}
           </div>
 
-          <DragOverlay>
+          <DragOverlay dropAnimation={{
+            duration: 200,
+            easing: 'cubic-bezier(0.2, 0, 0, 1)',
+          }}>
             {activeTask && <TaskCard task={activeTask} isDragging />}
           </DragOverlay>
         </DndContext>

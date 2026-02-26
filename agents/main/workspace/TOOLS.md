@@ -82,6 +82,31 @@ node /Users/mauricio/.openclaw/scripts/test-google.js
 
 ---
 
+## 📊 Dashboard SDR — Logging Obrigatório (laura.gpus.me/sdr)
+
+### Quando passar lead para Lucas ou Erika → registrar handoff
+```bash
+NEON_DATABASE_URL="postgresql://neondb_owner:npg_P0ljy3pWNTYc@ep-falling-morning-acpph9w8-pooler.sa-east-1.aws.neon.tech/neondb" \
+node /Users/mauricio/.openclaw/scripts/log_lead_handoff.js \
+  --action=insert \
+  --phone="+5562..." \
+  --name="Nome do Lead" \
+  --product="TRINTAE3" \
+  --closer_phone="+556195220319" \
+  --closer_name="Lucas" \
+  --notes="Lead qualificado, interesse em TRINTAE3"
+```
+
+### Quando uma objeção for tratada → salvar na memória
+```bash
+NEON_DATABASE_URL="..." node /Users/mauricio/.openclaw/skills/neondb-memories/index.js \
+  --action=save_memory \
+  --content="Lead +55... levantou objeção: 'tá caro'" \
+  --metadata='{"type":"sdr_action","lead":"+55...","objection":"preço alto","action":"objection_handled"}'
+```
+
+---
+
 ## 🔗 Links de Venda
 
 | Produto | Link |

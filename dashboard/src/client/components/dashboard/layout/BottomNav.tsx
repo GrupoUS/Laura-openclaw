@@ -3,9 +3,8 @@ import { Link, useRouterState } from '@tanstack/react-router'
 
 const NAV = [
   { to: '/board', icon: '🗂️', label: 'Kanban' },
-  { to: '/list', icon: '📋', label: 'Lista' },
   { to: '/agents', icon: '🤖', label: 'Agentes' },
-  { to: '/analytics', icon: '📊', label: 'Stats' },
+  { to: '/office', icon: '🏢', label: 'Office' },
 ] as const
 
 export function BottomNav() {

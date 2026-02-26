@@ -8,12 +8,12 @@ import { join, resolve, extname } from 'node:path'
 
 export const sdrRouter = router({
   kpis: publicProcedure.query(async () => {
-    // Leads contacted: unique lead_interaction memories
+    // Leads contacted: unique leads with sdr_action OR lead_interaction memories
     const contactedResult = await db
-      .select({ count: count() })
+      .select({ count: sql<number>`COUNT(DISTINCT ${lauraMemories.metadata}->>'lead')` })
       .from(lauraMemories)
-      .where(sql`${lauraMemories.metadata}->>'type' = 'lead_interaction'`)
-    const leadsContacted = contactedResult[0]?.count ?? 0
+      .where(sql`${lauraMemories.metadata}->>'type' IN ('sdr_action', 'lead_interaction') AND ${lauraMemories.metadata}->>'lead' IS NOT NULL`)
+    const leadsContacted = Number(contactedResult[0]?.count ?? 0)
 
     // Handoff stats
     const totalHandoffs = await db.select({ count: count() }).from(leadHandoffs)
@@ -32,7 +32,7 @@ export const sdrRouter = router({
         count: count(),
       })
       .from(lauraMemories)
-      .where(sql`${lauraMemories.metadata}->>'type' = 'sdr_action' AND ${lauraMemories.metadata}->>'objection' IS NOT NULL`)
+      .where(sql`${lauraMemories.metadata}->>'type' IN ('sdr_action', 'objection_handled') AND ${lauraMemories.metadata}->>'objection' IS NOT NULL`)
       .groupBy(sql`${lauraMemories.metadata}->>'objection'`)
       .orderBy(sql`count(*) DESC`)
       .limit(10)

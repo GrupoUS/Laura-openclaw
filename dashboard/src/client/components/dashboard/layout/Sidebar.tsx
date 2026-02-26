@@ -8,13 +8,10 @@ import type { UserPreferences } from '@/server/session'
 
 const NAV = [
   { href: '/board',          label: 'Kanban',       icon: '🗂️' },
-  { href: '/list',           label: 'Lista',        icon: '📋' },
   { href: '/office',         label: 'Office',       icon: '🏢' },
   { href: '/content',        label: 'Content',      icon: '🎬' },
-  { href: '/dash-agents',    label: 'Agentes',      icon: '🤖' },
+  { href: '/products',       label: 'Produtos',     icon: '📦' },
   { href: '/sdr',            label: 'SDR',          icon: '📞' },
-  { href: '/orchestration',  label: 'Orquestração', icon: '🏗️' },
-  { href: '/analytics',      label: 'Analytics',    icon: '📊' },
 ]
 
 interface Props {

@@ -5,10 +5,12 @@ import { ConnectionStatus } from '../shared/ConnectionStatus'
 import { CreateTaskButton } from '../create/CreateTaskButton'
 
 const TITLES: Record<string, string> = {
-  '/board': '🗂️ Kanban',
-  '/list': '📋 Lista',
+  '/board': '🗂️ Tasks',
   '/agents': '🤖 Agentes',
-  '/analytics': '📊 Analytics',
+  '/office': '🏢 Office',
+  '/content': '🎬 Content',
+  '/products': '📦 Produtos',
+  '/sdr': '📞 SDR',
   '/calendar': '🗓️ Calendar',
   '/channels': '💬 Channels',
   '/orchestration': '🧩 Orchestration',

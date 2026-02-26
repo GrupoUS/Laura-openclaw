@@ -13,9 +13,9 @@ import { Route as ToolsRouteImport } from './routes/tools'
 import { Route as SessionsRouteImport } from './routes/sessions'
 import { Route as SdrRouteImport } from './routes/sdr'
 import { Route as ProvidersRouteImport } from './routes/providers'
+import { Route as ProductsRouteImport } from './routes/products'
 import { Route as OrchestrationRouteImport } from './routes/orchestration'
 import { Route as OfficeRouteImport } from './routes/office'
-import { Route as ListRouteImport } from './routes/list'
 import { Route as EvolutionRouteImport } from './routes/evolution'
 import { Route as DashAgentsRouteImport } from './routes/dash-agents'
 import { Route as CronsRouteImport } from './routes/crons'
@@ -24,7 +24,6 @@ import { Route as ConfigRouteImport } from './routes/config'
 import { Route as ChannelsRouteImport } from './routes/channels'
 import { Route as CalendarRouteImport } from './routes/calendar'
 import { Route as BoardRouteImport } from './routes/board'
-import { Route as AnalyticsRouteImport } from './routes/analytics'
 import { Route as AgentsRouteImport } from './routes/agents'
 import { Route as IndexRouteImport } from './routes/index'
 
@@ -48,6 +47,11 @@ const ProvidersRoute = ProvidersRouteImport.update({
   path: '/providers',
   getParentRoute: () => rootRouteImport,
 } as any).lazy(() => import('./routes/providers.lazy').then((d) => d.Route))
+const ProductsRoute = ProductsRouteImport.update({
+  id: '/products',
+  path: '/products',
+  getParentRoute: () => rootRouteImport,
+} as any).lazy(() => import('./routes/products.lazy').then((d) => d.Route))
 const OrchestrationRoute = OrchestrationRouteImport.update({
   id: '/orchestration',
   path: '/orchestration',
@@ -58,11 +62,6 @@ const OfficeRoute = OfficeRouteImport.update({
   path: '/office',
   getParentRoute: () => rootRouteImport,
 } as any).lazy(() => import('./routes/office.lazy').then((d) => d.Route))
-const ListRoute = ListRouteImport.update({
-  id: '/list',
-  path: '/list',
-  getParentRoute: () => rootRouteImport,
-} as any).lazy(() => import('./routes/list.lazy').then((d) => d.Route))
 const EvolutionRoute = EvolutionRouteImport.update({
   id: '/evolution',
   path: '/evolution',
@@ -103,11 +102,6 @@ const BoardRoute = BoardRouteImport.update({
   path: '/board',
   getParentRoute: () => rootRouteImport,
 } as any).lazy(() => import('./routes/board.lazy').then((d) => d.Route))
-const AnalyticsRoute = AnalyticsRouteImport.update({
-  id: '/analytics',
-  path: '/analytics',
-  getParentRoute: () => rootRouteImport,
-} as any).lazy(() => import('./routes/analytics.lazy').then((d) => d.Route))
 const AgentsRoute = AgentsRouteImport.update({
   id: '/agents',
   path: '/agents',
@@ -122,7 +116,6 @@ const IndexRoute = IndexRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/agents': typeof AgentsRoute
-  '/analytics': typeof AnalyticsRoute
   '/board': typeof BoardRoute
   '/calendar': typeof CalendarRoute
   '/channels': typeof ChannelsRoute
@@ -131,9 +124,9 @@ export interface FileRoutesByFullPath {
   '/crons': typeof CronsRoute
   '/dash-agents': typeof DashAgentsRoute
   '/evolution': typeof EvolutionRoute
-  '/list': typeof ListRoute
   '/office': typeof OfficeRoute
   '/orchestration': typeof OrchestrationRoute
+  '/products': typeof ProductsRoute
   '/providers': typeof ProvidersRoute
   '/sdr': typeof SdrRoute
   '/sessions': typeof SessionsRoute
@@ -142,7 +135,6 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/agents': typeof AgentsRoute
-  '/analytics': typeof AnalyticsRoute
   '/board': typeof BoardRoute
   '/calendar': typeof CalendarRoute
   '/channels': typeof ChannelsRoute
@@ -151,9 +143,9 @@ export interface FileRoutesByTo {
   '/crons': typeof CronsRoute
   '/dash-agents': typeof DashAgentsRoute
   '/evolution': typeof EvolutionRoute
-  '/list': typeof ListRoute
   '/office': typeof OfficeRoute
   '/orchestration': typeof OrchestrationRoute
+  '/products': typeof ProductsRoute
   '/providers': typeof ProvidersRoute
   '/sdr': typeof SdrRoute
   '/sessions': typeof SessionsRoute
@@ -163,7 +155,6 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/agents': typeof AgentsRoute
-  '/analytics': typeof AnalyticsRoute
   '/board': typeof BoardRoute
   '/calendar': typeof CalendarRoute
   '/channels': typeof ChannelsRoute
@@ -172,9 +163,9 @@ export interface FileRoutesById {
   '/crons': typeof CronsRoute
   '/dash-agents': typeof DashAgentsRoute
   '/evolution': typeof EvolutionRoute
-  '/list': typeof ListRoute
   '/office': typeof OfficeRoute
   '/orchestration': typeof OrchestrationRoute
+  '/products': typeof ProductsRoute
   '/providers': typeof ProvidersRoute
   '/sdr': typeof SdrRoute
   '/sessions': typeof SessionsRoute
@@ -185,7 +176,6 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/agents'
-    | '/analytics'
     | '/board'
     | '/calendar'
     | '/channels'
@@ -194,9 +184,9 @@ export interface FileRouteTypes {
     | '/crons'
     | '/dash-agents'
     | '/evolution'
-    | '/list'
     | '/office'
     | '/orchestration'
+    | '/products'
     | '/providers'
     | '/sdr'
     | '/sessions'
@@ -205,7 +195,6 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/agents'
-    | '/analytics'
     | '/board'
     | '/calendar'
     | '/channels'
@@ -214,9 +203,9 @@ export interface FileRouteTypes {
     | '/crons'
     | '/dash-agents'
     | '/evolution'
-    | '/list'
     | '/office'
     | '/orchestration'
+    | '/products'
     | '/providers'
     | '/sdr'
     | '/sessions'
@@ -225,7 +214,6 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/agents'
-    | '/analytics'
     | '/board'
     | '/calendar'
     | '/channels'
@@ -234,9 +222,9 @@ export interface FileRouteTypes {
     | '/crons'
     | '/dash-agents'
     | '/evolution'
-    | '/list'
     | '/office'
     | '/orchestration'
+    | '/products'
     | '/providers'
     | '/sdr'
     | '/sessions'
@@ -246,7 +234,6 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AgentsRoute: typeof AgentsRoute
-  AnalyticsRoute: typeof AnalyticsRoute
   BoardRoute: typeof BoardRoute
   CalendarRoute: typeof CalendarRoute
   ChannelsRoute: typeof ChannelsRoute
@@ -255,9 +242,9 @@ export interface RootRouteChildren {
   CronsRoute: typeof CronsRoute
   DashAgentsRoute: typeof DashAgentsRoute
   EvolutionRoute: typeof EvolutionRoute
-  ListRoute: typeof ListRoute
   OfficeRoute: typeof OfficeRoute
   OrchestrationRoute: typeof OrchestrationRoute
+  ProductsRoute: typeof ProductsRoute
   ProvidersRoute: typeof ProvidersRoute
   SdrRoute: typeof SdrRoute
   SessionsRoute: typeof SessionsRoute
@@ -294,6 +281,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProvidersRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/products': {
+      id: '/products'
+      path: '/products'
+      fullPath: '/products'
+      preLoaderRoute: typeof ProductsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/orchestration': {
       id: '/orchestration'
       path: '/orchestration'
@@ -306,13 +300,6 @@ declare module '@tanstack/react-router' {
       path: '/office'
       fullPath: '/office'
       preLoaderRoute: typeof OfficeRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/list': {
-      id: '/list'
-      path: '/list'
-      fullPath: '/list'
-      preLoaderRoute: typeof ListRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/evolution': {
@@ -371,13 +358,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BoardRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/analytics': {
-      id: '/analytics'
-      path: '/analytics'
-      fullPath: '/analytics'
-      preLoaderRoute: typeof AnalyticsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/agents': {
       id: '/agents'
       path: '/agents'
@@ -398,7 +378,6 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AgentsRoute: AgentsRoute,
-  AnalyticsRoute: AnalyticsRoute,
   BoardRoute: BoardRoute,
   CalendarRoute: CalendarRoute,
   ChannelsRoute: ChannelsRoute,
@@ -407,9 +386,9 @@ const rootRouteChildren: RootRouteChildren = {
   CronsRoute: CronsRoute,
   DashAgentsRoute: DashAgentsRoute,
   EvolutionRoute: EvolutionRoute,
-  ListRoute: ListRoute,
   OfficeRoute: OfficeRoute,
   OrchestrationRoute: OrchestrationRoute,
+  ProductsRoute: ProductsRoute,
   ProvidersRoute: ProvidersRoute,
   SdrRoute: SdrRoute,
   SessionsRoute: SessionsRoute,

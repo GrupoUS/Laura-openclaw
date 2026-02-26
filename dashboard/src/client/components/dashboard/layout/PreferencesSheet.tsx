@@ -47,10 +47,8 @@ export function PreferencesSheet({ open, onClose, prefs, updatePref }: Props) {
                 <SelectValue />
               </SelectTrigger>
               <SelectContent className="dark:bg-slate-800 dark:border-slate-700">
-                <SelectItem value="board">🗂️ Kanban</SelectItem>
-                <SelectItem value="list">📋 Lista</SelectItem>
+                <SelectItem value="board">🗂️ Tasks</SelectItem>
                 <SelectItem value="agents">🤖 Agentes</SelectItem>
-                <SelectItem value="analytics">📊 Analytics</SelectItem>
               </SelectContent>
             </Select>
           </div>
