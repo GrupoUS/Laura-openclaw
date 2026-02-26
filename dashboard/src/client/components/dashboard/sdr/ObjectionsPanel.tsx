@@ -1,3 +1,6 @@
+import { useEffect } from 'react'
+import { trpc } from '@/client/trpc'
+
 interface Objection {
   objection: string
   count: number
@@ -5,10 +8,23 @@ interface Objection {
 
 export function ObjectionsPanel({ objections }: { objections: Objection[] }) {
   const max = objections.length > 0 ? Math.max(...objections.map((o) => o.count)) : 1
+  const utils = trpc.useUtils()
+
+  // Auto-refresh KPIs via SSE when objections or files change
+  useEffect(() => {
+    const handler = (e: Event) => {
+      const detail = (e as CustomEvent).detail as { name?: string; type?: string }
+      if (detail.name === 'objecoes' || detail.type === 'objection_handled') {
+        utils.sdr.kpis.invalidate()
+      }
+    }
+    window.addEventListener('file:updated', handler)
+    return () => window.removeEventListener('file:updated', handler)
+  }, [utils])
 
   if (objections.length === 0) {
     return (
-      <p className="text-sm text-slate-400 italic">Nenhuma objeção registrada ainda.</p>
+      <p className="text-sm text-slate-400 italic">Nenhuma objecao registrada ainda.</p>
     )
   }
 

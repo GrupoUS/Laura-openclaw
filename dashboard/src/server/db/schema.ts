@@ -352,6 +352,24 @@ export const leadHandoffs = pgTable('lead_handoffs', {
   index('lead_handoffs_handoff_at_idx').on(table.handoffAt),
 ])
 
+// ── Agent Files (NeonDB bridge for local ↔ cloud sync) ──
+
+export const agentFiles = pgTable('agent_files', {
+  id: serial('id').primaryKey(),
+  name: text('name').notNull().unique(),
+  content: text('content').notNull().default(''),
+  description: text('description'),
+  isEditable: boolean('is_editable').notNull().default(true),
+  source: text('source').notNull().default('disk'),
+  updatedBy: text('updated_by').notNull().default('system'),
+  updatedAt: timestamp('updated_at', { withTimezone: true })
+    .defaultNow()
+    .notNull()
+    .$onUpdate(() => new Date()),
+}, (table) => [
+  index('agent_files_name_idx').on(table.name),
+])
+
 // ── Content Pipeline ──
 
 export const contentStageEnum = pgEnum('content_stage', [

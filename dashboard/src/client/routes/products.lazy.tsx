@@ -1,4 +1,5 @@
 import { createLazyFileRoute } from '@tanstack/react-router'
+import { useEffect } from 'react'
 import { trpc } from '@/client/trpc'
 import { ProductsDashboard } from '@/client/components/dashboard/products/ProductsDashboard'
 
@@ -7,9 +8,23 @@ export const Route = createLazyFileRoute('/products')({
 })
 
 function ProductsPage() {
+  const utils = trpc.useUtils()
   const { data: products, isLoading, refetch } = trpc.products.list.useQuery(undefined, {
-    refetchInterval: 30_000,
+    refetchOnMount: true,
+    staleTime: 60_000,
   })
+
+  // SSE-driven invalidation: when produtos file updates, refresh product list
+  useEffect(() => {
+    const handler = (e: Event) => {
+      const detail = (e as CustomEvent).detail as { name?: string }
+      if (detail.name === 'produtos') {
+        utils.products.list.invalidate()
+      }
+    }
+    window.addEventListener('file:updated', handler)
+    return () => window.removeEventListener('file:updated', handler)
+  }, [utils])
 
   const seedMutation = trpc.products.seed.useMutation()
 

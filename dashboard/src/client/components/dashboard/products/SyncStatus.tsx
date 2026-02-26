@@ -1,19 +1,17 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { trpc } from '@/client/trpc'
 
 export function SyncStatus() {
   const [syncing, setSyncing] = useState(false)
   const [result, setResult] = useState<{ synced: number; total: number; errors: string[] } | null>(null)
-  const [diskAvailable, setDiskAvailable] = useState<boolean | null>(null)
 
   const syncMutation = trpc.products.syncToAgents.useMutation()
 
-  // Check if local disk sync is available
-  useEffect(() => {
-    fetch('/api/files')
-      .then((res) => setDiskAvailable(res.ok))
-      .catch(() => setDiskAvailable(false))
-  }, [])
+  // Check last sync time from NeonDB agent_files
+  const { data: prodFile } = trpc.files.get.useQuery(
+    { name: 'PRODUTOS_GRUPO_US.md' },
+    { staleTime: 30_000 }
+  )
 
   const handleSync = async () => {
     setSyncing(true)
@@ -46,10 +44,10 @@ export function SyncStatus() {
         )}
       </button>
 
-      {diskAvailable && (
+      {prodFile?.lastModified && (
         <span className="flex items-center gap-1 text-[10px] text-sky-600">
           <span className="w-1.5 h-1.5 rounded-full bg-sky-500" />
-          Sync disco ativo
+          NeonDB sync: {new Date(prodFile.lastModified).toLocaleString('pt-BR')}
         </span>
       )}
 

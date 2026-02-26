@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
+import { trpc } from '@/client/trpc'
 
 interface FileSyncState {
   content: string
@@ -14,7 +15,6 @@ interface FileSyncState {
 export function useFileSync(name: string): FileSyncState {
   const [content, setContentState] = useState('')
   const [savedContent, setSavedContent] = useState('')
-  const [isLoading, setIsLoading] = useState(true)
   const [lastUpdated, setLastUpdated] = useState<string | null>(null)
   const [isSaving, setIsSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -22,38 +22,27 @@ export function useFileSync(name: string): FileSyncState {
   const nameRef = useRef(name)
   nameRef.current = name
 
-  // Initial fetch
-  useEffect(() => {
-    setIsLoading(true)
-    setError(null)
+  const utils = trpc.useUtils()
 
-    fetch(`/api/files/${name}`)
-      .then(async (res) => {
-        if (!res.ok) {
-          const body = await res.json().catch(() => ({ error: 'Failed to fetch' }))
-          throw new Error(body.error ?? `HTTP ${res.status}`)
-        }
-        return res.json()
-      })
-      .then((data: { content: string; lastModified: string }) => {
-        if (nameRef.current === name) {
-          setContentState(data.content)
-          setSavedContent(data.content)
-          setLastUpdated(data.lastModified)
-          setError(null)
-        }
-      })
-      .catch((err) => {
-        if (nameRef.current === name) {
-          setError((err as Error).message)
-        }
-      })
-      .finally(() => {
-        if (nameRef.current === name) {
-          setIsLoading(false)
-        }
-      })
-  }, [name])
+  // Fetch from NeonDB via tRPC
+  const { data, isLoading } = trpc.files.get.useQuery(
+    { name },
+    { staleTime: 60_000 }
+  )
+
+  // Hydrate content when query resolves
+  useEffect(() => {
+    if (data && !data.error) {
+      setContentState(data.content)
+      setSavedContent(data.content)
+      setLastUpdated(data.lastModified)
+      setError(null)
+    } else if (data?.error) {
+      setError(data.error)
+    }
+  }, [data])
+
+  const updateMutation = trpc.files.update.useMutation()
 
   // Listen for SSE file:updated events via window CustomEvent
   useEffect(() => {
@@ -81,23 +70,25 @@ export function useFileSync(name: string): FileSyncState {
     setIsSaving(true)
     setError(null)
     try {
-      const res = await fetch(`/api/files/${nameRef.current}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ content }),
+      const result = await updateMutation.mutateAsync({
+        name: nameRef.current,
+        content,
+        source: 'dashboard',
       })
-      if (!res.ok) {
-        const body = await res.json().catch(() => ({ error: 'Failed to save' }))
-        throw new Error(body.error ?? `HTTP ${res.status}`)
+      if (!result.ok) {
+        throw new Error(result.error ?? 'Failed to save')
       }
       setSavedContent(content)
       setLastUpdated(new Date().toISOString())
+      // Invalidate the query cache
+      utils.files.get.invalidate({ name: nameRef.current })
+      utils.files.getAll.invalidate()
     } catch (err) {
       setError((err as Error).message)
     } finally {
       setIsSaving(false)
     }
-  }, [content])
+  }, [content, updateMutation, utils])
 
   return {
     content,

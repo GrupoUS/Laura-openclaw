@@ -491,7 +491,7 @@
       "name": "sdr-audit-leads",
       "enabled": true,
       "createdAtMs": 1772075193853,
-      "updatedAtMs": 1772127460792,
+      "updatedAtMs": 1772131066981,
       "schedule": {
         "kind": "every",
         "everyMs": 1800000,
@@ -513,10 +513,10 @@
         "channel": "last"
       },
       "state": {
-        "nextRunAtMs": 1772129254108,
-        "lastRunAtMs": 1772127454108,
+        "nextRunAtMs": 1772132854133,
+        "lastRunAtMs": 1772131054133,
         "lastStatus": "ok",
-        "lastDurationMs": 6684,
+        "lastDurationMs": 12848,
         "consecutiveErrors": 0,
         "lastRunStatus": "ok",
         "lastDeliveryStatus": "delivered",
