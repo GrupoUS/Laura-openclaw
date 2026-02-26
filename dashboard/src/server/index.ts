@@ -20,6 +20,7 @@ import { apiTasksRoutes } from './routes/api-tasks'
 import { sdrApiRoutes } from './routes/api-sdr'
 import { contentApiRoutes } from './routes/api-content'
 import { fileSyncRoutes } from './routes/file-sync'
+import { kiwifyWebhookRoute } from './routes/webhooks-kiwify'
 
 import { secureHeaders } from 'hono/secure-headers'
 import { etag } from 'hono/etag'
@@ -93,6 +94,9 @@ app.get('/api/health', async (c) => {
 // REST API for agents (auth via x-laura-secret header)
 // Mounted at /api/tasks to avoid wildcard middleware intercepting /api/health
 app.route('/api/tasks', apiTasksRoutes)
+
+// Kiwify webhooks → Mila onboarding automático
+app.route('/api/webhooks/kiwify', kiwifyWebhookRoute)
 
 // SDR real-time sync endpoints for Laura agent
 app.route('/api/laura/sdr', sdrApiRoutes)
