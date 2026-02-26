@@ -12,7 +12,7 @@ const fs = require('fs');
 const path = require('path');
 
 // Import components
-const CartesiaClient = require('./cartesia-client');
+const ElevenLabsClient = require('./elevenlabs-client');
 const GeminiSTT = require('./gemini-stt');
 const LauraLLM = require('./laura-llm');
 
@@ -31,7 +31,7 @@ const PORT = telephonyConfig.server?.port || 3001;
 const HOST = telephonyConfig.server?.host || '0.0.0.0';
 
 // Initialize clients
-const tts = new CartesiaClient();
+const tts = new ElevenLabsClient();
 
 // VAD Constants (Silence Detection)
 // Adjust these to make Laura more patient or responsive
@@ -39,61 +39,30 @@ const VAD_SILENCE_THRESHOLD = 800; // ms of silence to consider "done speaking" 
 const VAD_INTERRUPTION_ENERGY = 0.05; // Energy threshold to trigger interruption (placeholder logic)
 
 /**
- * Stream audio to Twilio via ffmpeg
- * Pipes: Cartesia(WAV) -> ffmpeg(mulaw) -> Twilio(WebSocket)
+ * Stream audio to Twilio
+ * ElevenLabs entrega diretamente μ-law 8kHz (formato nativo do Twilio)
+ * Não precisa de ffmpeg — streaming direto!
  */
 async function streamAudioToTwilio(ws, streamSid, audioStream, interruptionState) {
-  return new Promise((resolve, reject) => {
-    // Spawn ffmpeg to convert stream on-the-fly
-    const ffmpeg = spawn('ffmpeg', [
-      '-i', 'pipe:0',        // Read from stdin (Cartesia stream)
-      '-ar', '8000',         // Resample to 8kHz
-      '-ac', '1',            // Mono
-      '-f', 'mulaw',         // Output format mulaw
-      '-acodec', 'pcm_mulaw',
-      'pipe:1'               // Write to stdout
-    ], { stdio: ['pipe', 'pipe', 'pipe'] });
-
-    // Pipe Cartesia stream into ffmpeg
-    audioStream.pipe(ffmpeg.stdin);
-
-    // Read converted chunks from ffmpeg and send to Twilio
-    ffmpeg.stdout.on('data', (chunk) => {
+  return new Promise((resolve) => {
+    audioStream.on('data', (chunk) => {
       if (interruptionState.interrupted) {
-         // Stop sending if interrupted
-         if (!ffmpeg.killed) {
-             ffmpeg.kill(); 
-             audioStream.destroy(); // Stop upstream
-         }
-         return;
+        audioStream.destroy();
+        return;
       }
-      
       if (ws.readyState === WebSocket.OPEN) {
-        const payload = chunk.toString('base64');
         ws.send(JSON.stringify({
           event: 'media',
           streamSid: streamSid,
-          media: { payload: payload }
+          media: { payload: chunk.toString('base64') }
         }));
       }
     });
 
-    // Handle errors
-    ffmpeg.stderr.on('data', () => {}); // Ignore stderr log
-    
-    ffmpeg.on('close', (code) => {
-      resolve();
-    });
-    
-    ffmpeg.on('error', (err) => {
-      console.error('ffmpeg error:', err);
-      resolve();
-    });
-    
-    // Handle stream errors
+    audioStream.on('end', () => resolve());
+
     audioStream.on('error', (err) => {
-      console.error('Audio stream error:', err);
-      ffmpeg.kill();
+      console.error('ElevenLabs stream error:', err.message);
       resolve();
     });
     
@@ -112,7 +81,7 @@ async function speak(ws, streamSid, text, interruptionState) {
   console.log(`🗣️  Speaking: "${text}"`);
   
   try {
-    // Get audio stream from Cartesia
+    // Get audio stream from ElevenLabs (μ-law 8kHz — nativo Twilio)
     const audioStream = await tts.synthesizeStream(text);
     
     // Pipe to Twilio
@@ -138,7 +107,7 @@ const server = http.createServer((req, res) => {
       timestamp: new Date().toISOString(),
       config: {
         telephonyProvider: telephonyConfig.provider,
-        ttsProvider: 'Cartesia Sonic 3 (Streaming)',
+        ttsProvider: 'ElevenLabs Turbo v2.5 (Raquel)',
         ttsConfigured: tts.isConfigured()
       }
     }));
@@ -146,11 +115,16 @@ const server = http.createServer((req, res) => {
   }
   
   if (req.url === '/voice/webhook' && req.method === 'POST') {
+    // Use PUBLIC_URL env var if set (for tunnels like cloudflared/ngrok)
+    // Otherwise fall back to req.headers.host (works when server is directly public)
+    const publicHost = process.env.PUBLIC_URL
+      ? process.env.PUBLIC_URL.replace(/^https?:\/\//, '')
+      : req.headers.host;
     res.writeHead(200, { 'Content-Type': 'application/xml' });
     res.end(`<?xml version="1.0" encoding="UTF-8"?>
 <Response>
   <Connect>
-    <Stream url="wss://${req.headers.host}/media-stream" />
+    <Stream url="wss://${publicHost}/media-stream" />
   </Connect>
 </Response>`);
     return;
@@ -336,6 +310,6 @@ wss.on('connection', (ws, req) => {
 server.listen(PORT, HOST, () => {
   console.log(`\n🎙️  Laura Voice Server (Conversational) running on ${HOST}:${PORT}`);
   console.log(`   Features: Fast-Track Response (Barge-in DISABLED to fix mute issue)`);
-  console.log(`   TTS: Cartesia Sonic 3 (Streaming)`);
+  console.log(`   TTS: ElevenLabs Turbo v2.5 — Raquel (GDzHdQOi6jjf8zaXhCYD)`);
   console.log(`   LLM: Gemini 2.0 Flash`);
 });

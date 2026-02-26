@@ -1,180 +1,6 @@
 {
   "version": 2,
   "runs": {
-    "167b2dde-af7d-4481-b2b3-72e912503cf7": {
-      "runId": "167b2dde-af7d-4481-b2b3-72e912503cf7",
-      "childSessionKey": "agent:celso:subagent:7f48c7bb-f869-4a30-81ab-7276108d327c",
-      "requesterSessionKey": "agent:main:whatsapp:direct:+556299776996",
-      "requesterOrigin": {
-        "channel": "whatsapp",
-        "to": "+556299776996",
-        "accountId": "default"
-      },
-      "requesterDisplayKey": "agent:main:whatsapp:direct:+556299776996",
-      "task": "## Task #13: Aprimoramento Marketing — Celso + Time\n**Prioridade:** 🔴 Alta | **Agent:** celso\n\n### Contexto\nGrupo US é uma escola de pós-graduação em Saúde Estética Avançada. Produto principal: TRINTAE3 (534h, híbrido). Outros: NEON (mentoria), OTB (MBA Harvard), COMU US, Aurículo.\n\n### Entregáveis (executar TODOS — registrar progresso no NeonDB task #13)\n\n**Subtask 25:** Mapear top 5 criativos de cursos de saúde estética BR com hooks de alto CTR. Pesquisar no YouTube/Instagram tendências de 2025/2026.\n\n**Subtask 26:** Benchmarking de copies de concorrentes — analisar páginas de venda de 3 concorrentes (buscar \"pós-graduação saúde estética\" no Google).\n\n**Subtask 27:** Criar banco de 5 copies de alta conversão para TRINTAE3 — baseadas nos hooks pesquisados.\n\n**Subtask 28:** Montar estrutura de calendário editorial mensal — Instagram (3x/semana), TikTok (5x/semana), YouTube (1x/semana).\n\n**Subtask 29:** Criar 2 roteiros de vídeo autoridade para Dra. Sacha (formato Reels/TikTok, 60 segundos).\n\n**Subtask 30:** Identificar 5 afiliados potenciais de nicho saúde estética.\n\n**Subtask 31:** Estruturar fluxo de pré-venda WhatsApp — 5 mensagens de aquecimento antes do handoff para SDR.\n\n**Subtask 32:** Análise de concorrentes — mapear criativos, canais e estratégias dos top 3.\n\n### Como registrar progresso\n```bash\nNEON_DATABASE_URL=\"postgresql://neondb_owner:npg_P0ljy3pWNTYc@ep-falling-morning-acpph9w8-pooler.sa-east-1.aws.neon.tech/neondb\" \\\nnode /Users/mauricio/.openclaw/skills/neondb-tasks/index.js \\\n  --action=update_subtask --id=25 --status=done\n```\nIDs das subtasks: 25, 26, 27, 28, 29, 30, 31, 32\n\n### Handoff ao concluir\n1. Resumir o que foi produzido para cada subtask\n2. Salvar artefatos em `/Users/mauricio/.openclaw/agents/celso/workspace/memory/`\n3. Marcar task #13 como done: `--action=update_task --id=13 --status=done`",
-      "cleanup": "keep",
-      "expectsCompletionMessage": true,
-      "spawnMode": "run",
-      "label": "task-13-marketing",
-      "model": "anthropic/claude-sonnet-4-6",
-      "runTimeoutSeconds": 300,
-      "createdAt": 1772124019870,
-      "startedAt": 1772124019958,
-      "archiveAtMs": 1772127619870,
-      "cleanupHandled": true,
-      "endedAt": 1772124233835,
-      "outcome": {
-        "status": "ok"
-      },
-      "endedReason": "subagent-complete",
-      "endedHookEmittedAt": 1772124248963,
-      "cleanupCompletedAt": 1772124248963
-    },
-    "402a3630-e4a7-47b9-82e0-f524bcabaa68": {
-      "runId": "402a3630-e4a7-47b9-82e0-f524bcabaa68",
-      "childSessionKey": "agent:cris:subagent:e978b957-314e-4aaf-9c76-95ecd83f1ddd",
-      "requesterSessionKey": "agent:main:whatsapp:direct:+556299776996",
-      "requesterOrigin": {
-        "channel": "whatsapp",
-        "to": "+556299776996",
-        "accountId": "default"
-      },
-      "requesterDisplayKey": "agent:main:whatsapp:direct:+556299776996",
-      "task": "## Task #16: Aprimoramento Financeiro — Cris\n**Prioridade:** 🟡 Média | **Agent:** cris\n\n### Contexto\nGrupo US. Produtos: TRINTAE3, NEON, OTB, COMU US, Aurículo.\nInadimplente conhecida: Jessika Sales Ribeiro (+5511969815798), NEON, R$3.318,00, vencida 30/01/2026.\n\n### Entregáveis\n\n**Subtask 43:** Criar estrutura de dashboard de inadimplência — definir métricas chave: total inadimplente por produto, % inadimplência por turma, tempo médio de atraso. Entregar como documento markdown.\n\n**Subtask 44:** Implementar protocolo de alertas para boletos vencidos >7 dias — criar fluxo: dia 7 → WhatsApp automático, dia 15 → ligação, dia 30 → acordo. Entregar como SOP em markdown.\n\n**Subtask 45:** Pesquisar 5 melhores práticas de recuperação de inadimplentes em infoprodutos BR — incluir templates de mensagem que funcionam.\n\n**Subtask 46:** Montar projeção financeira simples para próximas turmas — com base em: TRINTAE3 (estimativa 30 alunos/turma, ticket médio confirmado pelo Maurício em 27/02), NEON (mentoria individual, alta margem). Entregar estimativa de faturamento semestral.\n\n### Como registrar progresso\n```bash\nNEON_DATABASE_URL=\"postgresql://neondb_owner:npg_P0ljy3pWNTYc@ep-falling-morning-acpph9w8-pooler.sa-east-1.aws.neon.tech/neondb\" \\\nnode /Users/mauricio/.openclaw/skills/neondb-tasks/index.js \\\n  --action=update_subtask --id=43 --status=done\n```\nIDs subtasks: 43, 44, 45, 46\n\n### Handoff\n1. Salvar artefatos em `/Users/mauricio/.openclaw/agents/cris/workspace/memory/`\n2. Marcar task #16 done: `--action=update_task --id=16 --status=done`",
-      "cleanup": "keep",
-      "expectsCompletionMessage": true,
-      "spawnMode": "run",
-      "label": "task-16-financeiro",
-      "model": "anthropic/claude-sonnet-4-6",
-      "runTimeoutSeconds": 240,
-      "createdAt": 1772124033053,
-      "startedAt": 1772124033134,
-      "archiveAtMs": 1772127633053,
-      "cleanupHandled": true,
-      "endedAt": 1772124192613,
-      "outcome": {
-        "status": "ok"
-      },
-      "endedReason": "subagent-complete",
-      "endedHookEmittedAt": 1772124202647,
-      "cleanupCompletedAt": 1772124202647
-    },
-    "d92ce32c-e129-42fd-8d6d-0497f7ca1ace": {
-      "runId": "d92ce32c-e129-42fd-8d6d-0497f7ca1ace",
-      "childSessionKey": "agent:mila:subagent:433513ab-4ac5-4ce3-a9db-359c8831c4d1",
-      "requesterSessionKey": "agent:main:whatsapp:direct:+556299776996",
-      "requesterOrigin": {
-        "channel": "whatsapp",
-        "to": "+556299776996",
-        "accountId": "default"
-      },
-      "requesterDisplayKey": "agent:main:whatsapp:direct:+556299776996",
-      "task": "## Task #17: Aprimoramento Comunidade & CS — Mila\n**Prioridade:** 🟡 Média | **Agent:** mila\n\n### Contexto\nGrupo US — comunidade de profissionais de saúde estética (COMU US). Alunos ativos nas turmas TRINTAE3. Foco em engajamento, NPS e retenção.\n\n### Entregáveis\n\n**Subtask 47:** Pesquisar 5 melhores práticas de comunidade em cursos de saúde BR — o que mais engaja alunos (grupos WhatsApp, Discord, encontros presenciais, etc). Entregar como documento markdown.\n\n**Subtask 48:** Criar modelo de pesquisa de NPS mensal — 5 perguntas, escala 0-10, seção de comentários. Formato para enviar via WhatsApp.\n\n**Subtask 49:** Criar fluxo de boas-vindas para novos alunos — 7 dias, mensagem por dia. Personalizado para TRINTAE3.\n\n**Subtask 50:** Criar ritual semanal de engajamento na comunidade — formato de post/mensagem semanal que gera interação (enquete, desafio, case de sucesso, etc).\n\n**Subtask 51:** Mapear sinais de aluno em risco de churn — lista de 10 comportamentos indicativos (sumiu do grupo, não acessa EAD há X dias, etc) e ação para cada um.\n\n**Subtask 52:** Estruturar programa de embaixadores/depoimentos — como identificar alunos satisfeitos e transformar em cases de sucesso para marketing.\n\n### Como registrar\nIDs subtasks: 47, 48, 49, 50, 51, 52\n```bash\nNEON_DATABASE_URL=\"postgresql://neondb_owner:npg_P0ljy3pWNTYc@ep-falling-morning-acpph9w8-pooler.sa-east-1.aws.neon.tech/neondb\" \\\nnode /Users/mauricio/.openclaw/skills/neondb-tasks/index.js --action=update_subtask --id=47 --status=done\n```\n\n### Handoff\nSalvar em `/Users/mauricio/.openclaw/agents/mila/workspace/memory/` + marcar task #17 done.",
-      "cleanup": "keep",
-      "expectsCompletionMessage": true,
-      "spawnMode": "run",
-      "label": "task-17-comunidade",
-      "model": "anthropic/claude-sonnet-4-6",
-      "runTimeoutSeconds": 240,
-      "createdAt": 1772124047100,
-      "startedAt": 1772124047174,
-      "archiveAtMs": 1772127647100,
-      "cleanupHandled": true,
-      "endedAt": 1772124261334,
-      "outcome": {
-        "status": "ok"
-      },
-      "endedReason": "subagent-complete",
-      "endedHookEmittedAt": 1772124262708,
-      "cleanupCompletedAt": 1772124262708
-    },
-    "270d8ab3-ffc0-4cdb-ba34-f95f59465e87": {
-      "runId": "270d8ab3-ffc0-4cdb-ba34-f95f59465e87",
-      "childSessionKey": "agent:otto:subagent:1ba7e5e5-0177-40f4-99f3-e09e363c34e7",
-      "requesterSessionKey": "agent:main:whatsapp:direct:+556299776996",
-      "requesterOrigin": {
-        "channel": "whatsapp",
-        "to": "+556299776996",
-        "accountId": "default"
-      },
-      "requesterDisplayKey": "agent:main:whatsapp:direct:+556299776996",
-      "task": "## Task #15: Aprimoramento Operações — Otto\n**Prioridade:** 🟡 Média | **Agent:** otto\n\n### Contexto\nGrupo US — empresa de educação em saúde estética. Processos internos precisam de estruturação e SLAs definidos.\n\n### Entregáveis\n\n**Subtask 39:** Mapear processos críticos sem dono definido — listar pelo menos 8 processos recorrentes (ex: onboarding aluno, cobrança, suporte técnico EAD, etc) e identificar quem deveria ser responsável.\n\n**Subtask 40:** Criar SLA de atendimento por tipo de demanda — ex: dúvida simples = 2h, problema técnico = 4h, reclamação = 1h. Formato: tabela markdown.\n\n**Subtask 41:** Criar fluxo automático de cobrança de inadimplentes via Asaas — esboço do fluxo: trigger (vencimento) → WhatsApp → email → ligação → acordo. Documento SOP.\n\n**Subtask 42:** Criar ritual semanal de revisão de KPIs operacionais — quais métricas acompanhar (NPS, tempo resposta, taxa resolução 1° contato, inadimplência %). Frequência e formato.\n\n### Como registrar\nIDs subtasks: 39, 40, 41, 42\n```bash\nNEON_DATABASE_URL=\"postgresql://neondb_owner:npg_P0ljy3pWNTYc@ep-falling-morning-acpph9w8-pooler.sa-east-1.aws.neon.tech/neondb\" \\\nnode /Users/mauricio/.openclaw/skills/neondb-tasks/index.js --action=update_subtask --id=39 --status=done\n```\n\n### Handoff\nSalvar em `/Users/mauricio/.openclaw/agents/otto/workspace/memory/` + marcar task #15 done.",
-      "cleanup": "keep",
-      "expectsCompletionMessage": true,
-      "spawnMode": "run",
-      "label": "task-15-operacoes",
-      "model": "anthropic/claude-sonnet-4-6",
-      "runTimeoutSeconds": 240,
-      "createdAt": 1772124057113,
-      "startedAt": 1772124057186,
-      "archiveAtMs": 1772127657113,
-      "cleanupHandled": true,
-      "endedAt": 1772124127304,
-      "outcome": {
-        "status": "ok"
-      },
-      "endedReason": "subagent-complete",
-      "endedHookEmittedAt": 1772124168833,
-      "cleanupCompletedAt": 1772124168833
-    },
-    "b629d52d-65f1-469c-8699-a2d2a49975b3": {
-      "runId": "b629d52d-65f1-469c-8699-a2d2a49975b3",
-      "childSessionKey": "agent:flora:subagent:bfc93828-c9e5-4aae-8bd9-e217d83bdd31",
-      "requesterSessionKey": "agent:main:whatsapp:direct:+556299776996",
-      "requesterOrigin": {
-        "channel": "whatsapp",
-        "to": "+556299776996",
-        "accountId": "default"
-      },
-      "requesterDisplayKey": "agent:main:whatsapp:direct:+556299776996",
-      "task": "## Task #14: Aprimoramento Produto & Tech — Flora\n**Prioridade:** 🟡 Média | **Agent:** flora\n\n### Contexto\nGrupo US. Dashboard em https://laura.gpus.me. Produtos: TRINTAE3, NEON, OTB, COMU US, Aurículo. Plataformas usadas: Kiwify, Asaas, Hubla, Google Drive.\n\n### Entregáveis\n\n**Subtask 33:** Pesquisar 5 melhores práticas de lançamento de infoprodutos BR — análise de Expert XP, Hotmart, Kiwify cases. Foco em saúde/educação.\n\n**Subtask 34:** Mapear jornada do aluno — do 1° contato WhatsApp ao certificado. Identificar 5 gaps ou fricções no processo atual.\n\n**Subtask 35:** Auditar automações existentes — listar o que está automatizado (heartbeat, crons, SDR) e identificar 3 itens a melhorar ou que estão desatualizados.\n\n**Subtask 36:** Criar esboço de integração Kiwify → CRM automático — quando aluno compra no Kiwify, como criar lead automaticamente no CRM Google Sheets do Grupo US.\n\n**Subtask 37:** Criar protocolo de notificações automáticas de inadimplência — gatilho + mensagem + timing (coordenar com Cris/Otto).\n\n**Subtask 38:** Pesquisar 3 ferramentas de AI para geração de criativos que fazem sentido para o Grupo US (budget, caso de uso, exemplos).\n\n### Como registrar\nIDs subtasks: 33, 34, 35, 36, 37, 38\n```bash\nNEON_DATABASE_URL=\"postgresql://neondb_owner:npg_P0ljy3pWNTYc@ep-falling-morning-acpph9w8-pooler.sa-east-1.aws.neon.tech/neondb\" \\\nnode /Users/mauricio/.openclaw/skills/neondb-tasks/index.js --action=update_subtask --id=33 --status=done\n```\n\n### Handoff\nSalvar em `/Users/mauricio/.openclaw/agents/flora/workspace/memory/` + marcar task #14 done.",
-      "cleanup": "keep",
-      "expectsCompletionMessage": true,
-      "spawnMode": "run",
-      "label": "task-14-produto-tech",
-      "model": "anthropic/claude-sonnet-4-6",
-      "runTimeoutSeconds": 240,
-      "createdAt": 1772124070255,
-      "startedAt": 1772124070329,
-      "archiveAtMs": 1772127670255,
-      "cleanupHandled": true,
-      "endedAt": 1772124232140,
-      "outcome": {
-        "status": "ok"
-      },
-      "endedReason": "subagent-complete",
-      "endedHookEmittedAt": 1772124240446,
-      "cleanupCompletedAt": 1772124240446
-    },
-    "a972b79d-8ff6-42bf-ba50-3935c1f16d6d": {
-      "runId": "a972b79d-8ff6-42bf-ba50-3935c1f16d6d",
-      "childSessionKey": "agent:coder:subagent:70278f26-3671-4c1c-9c9b-bc6333dea403",
-      "requesterSessionKey": "agent:main:whatsapp:direct:+556299776996",
-      "requesterOrigin": {
-        "channel": "whatsapp",
-        "to": "+556299776996",
-        "accountId": "default"
-      },
-      "requesterDisplayKey": "agent:main:whatsapp:direct:+556299776996",
-      "task": "## Task: Content Pipeline — Auto-sync de conteúdo produzido por agentes\n**Projeto:** `/Users/mauricio/.openclaw/dashboard/`\n**Prioridade:** 🔴 Alta\n\n### Contexto\nMaurício quer ver no Content Pipeline (Kanban `/content`) tudo que os agentes produzem automaticamente. Quando um agente cria um roteiro, copy, análise ou qualquer artefato, um card deve aparecer no Kanban.\n\nJá existe:\n- Tabela `content_cards` no NeonDB com stages: ideas → roteiro → thumbnail → gravacao → edicao → publicado\n- Router tRPC `content` com CRUD completo\n- SSE eventBus para real-time\n- Endpoint `POST /api/laura/sdr/agent-status` para Laura publicar eventos\n- 11 cards já criados manualmente\n\n### O que implementar\n\n#### 1. Endpoint REST: `POST /api/laura/content` — Laura cria card via API\nCriar `src/server/routes/api-content.ts`:\n\n```typescript\n// Auth: x-laura-secret\n// POST /api/laura/content/card\nBody: {\n  title: string\n  description?: string\n  script?: string\n  stage?: 'ideas' | 'roteiro' | 'thumbnail' | 'gravacao' | 'edicao' | 'publicado'\n  assignedTo?: string\n  tags?: string[]\n  createdBy?: string\n}\n```\nAções: INSERT em `content_cards` + publicar SSE event `content:card_created`.\n\n#### 2. Adicionar SSE event type `content:card_created` e `content:card_updated`\nEm `src/server/events/types.ts`, adicionar:\n- `'content:card_created'`\n- `'content:card_updated'`\n- `'content:card_moved'` (quando stage muda)\n\n#### 3. Publicar SSE no content router (mutations existentes)\nEm `src/server/routers/content.ts`, no `create` e `update` mutations, adicionar:\n```typescript\nimport { eventBus } from '../events/emitter'\n// após insert/update:\neventBus.publish({ type: 'content:card_created', taskId: card.id, payload: card, agent: input.createdBy ?? 'system', ts: new Date().toISOString() })\n```\n\n#### 4. Frontend: auto-refresh no Content Pipeline via SSE\nEm `src/client/routes/content.lazy.tsx` ou o componente do Kanban, adicionar listener para `content:card_created` e `content:card_updated` via `useTaskEvents` (já existe o EventSource conectado).\n\nEm `useTaskEvents.ts`, adicionar:\n```typescript\nes.addEventListener('content:card_created', (e) => {\n  // invalidate content.list query via trpc utils\n  utils.content.list.invalidate()\n})\nes.addEventListener('content:card_updated', (e) => {\n  utils.content.list.invalidate()\n})\n```\n\n#### 5. Montar endpoint em `src/server/index.ts`\n```typescript\nimport { contentApiRoutes } from './routes/api-content'\napp.route('/api/laura/content', contentApiRoutes)\n```\n\n#### 6. Atualizar TOOLS.md do agente main\nAdicionar ao arquivo `/Users/mauricio/.openclaw/agents/main/workspace/TOOLS.md`:\n```markdown\n## 📋 Content Pipeline — Criar card via API\n```bash\nSECRET=\"RffjoX6SmQFbXWOTfJVz9pn8ef8covsMVdByeO/rcpA=\"\ncurl -s -X POST https://laura.gpus.me/api/laura/content/card \\\n  -H \"x-laura-secret: $SECRET\" -H \"Content-Type: application/json\" \\\n  -d '{\"title\":\"Nome do conteúdo\",\"description\":\"...\",\"stage\":\"ideas\",\"assignedTo\":\"rafa\",\"createdBy\":\"celso\",\"tags\":[\"marketing\"]}'\n```\n\n#### 7. Quality gates + deploy\n```bash\ncd /Users/mauricio/.openclaw/dashboard\nbun run type-check   # zero erros\nbun run lint:check   # zero warnings\ngit add -A\ngit commit -m \"feat: content pipeline auto-sync — REST API + SSE real-time for agent-created cards\"\ngit push origin main\n```\n\n### Handoff ao concluir\n1. URL do endpoint: `https://laura.gpus.me/api/laura/content/card`\n2. Confirmar SSE atualiza o Kanban sem reload\n3. Testar com curl\n4. Issues conhecidas\n\n**Auth:** `x-laura-secret: RffjoX6SmQFbXWOTfJVz9pn8ef8covsMVdByeO/rcpA=`",
-      "cleanup": "keep",
-      "expectsCompletionMessage": true,
-      "spawnMode": "run",
-      "label": "content-pipeline-agent-autosync",
-      "model": "anthropic/claude-sonnet-4-6",
-      "runTimeoutSeconds": 480,
-      "createdAt": 1772124511200,
-      "startedAt": 1772124511275,
-      "archiveAtMs": 1772128111200,
-      "cleanupHandled": true,
-      "endedAt": 1772124622962,
-      "outcome": {
-        "status": "ok"
-      },
-      "endedReason": "subagent-complete",
-      "endedHookEmittedAt": 1772124623294,
-      "cleanupCompletedAt": 1772124623294
-    },
     "db2368b7-9660-42b5-8def-2944e7552354": {
       "runId": "db2368b7-9660-42b5-8def-2944e7552354",
       "childSessionKey": "agent:coder:subagent:621a659a-fe25-4b5e-b20a-fe30583f5bf8",
@@ -195,7 +21,14 @@
       "createdAt": 1772125230793,
       "startedAt": 1772125230865,
       "archiveAtMs": 1772128830793,
-      "cleanupHandled": false
+      "cleanupHandled": true,
+      "endedAt": 1772125351618,
+      "outcome": {
+        "status": "ok"
+      },
+      "endedReason": "subagent-complete",
+      "endedHookEmittedAt": 1772125351940,
+      "cleanupCompletedAt": 1772125351940
     }
   }
 }
