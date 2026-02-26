@@ -4,7 +4,7 @@ description: Delegate a task to a specialist agent using the mandatory 7-section
 
 # /delegate - Explicit Delegation Protocol
 
-$ARGUMENTS
+**ARGUMENTS**: $ARGUMENTS
 
 <command-instruction>
 Before delegating, you MUST complete the Pre-Delegation Declaration:
@@ -34,4 +34,14 @@ After delegation completes, VERIFY:
 - Does it work as expected?
 - Does it follow existing codebase patterns?
 - Did the agent follow MUST DO and MUST NOT DO?
+
+## Research Agent Selection
+
+When delegating research tasks, choose based on **where the answer lives**:
+
+| Need                                        | Agent      |
+| ------------------------------------------- | ---------- |
+| Find patterns / files / conventions in repo | `explorer` |
+| Check docs / packages / best practices      | `librarian` |
+| Both needed?                                | Delegate to **both in the same message** (parallel) |
   </command-instruction>

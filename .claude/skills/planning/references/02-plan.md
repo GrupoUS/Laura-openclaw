@@ -206,7 +206,7 @@ git commit -m "feat: add specific feature"
 | Complexity | Pattern    | Agents           | Parallel? |
 | ---------- | ---------- | ---------------- | --------- |
 | L1-L2      | Direct     | None             | N/A       |
-| L3         | Subagent   | 1 explorer-agent | No        |
+| L3         | Subagent   | 1 explorer | No        |
 | L4-L5      | Swarm      | 2-3 subagents    | YES       |
 | L6-L8      | Team       | 3-5 teammates    | YES       |
 | L9-L10     | Full Swarm | 5+               | YES       |
@@ -217,7 +217,7 @@ git commit -m "feat: add specific feature"
 
 ```typescript
 Task({
-  subagent_type: "explorer-agent",
+  subagent_type: "explorer",
   prompt: "Research [topic]",
 });
 ```
@@ -226,12 +226,12 @@ Task({
 
 ```typescript
 Task({
-  subagent_type: "explorer-agent",
+  subagent_type: "explorer",
   prompt: "Research X",
   run_in_background: true,
 });
 Task({
-  subagent_type: "explorer-agent",
+  subagent_type: "explorer",
   prompt: "Research Y",
   run_in_background: true,
 });

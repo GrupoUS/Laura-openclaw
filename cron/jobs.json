@@ -491,7 +491,7 @@
       "name": "sdr-audit-leads",
       "enabled": true,
       "createdAtMs": 1772075193853,
-      "updatedAtMs": 1772107653955,
+      "updatedAtMs": 1772111265732,
       "schedule": {
         "kind": "every",
         "everyMs": 1800000,
@@ -513,14 +513,14 @@
         "channel": "last"
       },
       "state": {
-        "nextRunAtMs": 1772111253955,
-        "lastRunAtMs": 1772107593896,
-        "lastStatus": "error",
-        "lastDurationMs": 60059,
-        "consecutiveErrors": 5,
-        "lastRunStatus": "error",
-        "lastDeliveryStatus": "unknown",
-        "lastError": "cron: job execution timed out"
+        "nextRunAtMs": 1772113053970,
+        "lastRunAtMs": 1772111253970,
+        "lastStatus": "ok",
+        "lastDurationMs": 11762,
+        "consecutiveErrors": 0,
+        "lastRunStatus": "ok",
+        "lastDeliveryStatus": "delivered",
+        "lastDelivered": true
       }
     },
     {

@@ -125,10 +125,10 @@ Before acting, do all checks in order:
 
 | Complexity | Agents              | Parallel?     |
 | ---------- | ------------------- | ------------- |
-| L3         | 1 explorer-agent    | No            |
-| L4-L5      | 2-3 explorer-agents | **YES**       |
-| L6-L8      | 3-5 explorer-agents | **YES**       |
-| L9-L10     | 5+ explorer-agents  | **MANDATORY** |
+| L3         | 1 explorer    | No            |
+| L4-L5      | 2-3 explorers | **YES**       |
+| L6-L8      | 3-5 explorers | **YES**       |
+| L9-L10     | 5+ explorers  | **MANDATORY** |
 
 ### Required Output
 
@@ -249,7 +249,7 @@ After plan approval, delegate to specialists via `/implement`.
 
 ```
 Task({
-  subagent_type: "explorer-agent",
+  subagent_type: "explorer",
   prompt: "Research [topic] and report findings",
   run_in_background: true  // MANDATORY for concurrent execution
 })
@@ -284,7 +284,7 @@ Run: bun run check && bun run lint:check`,
 | Vulnerabilities          | `performance-optimizer` | performance-optimization                                         |
 | Performance              | `performance-optimizer` | performance-optimization                                         |
 | Oracle Consultation      | `oracle`              | read-only analysis                                                 |
-| Discovery/Research       | `explorer-agent`      | planning                                                           |
+| Discovery/Research       | `explorer`      | planning                                                           |
 
 ### Plan Agent Assignment
 
@@ -306,7 +306,7 @@ This tells `/implement` which specialist to spawn.
 | Self-review after big change | `oracle`                | Significant implementation     |
 | Hard debugging (2+ failures) | `oracle`                | Repeated failed attempts       |
 | External docs or libraries   | `librarian`             | Unfamiliar packages, quirks    |
-| Internal codebase structure  | `explorer-agent`        | Find patterns, file locations  |
+| Internal codebase structure  | `explorer`        | Find patterns, file locations  |
 | Backend API implementation   | `backend-specialist`    | Hono, tRPC, Drizzle            |
 | Frontend UI implementation   | `frontend-specialist`   | React, shadcn, Tailwind        |
 | DB schema or migrations      | `database-architect`    | Schema, Neon, Clerk auth       |

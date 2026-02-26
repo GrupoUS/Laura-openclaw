@@ -24,7 +24,7 @@ description: Canonical design workflow. Phase 0 (design spec) → Phase 1 (proto
 ## Design Tool Chain
 
 ```
-Phase 0:  explorer-agent + Skill("ui-ux-pro-max")
+Phase 0:  explorer + Skill("ui-ux-pro-max")
             → Style, palette, fonts, layout, components (spec document)
               ↓
 Phase 1:  frontend-specialist + Stitch MCP  (new pages only — skip for components)
@@ -45,14 +45,14 @@ Phase 3:  frontend-specialist (continues)
 
 ## PRE-FLIGHT: Design Research (MANDATORY — L3+)
 
-**Before ANY implementation**, spawn `explorer-agent` to generate a design specification using `ui-ux-pro-max`.
+**Before ANY implementation**, spawn `explorer` to generate a design specification using `ui-ux-pro-max`.
 
 > **Skip only for:** Bug fixes (L1-L2) or trivial CSS tweaks.
 
 ```typescript
 // Step 1: Generate design spec (foreground — must complete BEFORE implementation)
 Task({
-  subagent_type: "explorer-agent",
+  subagent_type: "explorer",
   prompt: `Use Skill("ui-ux-pro-max") to analyze design requirements for: $ARGUMENTS
 
   Research and output a complete design specification:
@@ -127,7 +127,7 @@ Simple tweak → Fix directly (skip Phase 0 and background agent)
 ```typescript
 // Step 1: Design spec (foreground)
 Task({
-  subagent_type: "explorer-agent",
+  subagent_type: "explorer",
   prompt: `Use Skill("ui-ux-pro-max") to create design spec for: [task]...`,
   // No run_in_background — need result first
 });
@@ -137,7 +137,7 @@ Task({
   subagent_type: "frontend-specialist",
   prompt: `Implement [task].
 
-## Design Specification (from explorer-agent + ui-ux-pro-max)
+## Design Specification (from explorer + ui-ux-pro-max)
 [paste full design spec here]
 
 ## Instructions
@@ -159,7 +159,7 @@ Task({
 ```typescript
 // Step 1: Design spec (foreground — sequential)
 Task({
-  subagent_type: "explorer-agent",
+  subagent_type: "explorer",
   prompt: `Use Skill("ui-ux-pro-max") to create design spec for: [feature]...`,
 });
 
@@ -198,7 +198,7 @@ Task({
 ```typescript
 // Step 1: Design spec (foreground)
 Task({
-  subagent_type: "explorer-agent",
+  subagent_type: "explorer",
   prompt: `Use Skill("ui-ux-pro-max") to create design spec for: [feature]...`,
 });
 
@@ -221,7 +221,7 @@ TaskUpdate({ taskId: "3", owner: "performance-optimizer" });
 ## 3. Skills to Load
 
 ```yaml
-ALWAYS (in explorer-agent step):
+ALWAYS (in explorer step):
   - ui-ux-pro-max # 67 styles, 96 palettes, 57 font pairings — generates design spec (Phase 0)
 
 ALWAYS (in frontend-specialist step):
@@ -240,12 +240,12 @@ OPTIONAL:
 
 ## 4. 4-Phase Pipeline
 
-### Phase 0 — Design Research (explorer-agent + ui-ux-pro-max)
+### Phase 0 — Design Research (explorer + ui-ux-pro-max)
 
 **Always:** For L3+ tasks.
 **Skip:** Bug fixes, trivial tweaks.
 
-1. Spawn `explorer-agent` (foreground)
+1. Spawn `explorer` (foreground)
 2. `Skill("ui-ux-pro-max")` → style + palette + fonts + layout + components
 3. Wait for structured design spec
 4. Pass spec to `frontend-specialist` prompt
@@ -358,7 +358,7 @@ START: /design [task]
 │     └─► YES → Direct fix (skip Phase 0, no background agent)
 │
 ├─► Phase 0: ALWAYS (L3+)
-│     └─► explorer-agent + Skill("ui-ux-pro-max") → design spec
+│     └─► explorer + Skill("ui-ux-pro-max") → design spec
 │
 ├─► Is it a COMPONENT or PAGE?
 │     └─► YES → frontend-specialist (run_in_background: true)
@@ -384,12 +384,12 @@ START: /design [task]
 
 | ❌ Don't                                        | ✅ Do                                                      |
 | ----------------------------------------------- | ---------------------------------------------------------- |
-| Skip Phase 0 for L3+ tasks                     | Always run explorer-agent + ui-ux-pro-max first            |
+| Skip Phase 0 for L3+ tasks                     | Always run explorer + ui-ux-pro-max first            |
 | Run frontend-specialist in foreground           | Always use run_in_background: true                         |
 | Skip Skill("frontend-design") invocation        | Invoke frontend-design FIRST in frontend-specialist        |
 | Write code before declaring DESIGN COMMITMENT   | Declare geometry/typography/palette/effects before coding  |
-| Use ui-ux-pro-max inside frontend-specialist    | ui-ux-pro-max belongs to explorer-agent (Phase 0 only)     |
-| Use frontend-design inside explorer-agent       | frontend-design belongs to frontend-specialist (Phase 2)   |
+| Use ui-ux-pro-max inside frontend-specialist    | ui-ux-pro-max belongs to explorer (Phase 0 only)     |
+| Use frontend-design inside explorer       | frontend-design belongs to frontend-specialist (Phase 2)   |
 | Hardcode colors                                 | Use GPUS tokens                                            |
 | Custom modal                                    | shadcn/ui Dialog                                           |
 | Skip UX validation                              | Loading/error/empty first                                  |

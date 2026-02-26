@@ -51,7 +51,7 @@ async function loadSnapshot(): Promise<Snapshot | null> {
 // Paths
 // ---------------------------------------------------------------------------
 
-const WORKSPACE_SKILLS_DIR = '/Users/mauricio/.openclaw/workspace/skills'
+const WORKSPACE_SKILLS_DIR = process.env.WORKSPACE_SKILLS_DIR || '/Users/mauricio/.openclaw/workspace/skills'
 const AGENTS_DIR = '/Users/mauricio/.openclaw/agents'
 
 const HIERARCHY_MAP = {

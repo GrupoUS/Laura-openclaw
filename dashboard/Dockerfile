@@ -3,7 +3,7 @@ FROM oven/bun:latest AS builder
 WORKDIR /app
 
 # Install dependencies first (caching)
-COPY package.json bun.lockb* ./
+COPY package.json bun.lock* ./
 RUN bun install --frozen-lockfile
 
 # Copy the rest of the source code
@@ -15,10 +15,10 @@ ENV VITE_SSE_READ_TOKEN=${VITE_SSE_READ_TOKEN}
 
 # Build Vite frontend and Bun backend
 RUN bun vite build
-# Build the hono backend into a single executable file or just transpile.
-# For simplicity and to ensure file serving works paths cleanly, we just tsc and run with bun directly.
-# Let's use `bun build` to bundle the server, although it's fine to just run index.ts
 RUN bun build src/server/index.ts --outdir dist/server --target bun
+
+# Copy server data files (snapshot, etc.)
+RUN cp -r src/server/data dist/data
 
 # Runner Stage
 FROM oven/bun:latest AS runner
@@ -26,7 +26,7 @@ WORKDIR /app
 
 # Copy built assets
 COPY --from=builder /app/dist ./dist
-COPY --from=builder /app/package.json ./bun.lockb* ./
+COPY --from=builder /app/package.json ./bun.lock* ./
 
 # Keep it lean with production dependencies only
 RUN bun install --production --frozen-lockfile

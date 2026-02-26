@@ -1,5 +1,5 @@
 ---
-description: Unified planning workflow using parallel explorer-agents for research and project-planner for synthesis. Delegates to planning skill for methodology.
+description: Unified planning workflow using parallel explorer + librarian agents for research and project-planner for synthesis. Delegates to planning skill for methodology.
 ---
 
 # /plan — Planning Orchestration
@@ -80,7 +80,7 @@ Is it L1-L2 (bug fix, single file)?
 "Frontend creation detected. Delegating to /design for proper UI/UX research..."
 
 // Then invoke /design workflow:
-// 1. Phase 0: explorer-agent + ui-ux-pro-max → design spec
+// 1. Phase 0: explorer + ui-ux-pro-max → design spec
 // 2. frontend-specialist (background) → implementation
 ```
 
@@ -176,59 +176,65 @@ AskUserQuestion({
 4. Sequential Thinking for complex decisions
 ```
 
+### Research Agent Routing
+
+Route each research task to the correct agent based on **where the answer lives**:
+
+| Research Type                | Agent      | Reason                        |
+| ---------------------------- | ---------- | ----------------------------- |
+| Existing code patterns       | `explorer` | Lives in codebase             |
+| Files to modify              | `explorer` | Lives in codebase             |
+| Current conventions          | `explorer` | Lives in codebase             |
+| Library/package docs         | `librarian` | External knowledge            |
+| Security best practices      | `librarian` | External knowledge (OWASP)    |
+| Performance patterns         | `librarian` | External knowledge            |
+| OSS implementation examples  | `librarian` | External knowledge            |
+| External API behavior        | `librarian` | External knowledge            |
+
 ### Agent Allocation by Complexity
 
 > [!IMPORTANT]
-> **ALL explorer-agents MUST use `run_in_background: true`** — always, regardless of complexity.
-> The hook `task-routing-guard.sh` blocks any explorer-agent call without it.
+> **ALL research agents MUST use `run_in_background: true`** — always, regardless of complexity.
+> The hook `task-routing-guard.sh` blocks any research agent call without it.
 
-| Complexity | Agents              | Multiple agents? |
-| ---------- | ------------------- | ---------------- |
-| L3         | 1 explorer-agent    | No (1 only)      |
-| L4-L5      | 2-3 explorer-agents | **YES**          |
-| L6-L8      | 3-5 explorer-agents | **YES**          |
-| L9-L10     | 5+ explorer-agents  | **MANDATORY**    |
+| Complexity | Agents                          | Multiple agents? |
+| ---------- | ------------------------------- | ---------------- |
+| L3         | 1 `explorer`                    | No (1 only)      |
+| L4-L5      | 1-2 `explorer` + 1 `librarian`  | **YES**          |
+| L6-L8      | 2-3 `explorer` + 2 `librarian`  | **YES**          |
+| L9-L10     | 3+ `explorer` + 2+ `librarian`  | **MANDATORY**    |
 
 ### L3: Single Domain
 
 ```typescript
 Task({
-  subagent_type: "explorer-agent",
+  subagent_type: "explorer",
   prompt: `Research [topic] in codebase.
 
   Required outputs:
   - Findings Table with confidence scores (1-5)
   - Knowledge Gaps identified
-  - Edge Cases (min 5 for L4+)`,
-  run_in_background: true, // Always background research
+  - Librarian Requests (if external docs needed)`,
+  run_in_background: true,
 });
 ```
 
 ### L4-L5: Multi-Domain (Parallel)
 
 ```typescript
+// Internal codebase research
 Task({
-  subagent_type: "explorer-agent",
+  subagent_type: "explorer",
   name: "codebase-research",
-  prompt: `Research codebase for [feature]...`,
+  prompt: `Research codebase for [feature]: find existing patterns, files to modify, conventions.`,
   run_in_background: true,
 });
+
+// External docs research (only if library/API involved)
 Task({
-  subagent_type: "explorer-agent",
+  subagent_type: "librarian",
   name: "docs-research",
-  prompt: `Research via Tavily: latest docs, tutorials, patterns...`,
-  run_in_background: true,
-});
-Task({
-  subagent_type: "explorer-agent",
-  name: "data-extraction",
-  prompt: `Use Skill("planning") research cascade: codebase → Tavily → web extraction...`,
-  run_in_background: true,
-});
-Task({
-  subagent_type: "explorer-agent",
-  name: "best-practices",
-  prompt: `Research best practices via Tavily...`,
+  prompt: `Find official documentation and best practices for [library/framework]. Focus on: version behavior, breaking changes, recommended patterns.`,
   run_in_background: true,
 });
 ```
@@ -236,11 +242,14 @@ Task({
 ### L6+: Full Research Swarm
 
 ```typescript
-Task({ subagent_type: "explorer-agent", name: "codebase", run_in_background: true });
-Task({ subagent_type: "explorer-agent", name: "docs-official", run_in_background: true });
-Task({ subagent_type: "explorer-agent", name: "security", run_in_background: true });
-Task({ subagent_type: "explorer-agent", name: "performance", run_in_background: true });
-Task({ subagent_type: "explorer-agent", name: "data-extraction", run_in_background: true });
+// Internal
+Task({ subagent_type: "explorer", name: "codebase-patterns", run_in_background: true });
+Task({ subagent_type: "explorer", name: "impact-analysis", run_in_background: true });
+
+// External
+Task({ subagent_type: "librarian", name: "docs-official", run_in_background: true });
+Task({ subagent_type: "librarian", name: "security-practices", run_in_background: true });
+Task({ subagent_type: "librarian", name: "performance-patterns", run_in_background: true });
 ```
 
 ### Required Research Outputs
@@ -296,7 +305,8 @@ Every task must declare `**Agent:**`. Use this matrix:
 | React, UI, components        | `frontend-specialist`   |
 | Performance, security        | `performance-optimizer` |
 | Documentation, notion, xlsx  | `orchestrator`          |
-| Research only                | `explorer-agent`        |
+| Codebase research only       | `explorer`              |
+| External docs research only  | `librarian`             |
 
 ### Task Template
 
@@ -400,7 +410,7 @@ Task({
   prompt: `Create implementation plan for: [user request]
 
 ## Research Findings
-[Paste findings from explorer-agents]
+[Paste findings from explorer + librarian agents]
 
 ## Requirements
 [From discovery phase]
@@ -492,9 +502,9 @@ Hybrid (FE + BE)  → Plan backend, delegate frontend to /design
 COMPLEXITY ROUTING:
 L1-L2  → Direct fix (no /plan)
 L3     → DISCOVER? → 1 explorer (background) → project-planner → self-review
-L4-L5  → DISCOVER  → 2-3 explorers (parallel background) → project-planner → self-review
-L6-L8  → DISCOVER  → 3-5 explorers (parallel background) → project-planner → self-review OR Team
-L9-L10 → DISCOVER  → 5+ explorers (mandatory parallel background) → Team → self-review
+L4-L5  → DISCOVER  → explorer + librarian (parallel background) → project-planner → self-review
+L6-L8  → DISCOVER  → 2-3 explorers + 2 librarians (parallel bg) → project-planner → self-review OR Team
+L9-L10 → DISCOVER  → 3+ explorers + 2+ librarians (mandatory parallel bg) → Team → self-review
 
 GOLDEN RULES:
 ✓ ROUTE FIRST — frontend creation → /design immediately
@@ -519,7 +529,8 @@ GOLDEN RULES:
 
 - **Methodology:** `.claude/skills/planning/SKILL.md`
 - **Executor:** `.claude/agents/orchestrator.md`
-- **Researcher:** `.claude/agents/explorer-agent.md`
+- **Codebase Researcher:** `.claude/agents/explorer-agent.md` (internal)
+- **External Researcher:** `.claude/agents/librarian.md` (external docs)
 - **Implementation:** `.claude/commands/implement.md`
 - **Frontend Design:** `.claude/commands/design.md` — DELEGATE for frontend creation tasks
 - **Data Extraction:** `.claude/skills/planning/SKILL.md`

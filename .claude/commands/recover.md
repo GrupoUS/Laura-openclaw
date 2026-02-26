@@ -4,7 +4,7 @@ description: Failure recovery protocol for post-failure handling. Use after 2+ f
 
 # /recover - Structured Failure Recovery
 
-$ARGUMENTS
+**ARGUMENTS**:$ARGUMENTS
 
 <command-instruction>
 Execute Phase 2C Failure Recovery protocol:

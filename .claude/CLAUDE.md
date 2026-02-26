@@ -108,7 +108,7 @@ When rules conflict:
 | Complexity | Research Agents          | Pattern               |
 | ---------- | ------------------------ | --------------------- |
 | **L1-L2**  | Skip                     | Direct fix            |
-| **L3**     | 1 explorer-agent         | Single research       |
+| **L3**     | 1 explorer         | Single research       |
 | **L4-L5**  | 2-3 explorers (parallel) | Multi-domain research |
 | **L6+**    | 3-5 explorers (parallel) | Full research swarm   |
 
@@ -181,7 +181,7 @@ Before ANY task, complete this checklist:
 | --------------------- | -------------------------- | ----------------------- | ----------------------------------------------------- |
 | Planning              | `planning`                 | `orchestrator`          | D.R.P.I.V methodology                                 |
 | Project Memory        | `evolution-core`           | `orchestrator`          | Session context load/capture                          |
-| Research/Crawling     | `planning`                 | `explorer-agent`        | NotebookLM synthesis, web extraction, research-heavy planning     |
+| Research/Crawling     | `planning`                 | `explorer`        | NotebookLM synthesis, web extraction, research-heavy planning     |
 | Backend/Hono/tRPC     | `debugger`                 | `debugger`              | Backend debug pack, procedures, middleware checks     |
 | Auth/DB/RBAC          | `debugger`                 | `debugger`              | Auth-DB debug pack, schema/RBAC consistency           |
 | Meta APIs/WhatsApp    | `meta-api-integration`     | `debugger`              | Instagram, Facebook, WhatsApp Cloud                   |
@@ -198,7 +198,7 @@ Before ANY task, complete this checklist:
 | Performance           | `performance-optimization` | `performance-optimizer` | Profiling, Core Web Vitals                            |
 | Security              | `performance-optimization` | `performance-optimizer` | `security-baseline` pack                              |
 | SEO/GEO               | `performance-optimization` | `performance-optimizer` | `seo-geo-baseline` pack                               |
-| Web Crawling          | `planning`                 | `explorer-agent`        | Structured extraction from websites                   |
+| Web Crawling          | `planning`                 | `explorer`        | Structured extraction from websites                   |
 | Notion Integration    | `notion`                   | `orchestrator`          | Notion-to-Markdown/HTML conversion                    |
 | Spreadsheet Ops       | `xlsx`                     | `orchestrator`          | Spreadsheet creation/analysis                         |
 | Skill Authoring       | `skill-creator`            | `orchestrator`          | Create/edit skills                                    |
@@ -231,7 +231,7 @@ Frontmatter portability rule (OpenCode + Claude): keep only `name` and `descript
 
 ### The Three Laws of Parallelism
 
-1. **Research is ALWAYS parallel** — never run explorer-agents sequentially
+1. **Research is ALWAYS parallel** — never run explorers sequentially
 2. **Background is MANDATORY** — `run_in_background: true` for any task > 5 min
 3. **Phases gate phases** — within a phase, all tasks run concurrently; phases run sequentially
 
@@ -239,12 +239,12 @@ Frontmatter portability rule (OpenCode + Claude): keep only `name` and `descript
 
 ```typescript
 // WRONG — sequential independent research
-const r1 = await Task({ subagent_type: "explorer-agent", prompt: "..." });
-const r2 = await Task({ subagent_type: "explorer-agent", prompt: "..." });
+const r1 = await Task({ subagent_type: "explorer", prompt: "..." });
+const r2 = await Task({ subagent_type: "explorer", prompt: "..." });
 
 // CORRECT — parallel background research
-Task({ subagent_type: "explorer-agent", prompt: "...", run_in_background: true });
-Task({ subagent_type: "explorer-agent", prompt: "...", run_in_background: true });
+Task({ subagent_type: "explorer", prompt: "...", run_in_background: true });
+Task({ subagent_type: "explorer", prompt: "...", run_in_background: true });
 // Both spawn in same message turn, Claude notified when each completes
 ```
 
@@ -273,17 +273,17 @@ START
 
 ```typescript
 Task({
-  subagent_type: "explorer-agent",
+  subagent_type: "explorer",
   name: "codebase",
   run_in_background: true,
 });
 Task({
-  subagent_type: "explorer-agent",
+  subagent_type: "explorer",
   name: "docs",
   run_in_background: true,
 });
 Task({
-  subagent_type: "explorer-agent",
+  subagent_type: "explorer",
   name: "security",
   run_in_background: true,
 });

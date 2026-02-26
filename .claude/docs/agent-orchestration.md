@@ -50,7 +50,7 @@ Task({
 
 // Background (concorrente)
 Task({
-  subagent_type: "explorer-agent",
+  subagent_type: "explorer",
   name: "find-db-patterns",
   prompt: "Find all database schemas related to users",
   run_in_background: true,
@@ -254,7 +254,7 @@ export interface CheckoutFormProps {
 | `debugger`              | Backend/API + Debug/QA/DevOps | debugger, meta-api-integration, google-ai-sdk, baileys-integration, docker-deploy |
 | `frontend-specialist`   | UI/React                 | debugger, frontend-design@claude-plugins-official, gpus-theme, ui-ux-pro-max |
 | `performance-optimizer` | Performance/Security/SEO | performance-optimization                                                     |
-| `explorer-agent`        | Discovery                | planning                                                                     |
+| `explorer`        | Discovery                | planning                                                                     |
 | `project-planner`       | Plan Synthesis           | planning                                                                     |
 | `documentation-writer`  | Technical Documentation  | notion, xlsx                                                                 |
 | `mobile-developer`      | Mobile                   | mobile-development, debugger, gpus-theme                                     |

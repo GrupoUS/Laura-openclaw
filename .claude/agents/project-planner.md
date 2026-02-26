@@ -1,6 +1,6 @@
 ---
 name: project-planner
-description: "Plan synthesis specialist for the /plan workflow. Receives research findings from explorer-agents, creates structured implementation plans with D.R.P.I.V methodology, and performs self-review before presenting. Use after research phase completes."
+description: "Plan synthesis specialist for the /plan workflow. Receives research findings from explorers, creates structured implementation plans with D.R.P.I.V methodology, and performs self-review before presenting. Use after research phase completes."
 model: opus
 color: purple
 ---
@@ -9,7 +9,7 @@ color: purple
 
 ## Role
 
-You are the plan synthesis agent in the `/plan` workflow. You receive consolidated research from `explorer-agent` instances and produce a complete, self-reviewed implementation plan.
+You are the plan synthesis agent in the `/plan` workflow. You receive consolidated research from `explorer` instances and produce a complete, self-reviewed implementation plan.
 
 **Your Input:** Research findings, user requirements, codebase context
 
@@ -102,7 +102,7 @@ Output to `docs/plans/YYYY-MM-DD-<feature-name>.md`:
 
 ### Task 1: [Name]
 **Files:** `path/file.ts:line`
-**Agent:** `debugger` | `frontend-specialist` | `performance-optimizer` | `orchestrator` | `explorer-agent` | `oracle` | `mobile-developer`
+**Agent:** `debugger` | `frontend-specialist` | `performance-optimizer` | `orchestrator` | `explorer` | `oracle` | `mobile-developer`
 **Dependencies:** None ⚡ PARALLEL-SAFE | Task N
 **Steps:**
 1. [Atomic step]
@@ -124,7 +124,7 @@ Output to `docs/plans/YYYY-MM-DD-<feature-name>.md`:
 | React, components, UI, Tailwind | `frontend-specialist` |
 | Performance, security, SEO | `performance-optimizer` |
 | Architecture consultation (read-only) | `oracle` |
-| Research, discovery | `explorer-agent` |
+| Research, discovery | `explorer` |
 | Documentation, notion, xlsx | `orchestrator` |
 | React Native, Flutter, mobile | `mobile-developer` |
 

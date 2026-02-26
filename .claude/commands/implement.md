@@ -4,7 +4,7 @@ description: Execute implementation plans created by orchestrator. Parses plan f
 
 # /implement — Execution Engine
 
-$ARGUMENTS
+**ARGUMENTS**:$ARGUMENTS
 
 > **Plans come from:** `orchestrator` with D.R.P.I.V methodology
 > **Plan format:** `docs/plans/YYYY-MM-DD-<feature>.md`
@@ -83,7 +83,8 @@ ls docs/plans/*.md 2>/dev/null || ls PLAN-*.md 2>/dev/null
 | Tests, QA, CI/CD             | `debugger`              | debugger, docker-deploy                             |
 | Performance, security, SEO   | `performance-optimizer` | performance-optimization                            |
 | Documentation (notion, xlsx) | `orchestrator`          | notion, xlsx                                        |
-| Research, discovery          | `explorer-agent`        | planning                                            |
+| Codebase research            | `explorer`              | planning                                            |
+| External docs research       | `librarian`             | —                                                   |
 | Architecture consultation    | `oracle`                | read-only analysis                                  |
 
 **Rule:** Every task in the plan MUST specify `**Agent:**`. If missing, use domain detection above.

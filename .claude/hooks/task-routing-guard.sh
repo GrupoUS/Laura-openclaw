@@ -12,7 +12,7 @@ CATEGORY=$(echo "$INPUT" | python3 -c 'import json,sys; d=json.load(sys.stdin); 
 
 if [ -n "$SUBAGENT" ]; then
   case "$SUBAGENT" in
-    backend-specialist|database-architect|debugger|documentation-writer|explorer-agent|frontend-specialist|mobile-developer|oracle|orchestrator|performance-optimizer|project-planner|explore|librarian|metis|momus|general-purpose|Explore|Plan|claude-code-guide|statusline-setup)
+    backend-specialist|database-architect|debugger|documentation-writer|explorer-agent|explorer|frontend-specialist|mobile-developer|oracle|orchestrator|performance-optimizer|project-planner|explore|librarian|metis|momus|general-purpose|Explore|Plan|claude-code-guide|statusline-setup)
       ;;
     *)
       echo '{"hookSpecificOutput":{"hookEventName":"PreToolUse","permissionDecision":"deny","permissionDecisionReason":"Unknown or unavailable subagent_type for this project."}}'

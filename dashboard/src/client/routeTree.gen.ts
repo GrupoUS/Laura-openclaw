@@ -14,11 +14,11 @@ import { Route as SessionsRouteImport } from './routes/sessions'
 import { Route as ProvidersRouteImport } from './routes/providers'
 import { Route as OrchestrationRouteImport } from './routes/orchestration'
 import { Route as OfficeRouteImport } from './routes/office'
-import { Route as ContentRouteImport } from './routes/content'
 import { Route as ListRouteImport } from './routes/list'
 import { Route as EvolutionRouteImport } from './routes/evolution'
 import { Route as DashAgentsRouteImport } from './routes/dash-agents'
 import { Route as CronsRouteImport } from './routes/crons'
+import { Route as ContentRouteImport } from './routes/content'
 import { Route as ConfigRouteImport } from './routes/config'
 import { Route as ChannelsRouteImport } from './routes/channels'
 import { Route as CalendarRouteImport } from './routes/calendar'
@@ -52,11 +52,6 @@ const OfficeRoute = OfficeRouteImport.update({
   path: '/office',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ContentRoute = ContentRouteImport.update({
-  id: '/content',
-  path: '/content',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const ListRoute = ListRouteImport.update({
   id: '/list',
   path: '/list',
@@ -75,6 +70,11 @@ const DashAgentsRoute = DashAgentsRouteImport.update({
 const CronsRoute = CronsRouteImport.update({
   id: '/crons',
   path: '/crons',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContentRoute = ContentRouteImport.update({
+  id: '/content',
+  path: '/content',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ConfigRoute = ConfigRouteImport.update({
@@ -253,20 +253,6 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/office': {
-      id: '/office'
-      path: '/office'
-      fullPath: '/office'
-      preLoaderRoute: typeof OfficeRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/content': {
-      id: '/content'
-      path: '/content'
-      fullPath: '/content'
-      preLoaderRoute: typeof ContentRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/tools': {
       id: '/tools'
       path: '/tools'
@@ -295,6 +281,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OrchestrationRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/office': {
+      id: '/office'
+      path: '/office'
+      fullPath: '/office'
+      preLoaderRoute: typeof OfficeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/list': {
       id: '/list'
       path: '/list'
@@ -321,6 +314,13 @@ declare module '@tanstack/react-router' {
       path: '/crons'
       fullPath: '/crons'
       preLoaderRoute: typeof CronsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/content': {
+      id: '/content'
+      path: '/content'
+      fullPath: '/content'
+      preLoaderRoute: typeof ContentRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/config': {

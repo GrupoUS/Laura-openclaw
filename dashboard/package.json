@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "bun run --hot src/server/index.ts & vite",
     "snapshot": "bun run scripts/snapshot-openclaw.ts",
-    "build": "bun run snapshot && vite build && bun build src/server/index.ts --outdir dist --target bun && cp -r src/server/data dist/data",
+    "build": "bun run snapshot && vite build && bun build src/server/index.ts --outdir dist/server --target bun && cp -r src/server/data dist/data",
     "type-check": "tsc --noEmit",
     "lint:check": "oxlint --config .oxlintrc.json src/",
     "lint:fix": "oxlint --config .oxlintrc.json --fix src/",

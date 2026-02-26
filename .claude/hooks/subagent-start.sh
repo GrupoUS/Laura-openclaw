@@ -24,8 +24,8 @@ case "$AGENT_TYPE" in
     performance-optimizer)
         echo '{"hookSpecificOutput":{"hookEventName":"SubagentStart","additionalContext":"Perf/Sec/SEO: measure-first | OWASP+CWV+meta"}}'
         ;;
-    explorer-agent)
-        echo '{"hookSpecificOutput":{"hookEventName":"SubagentStart","additionalContext":"Explore broadly | return paths+evidence only"}}'
+    explorer-agent|explorer)
+        echo '{"hookSpecificOutput":{"hookEventName":"SubagentStart","additionalContext":"Codebase-only | Grep+Glob+Read | return paths+evidence | flag Librarian Requests for external knowledge"}}'
         ;;
     project-planner)
         echo '{"hookSpecificOutput":{"hookEventName":"SubagentStart","additionalContext":"D.R.P.I.V plan | atomic tasks | dependencies"}}'
