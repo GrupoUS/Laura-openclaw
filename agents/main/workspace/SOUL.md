@@ -381,3 +381,35 @@ Each session, you wake up fresh. These files _are_ your memory. Read them. Updat
 If you change this file, tell the user — it's your soul, and they should know.
 
 _This file is yours to evolve. As you learn who you are, update it._
+
+---
+
+## 📚 BASE DE CONHECIMENTO — Atualizado 26/02/2026
+
+### 🔍 Inteligência Competitiva (Concorrentes TRINTAE3)
+| Concorrente | Diferencial | Como rebater |
+|-------------|-------------|-------------|
+| Nepuga (480h) | MEC reconhecido, injetáveis | "A TRINTAE3 tem 534h — maior carga do mercado, + comunidade nacional" |
+| Ibeco | Foco em estética pura | "TRINTAE3 é para profissionais de saúde — maior amplitude e credencial" |
+| São Camilo (SP) | Marca institucional SP | "3 fases presenciais em locais nacionais — não fica restrito a SP" |
+| UNIFOR (CE) | Universidade nordeste | "Além da certificação: comunidade ativa de 500+ profissionais em todo BR" |
+
+### 🚀 Insights SDR (Pesquisa mercado 2025/2026)
+- **Speed to Lead no WhatsApp**: primeiros 5 minutos = 21x mais conversão (validado com mercado BR)
+- **Fluxo ideal**: abordagem → qualificação → reunião → repasse closer ≤ 3h
+- **Canal #1 BR**: WhatsApp supera email em 5x para infoprodutos de saúde
+- **Tendência 2026**: personalização por segmento (mesma TRINTAE3, pitch diferente para fisio vs. biomédico vs. enfermeiro)
+- **SDR com IA**: automação orientada a eventos (não agendamento estático) = maior conversão
+
+### 💪 Diferencial único TRINTAE3 (para usar no pitch)
+1. **534h** — maior carga horária do mercado de pós estética
+2. **3 fases presenciais NACIONAIS** — não é regional, é rede nacional
+3. **Comunidade US ativa** — rede de 500+ profissionais + encontros mensais
+4. **Dra. Sacha** — autoridade nacional com certificações Harvard e Xiamen
+5. **Bônus exclusivos** — Aurículo com Dra. Sacha + Comunidade US
+
+### 🎯 Melhorias SDR implementadas (aplicar imediatamente)
+- Ao receber lead que veio de ad sobre faturamento → abrir com hook ROI
+- Ao receber lead que veio de ad de procedimento → abrir com hook técnica/certificação
+- Qualificação: perguntar profissão logo no início → determina TRINTAE3 vs. NEON
+- Se lead pergunta preço sem qualificação → desviar para benefício concreto primeiro

@@ -47,3 +47,42 @@ Garanto que processos rodem sem fricção: cobranças, prazos, fluxos operaciona
 ---
 
 *Processos que funcionam. Prazos que são cumpridos.*
+
+---
+
+## 📚 BASE DE CONHECIMENTO — Atualizado 26/02/2026 (Task #15)
+
+### ⚙️ 10 Processos Críticos do Grupo US (com donos sugeridos)
+1. Onboarding aluno → CS + Mila
+2. Cobrança inadimplentes → Cris + Suporte
+3. Suporte técnico EAD → CS + Coder
+4. Emissão de certificados → Suporte + CS
+5. Renovação/upgrade → SDR Laura + Closer
+6. Cancelamento/reembolso → Suporte + Financeiro
+7. Gestão de NPS/avaliações → Mila
+8. Integração de colaborador → Claudete
+9. Atualização de conteúdo EAD → Flora + Coder
+10. Relatório mensal → Cris + Otto
+
+### 📋 SLA de Atendimento (tabela definitiva)
+| Tipo | 1ª Resposta | Resolução |
+|------|-------------|-----------|
+| Dúvida simples | 2h | 4h |
+| Problema técnico EAD | 4h | 8h |
+| Reclamação | 1h | 24h |
+| Certificado | 24h | 72h |
+| Cancelamento | 2h | 48h |
+| Financeiro/boleto | 2h | 24h |
+| **Bug crítico** | **15min** | **2h** |
+| Upgrade | 4h | 24h |
+
+### 🏦 SOP Cobrança Asaas (fluxo definitivo)
+- D+0: WhatsApp automático via Asaas (config na plataforma)
+- D+2: Email automático
+- D+5: WhatsApp manual personalizado
+- D+10: Ligação manual (CS ou Otto)
+- D+15: Proposta de acordo (parcelamento/desconto juros)
+- D+30: Suspensão de acesso + notificação formal
+
+### 📊 Ritual Semanal de KPIs (toda segunda 9h, 30-45min)
+Métricas obrigatórias: NPS, taxa resolução 1° contato (FCR), % inadimplência, CSAT, churn mensal, tempo médio resposta, volume tickets, certificados emitidos.

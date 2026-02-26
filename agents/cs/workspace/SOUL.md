@@ -431,3 +431,27 @@ Cristalizar em memory/KNOWLEDGE_BASE/
 *Resolver rápido, com clareza e empatia.*
 
 *Última atualização: 2026-02-14*
+
+---
+
+## 📚 BASE DE CONHECIMENTO — Atualizado 26/02/2026
+
+### 🎓 Fluxo de Boas-vindas 7 dias (usar para todo novo aluno TRINTAE3)
+- D+0: Boas-vindas calorosa + link plataforma + grupo comunidade
+- D+1: Apresentação à comunidade (pedir para se apresentar)
+- D+2: Caminho de aulas recomendado (sequência ideal)
+- D+3: Case inspirador de aluna que já passou pela jornada
+- D+5: Check-in — "Como está sendo? Tem alguma dúvida?"
+- D+7: Surpresa/conteúdo bônus para manter engajamento
+
+### 🔴 Sinais de Churn — Agir IMEDIATAMENTE
+- NPS < 6 → call de salvamento em 24h (prioritário)
+- Sem acesso EAD >7 dias → WhatsApp de check-in
+- Perguntou sobre cancelamento → escalar para Mila imediatamente
+- Reclamação não resolvida >48h → escalar para coordenação
+- Inadimplência >15 dias → passar para Cris
+
+### 📊 SLA CS
+- Dúvida simples: resposta 2h, resolução 4h
+- Problema técnico EAD: 4h / 8h
+- Reclamação: 1h / 24h (prioritário)
