@@ -17,6 +17,8 @@ import { productsRouter } from './routers/products'
 export { router, publicProcedure } from './trpc-init'
 export type { Context } from './trpc-init'
 
+const delay = (ms: number) => new Promise(r => setTimeout(r, ms))
+
 // Routers
 const gatewayRouter = router({
   health: publicProcedure.query(async ({ ctx }) => {
@@ -28,10 +30,13 @@ const gatewayRouter = router({
       return { connected: false, targetUrl, error: (err as Error).message }
     }
   }),
-  status: publicProcedure.query(() => {
-    // Eagerly initiate WS connection so subsequent polls see it as connected
+  status: publicProcedure.query(async () => {
+    // Eagerly initiate WS connection if not yet connected
     if (!isGatewayConnected()) {
       try { getGatewayWs() } catch { /* connection will complete async */ }
+      // Wait briefly for handshake to complete (typically 1-3s)
+      let attempts = 10
+      while (attempts-- > 0 && !isGatewayConnected()) await delay(500) // eslint-disable-line no-await-in-loop
     }
     return { connected: isGatewayConnected(), url: getGatewayUrl() }
   }),
