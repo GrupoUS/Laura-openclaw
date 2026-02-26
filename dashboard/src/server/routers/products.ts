@@ -5,6 +5,21 @@ import { db } from '../db/client'
 import { products } from '../db/schema'
 import { writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
+import { neon } from '@neondatabase/serverless'
+
+const rawSql = neon(process.env.DATABASE_URL ?? '')
+
+/** Upsert PRODUTOS_GRUPO_US.md into agent_files NeonDB table */
+async function syncProductsToAgentFiles(markdown: string): Promise<void> {
+  await rawSql`
+    INSERT INTO agent_files (name, content, description, is_editable, updated_by)
+    VALUES ('PRODUTOS_GRUPO_US.md', ${markdown}, 'Catálogo de produtos do Grupo US', false, 'dashboard')
+    ON CONFLICT (name) DO UPDATE
+      SET content = EXCLUDED.content,
+          updated_at = NOW(),
+          updated_by = 'dashboard'
+  `
+}
 
 const AGENT_MEMORY_DIRS = [
   'agents/main/workspace/memory',
@@ -81,6 +96,9 @@ export const productsRouter = router({
           .set({ ...data, updatedAt: new Date() })
           .where(eq(products.id, id))
           .returning()
+        // Auto-sync markdown to agent_files after any edit
+        const all = await db.query.products.findMany({ orderBy: (t, { asc: a }) => [a(t.name)] })
+        void syncProductsToAgentFiles(generateProductsMarkdown(all))
         return updated
       }
 
@@ -88,6 +106,9 @@ export const productsRouter = router({
         .insert(products)
         .values(data)
         .returning()
+      // Auto-sync markdown to agent_files after new product
+      const all = await db.query.products.findMany({ orderBy: (t, { asc: a }) => [a(t.name)] })
+      void syncProductsToAgentFiles(generateProductsMarkdown(all))
       return created
     }),
 
@@ -95,6 +116,9 @@ export const productsRouter = router({
     .input(z.object({ id: z.number() }))
     .mutation(async ({ input }) => {
       await db.delete(products).where(eq(products.id, input.id))
+      // Auto-sync markdown to agent_files after deletion
+      const all = await db.query.products.findMany({ orderBy: (t, { asc: a }) => [a(t.name)] })
+      void syncProductsToAgentFiles(generateProductsMarkdown(all))
       return { success: true }
     }),
 
@@ -104,8 +128,12 @@ export const productsRouter = router({
     })
 
     const markdown = generateProductsMarkdown(rows)
+
+    // Always sync to NeonDB agent_files (works in cloud + local)
+    await syncProductsToAgentFiles(markdown)
+
     const baseDir = process.env.OPENCLAW_DIR ?? ''
-    if (!baseDir) return { success: false, synced: 0, total: 0, errors: ['OPENCLAW_DIR not set'] }
+    if (!baseDir) return { success: true, synced: 0, total: 0, errors: [], note: 'Synced to NeonDB. OPENCLAW_DIR not set — skipping local files.' }
 
     const results = await Promise.allSettled(
       AGENT_MEMORY_DIRS.map((dir) =>
