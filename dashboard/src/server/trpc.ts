@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { gatewayCall, getGatewayUrl, isGatewayConnected } from './ws/openclaw'
+import { gatewayCall, getGatewayUrl, getGatewayWs, isGatewayConnected } from './ws/openclaw'
 import { router, publicProcedure } from './trpc-init'
 import { evolutionRouter } from './routers/evolution'
 import { tasksRouter } from './routers/tasks'
@@ -27,6 +27,10 @@ const gatewayRouter = router({
     }
   }),
   status: publicProcedure.query(() => {
+    // Eagerly initiate WS connection so subsequent polls see it as connected
+    if (!isGatewayConnected()) {
+      try { getGatewayWs() } catch { /* connection will complete async */ }
+    }
     return { connected: isGatewayConnected(), url: getGatewayUrl() }
   }),
   patch: publicProcedure
