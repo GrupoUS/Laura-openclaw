@@ -39,7 +39,7 @@ function FileSyncEditor({ fileName }: { fileName: string }) {
   }
 
   if (error && !content) {
-    return <p className="text-sm text-red-500">Erro: {error}</p>
+    return <p className="text-sm text-red-500 dark:text-red-400">Erro: {error}</p>
   }
 
   return (
@@ -47,8 +47,13 @@ function FileSyncEditor({ fileName }: { fileName: string }) {
       <textarea
         value={content}
         onChange={(e) => { setContent(e.target.value); setSaveMsg(null) }}
-        className="w-full h-80 font-mono text-sm bg-slate-50 border border-slate-200 rounded-lg p-4 resize-y
-                   focus:outline-none focus:ring-2 focus:ring-indigo-300 focus:border-indigo-300"
+        className="w-full h-80 font-mono text-sm rounded-lg p-4 resize-y
+                   bg-slate-50 dark:bg-slate-900/60
+                   border border-slate-200 dark:border-slate-600
+                   text-slate-900 dark:text-slate-100
+                   placeholder:text-slate-400 dark:placeholder:text-slate-500
+                   focus:outline-none focus:ring-2 focus:ring-indigo-400 dark:focus:ring-indigo-500
+                   focus:border-indigo-300 dark:focus:border-indigo-600"
         spellCheck={false}
       />
       <div className="flex items-center justify-between">
@@ -62,17 +67,19 @@ function FileSyncEditor({ fileName }: { fileName: string }) {
             {isSaving ? 'Salvando...' : 'Salvar'}
           </button>
           {saveMsg && (
-            <span className="text-xs text-green-600">{saveMsg}</span>
+            <span className="text-xs text-green-600 dark:text-green-400">{saveMsg}</span>
           )}
           {error && (
-            <span className="text-xs text-red-500">Erro: {error}</span>
+            <span className="text-xs text-red-500 dark:text-red-400">Erro: {error}</span>
           )}
           {flashLive && (
-            <span className="text-xs text-sky-500 animate-pulse">Atualizado pelo agente</span>
+            <span className="text-xs text-sky-500 dark:text-sky-400 animate-pulse">
+              Atualizado pelo agente
+            </span>
           )}
         </div>
         {lastUpdated && (
-          <span className="text-xs text-slate-400">
+          <span className="text-xs text-slate-400 dark:text-slate-500">
             {new Date(lastUpdated).toLocaleString('pt-BR')}
           </span>
         )}
@@ -120,7 +127,7 @@ export function AgentFilesEditor() {
 
   if (!files || files.length === 0) {
     return (
-      <p className="text-sm text-slate-400 italic">
+      <p className="text-sm text-slate-400 dark:text-slate-500 italic">
         Nenhum arquivo encontrado no NeonDB.
       </p>
     )
@@ -129,15 +136,15 @@ export function AgentFilesEditor() {
   return (
     <div className="flex flex-col gap-3">
       {/* Tabs */}
-      <div className="flex flex-wrap gap-1 border-b border-slate-200 pb-2">
+      <div className="flex flex-wrap gap-1 border-b border-slate-200 dark:border-slate-700 pb-2">
         {files.map((f) => (
           <button
             key={f.name}
             onClick={() => setActiveFile(f.name)}
             className={`text-xs px-3 py-1.5 rounded-t-md transition-colors ${
               activeFile === f.name
-                ? 'bg-white border border-b-0 border-slate-200 text-slate-900 font-medium -mb-px'
-                : 'text-slate-500 hover:text-slate-700 hover:bg-slate-50'
+                ? 'bg-white dark:bg-slate-700 border border-b-0 border-slate-200 dark:border-slate-600 text-slate-900 dark:text-slate-100 font-medium -mb-px'
+                : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700/50'
             }`}
           >
             {f.name}.md

@@ -117,7 +117,7 @@
 |--------|-----------|-------|--------------|
 | `+556299776996` | **Maurício** | Dono / Admin | Tudo: sistema, heartbeat, logs, alertas |
 | `+556195220319` / `+556284414105` | **Lucas** | Head de Vendas | Apenas leads qualificados. NUNCA sistema. |
-| `+556299438005` | **Erika** | Consultora Comercial | Apenas leads qualificados. NUNCA sistema. |
+| `+556199574354` | **Érica Guirra** | Consultora Comercial/Closer | Apenas leads qualificados. NUNCA sistema. |
 | `+556294705081` | **Eu mesma (Laura)** | — | NUNCA enviar para mim mesma |
 
 ### ⛔ REGRA ABSOLUTA — SEM EXCEÇÃO:
@@ -262,8 +262,51 @@
 
 ---
 
+## 🎯 Funil de Indicação — Instrução para o Time (adicionado por Maurício)
+- Arquivo completo: `FUNIL_INDICACAO.md`
+- **Quando usar:** Sempre que Lucas, Erika ou qualquer membro do time perguntar sobre indicação.
+- **Resumo:** 2 momentos ideais — (1) logo após o fechamento (indicação por entusiasmo, maior volume) e (2) após resultado/curso (indicação por prova, mais qualificada). Priorizar o Momento 1.
+- Script padrão pós-fechamento: *"Você conhece mais alguém que também está nesse momento de crescimento?"*
+
 ## 👥 Equipe Comercial — Contexto 24/02/26
 - **Andressa Lima** (+55 85 8543-2733): Pediu para receber mais planilhas de leads para centralizar no CRM.
 - **Erica** em negociação com lead decidida, aguardando pagamento.
 - **Lucas** com lead que prometeu pagar à vista + outra para OTB com sócia.
 - **Maurício** pediu que toda planilha de leads extra seja enviada para Laura centralizar.
+## 🚨 ERRO CRÍTICO — Confusão de contatos com Tânia (27/02/2026)
+
+**O que aconteceu:** Laura enviou mensagens para Tânia Cristina (Gestora de Comunidade) chamando-a de "chefe" e de "Erika". Dois erros graves simultâneos.
+
+**Tânia Cristina Souza Costa:**
+- Cargo: Gestora da Comunidade (setor Marketing)
+- Número: A confirmar com Maurício (não estava no mapa)
+- NÃO é "chefe" (só Maurício é)
+- NÃO é "Erika" (Erika é a consultora comercial, +556299438005)
+- Não recebe mensagens de sistema/heartbeat/logs
+
+**Correção aplicada:**
+- SOUL.md atualizado com tabela de contatos reforçada + regra de identificação obrigatória
+- ORGANOGRAMA.md atualizado com aviso na entrada da Tânia
+- Regra: "chefe" = EXCLUSIVO para Maurício. Todos os outros = nome próprio.
+
+**Pendência:** Maurício precisa confirmar o número de WhatsApp da Tânia para completar o mapa.
+
+## 📱 Correção crítica — Tânia vs Erika (27/02/2026)
+
+**Raiz da confusão:** O número +55 62 9943-8005 estava INCORRETAMENTE salvo como "Erika" em todos os arquivos.
+**Número correto:** +55 62 9943-8005 = **Tânia Cristina Souza Costa** (Gestora da Comunidade / Suporte 33).
+
+**Erika (Consultora Comercial/Closer):** número DESCONHECIDO — pendente confirmação de Maurício.
+
+**Correções aplicadas em 27/02:**
+- SOUL.md: tabela de contatos corrigida
+- USER.md: tabela de equipe corrigida  
+- ORGANOGRAMA.md: número da Tânia adicionado
+
+**Pendência:** Confirmar com Maurício qual é o número real da Erika.
+
+## ✅ Érica Guirra — Número confirmado (27/02/2026)
+- **Número real:** +55 61 9957-4354 → formato E.164: `+556199574354`
+- Consultora Comercial / Closer do Grupo US
+- NÃO confundir com Tânia (+55 62 9943-8005)
+- Leads qualificados → enviar para este número ou para o grupo comercial `120363361363907454@g.us`

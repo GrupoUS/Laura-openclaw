@@ -94,6 +94,17 @@ export function useTaskEvents() {
       } catch { /* ignore parsing errors */ }
     })
 
+    // Forward SDR events so LeadsTable/KPIs can react
+    for (const sdrType of ['lead_contacted', 'lead_handoff', 'objection_handled', 'sdr_generic'] as const) {
+      es.addEventListener(sdrType, (e) => {
+        try {
+          const event = JSON.parse(e.data)
+          window.dispatchEvent(new CustomEvent(sdrType, { detail: event.payload }))
+          pushActivity(toActivity(e as MessageEvent))
+        } catch { /* ignore parsing errors */ }
+      })
+    }
+
     es.addEventListener('content:card_created', () => {
       window.dispatchEvent(new CustomEvent('content:invalidate'))
     })

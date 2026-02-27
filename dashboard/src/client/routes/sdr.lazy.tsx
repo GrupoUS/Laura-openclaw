@@ -11,19 +11,31 @@ function SdrPage() {
   const utils = trpc.useUtils()
   const { data: kpis, isLoading } = trpc.sdr.kpis.useQuery(undefined, {
     refetchOnMount: true,
-    staleTime: 60_000,
+    staleTime: 30_000,
+    refetchInterval: 60_000,
   })
 
-  // SSE-driven invalidation instead of polling
+  // SSE-driven invalidation for all SDR events
   useEffect(() => {
-    const handler = (e: Event) => {
+    const invalidateKpis = () => utils.sdr.kpis.invalidate()
+
+    const fileHandler = (e: Event) => {
       const detail = (e as CustomEvent).detail as { name?: string }
-      if (detail.name === 'objecoes') {
-        utils.sdr.kpis.invalidate()
-      }
+      if (detail.name === 'objecoes') invalidateKpis()
     }
-    window.addEventListener('file:updated', handler)
-    return () => window.removeEventListener('file:updated', handler)
+
+    // React to all SDR SSE events
+    window.addEventListener('file:updated', fileHandler)
+    window.addEventListener('lead_contacted', invalidateKpis)
+    window.addEventListener('lead_handoff', invalidateKpis)
+    window.addEventListener('objection_handled', invalidateKpis)
+
+    return () => {
+      window.removeEventListener('file:updated', fileHandler)
+      window.removeEventListener('lead_contacted', invalidateKpis)
+      window.removeEventListener('lead_handoff', invalidateKpis)
+      window.removeEventListener('objection_handled', invalidateKpis)
+    }
   }, [utils])
 
   if (isLoading) {
@@ -31,7 +43,7 @@ function SdrPage() {
       <div className="flex items-center justify-center h-full">
         <div className="flex flex-col items-center gap-3">
           <div className="w-8 h-8 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin" />
-          <span className="text-slate-500 text-sm">Carregando SDR...</span>
+          <span className="text-slate-500 dark:text-slate-400 text-sm">Carregando SDR...</span>
         </div>
       </div>
     )

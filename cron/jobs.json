@@ -491,7 +491,7 @@
       "name": "sdr-audit-leads",
       "enabled": true,
       "createdAtMs": 1772075193853,
-      "updatedAtMs": 1772131066981,
+      "updatedAtMs": 1772190460091,
       "schedule": {
         "kind": "every",
         "everyMs": 1800000,
@@ -513,10 +513,10 @@
         "channel": "last"
       },
       "state": {
-        "nextRunAtMs": 1772132854133,
-        "lastRunAtMs": 1772131054133,
+        "nextRunAtMs": 1772192254663,
+        "lastRunAtMs": 1772190454663,
         "lastStatus": "ok",
-        "lastDurationMs": 12848,
+        "lastDurationMs": 5428,
         "consecutiveErrors": 0,
         "lastRunStatus": "ok",
         "lastDeliveryStatus": "delivered",
@@ -528,7 +528,7 @@
       "name": "followup-pos-handoff",
       "enabled": true,
       "createdAtMs": 1772078147065,
-      "updatedAtMs": 1772121378664,
+      "updatedAtMs": 1772186162115,
       "schedule": {
         "kind": "every",
         "everyMs": 21600000,
@@ -550,11 +550,11 @@
         "channel": "last"
       },
       "state": {
-        "nextRunAtMs": 1772142947078,
-        "lastRunAtMs": 1772121347078,
+        "nextRunAtMs": 1772207747114,
+        "lastRunAtMs": 1772186147114,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 31586,
+        "lastDurationMs": 15001,
         "lastDelivered": true,
         "lastDeliveryStatus": "delivered",
         "consecutiveErrors": 0

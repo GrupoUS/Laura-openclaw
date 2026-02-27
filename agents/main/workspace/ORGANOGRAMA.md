@@ -23,6 +23,13 @@
 - **E-mail:** paixaobruno160@gmail.com
 - **Endereço:** Rua Barão de Téfe, 216 - Apto 302 - Jardim 25 de agosto - Duque de Caxias, RJ - 25075-010 -  Brasil.
 
+
+### Érica Guirra
+- **Setor:** Comercial
+- **Função:** Consultora Comercial / Closer
+- **Contato:** +55 61 99574-7354
+- **⚠️ ATENÇÃO:** NÃO confundir com Tânia (+55 62 9943-8005)
+
 ### Andressa Lima
 - **Setor:** Marketing
 - **Função:** Estrategista
@@ -54,9 +61,10 @@
 ### Tânia Cristina Souza Costa
 - **Setor:** Marketing
 - **Função:** Gestora da Comunidade
-- **Contato:** 
+- **Contato:** +55 62 9943-8005
 - **E-mail:** 
 - **Endereço:** Avenida Araucária  Quadra P lote 10 Jardim Bela Vista Goiania- GO Cep: 74863020
+- **⚠️ ATENÇÃO:** Nunca chamá-la de "chefe" nem de "Erika". Ela é TÂNIA, Gestora de Comunidade.
 
 ### João Paulo Barrionovo
 - **Setor:** Marketing
