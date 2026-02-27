@@ -240,6 +240,7 @@ export const tasks = pgTable('tasks', {
   id:          serial('id').primaryKey(),
   title:       text('title').notNull(),
   description: text('description'),
+  notes:       text('notes'),
   status:      taskStatusEnum('status').default('backlog'),
   phase:       integer('phase').default(1),
   priority:    priorityEnum('priority').default('medium'),

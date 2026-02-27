@@ -16,9 +16,9 @@ const COLUMN_THEME: Record<TaskStatus, {
   blocked:     { accent: 'border-t-red-500',     dropBg: 'bg-red-50/50 dark:bg-red-950/30',       icon: '🔴', badgeClass: 'bg-red-100 text-red-700 dark:bg-red-900/50 dark:text-red-300' },
 }
 
-interface Props { status: TaskStatus; tasks: Task[] }
+interface Props { status: TaskStatus; tasks: Task[]; onTaskClick?: (task: Task) => void }
 
-export function KanbanColumn({ status, tasks }: Props) {
+export function KanbanColumn({ status, tasks, onTaskClick }: Props) {
   const { setNodeRef, isOver } = useDroppable({ id: status })
   const theme = COLUMN_THEME[status]
   const label = STATUS_LABELS[status].replace(/^.+\s/, '')
@@ -59,7 +59,7 @@ export function KanbanColumn({ status, tasks }: Props) {
                 className="animate-in fade-in slide-in-from-bottom-1"
                 style={{ animationDelay: `${i * 30}ms`, animationFillMode: 'both' }}
               >
-                <TaskCard task={task} />
+                <TaskCard task={task} onTaskClick={onTaskClick} />
               </div>
             ))}
           </SortableContext>

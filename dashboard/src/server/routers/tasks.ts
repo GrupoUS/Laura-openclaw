@@ -49,10 +49,13 @@ export const tasksRouter = router({
 
   update: publicProcedure
     .input(z.object({
-      id:       z.number().int(),
-      status:   taskStatusEnum.optional(),
-      priority: priorityEnum.optional(),
-      agent:    z.string().optional(),
+      id:          z.number().int(),
+      title:       z.string().min(3).max(200).optional(),
+      description: z.string().optional(),
+      notes:       z.string().optional(),
+      status:      taskStatusEnum.optional(),
+      priority:    priorityEnum.optional(),
+      agent:       z.string().optional(),
     }))
     .mutation(async ({ input }) => {
       const { id, ...data } = input

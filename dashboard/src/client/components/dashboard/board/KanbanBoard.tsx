@@ -1,11 +1,12 @@
 
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import {
   DndContext, DragEndEvent, DragOverlay, DragStartEvent,
   PointerSensor, useSensor, useSensors, closestCorners,
 } from '@dnd-kit/core'
 import { KanbanColumn } from './KanbanColumn'
 import { TaskCard } from './TaskCard'
+import { TaskDetailModal } from './TaskDetailModal'
 import { useTaskStore } from '@/client/hooks/useTaskStore'
 import { patchTaskStatus } from '@/client/lib/api'
 import { ViewHeader } from '@/client/components/dashboard/layout/ViewHeader'
@@ -40,6 +41,11 @@ export function KanbanBoard({ initialTasks, viewToggle }: KanbanBoardProps) {
     return g
   }, [tasks])
   const [activeTask, setActiveTask] = useState<Task | null>(null)
+  const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null)
+
+  const handleTaskClick = useCallback((task: Task) => {
+    setSelectedTaskId(task.id)
+  }, [])
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 8 } })
@@ -84,7 +90,7 @@ export function KanbanBoard({ initialTasks, viewToggle }: KanbanBoardProps) {
         >
           <div className="flex gap-3 p-4 md:px-5 md:py-4 h-full min-h-0">
             {COLUMNS.map((status) => (
-              <KanbanColumn key={status} status={status} tasks={groups[status]} />
+              <KanbanColumn key={status} status={status} tasks={groups[status]} onTaskClick={handleTaskClick} />
             ))}
           </div>
 
@@ -96,6 +102,12 @@ export function KanbanBoard({ initialTasks, viewToggle }: KanbanBoardProps) {
           </DragOverlay>
         </DndContext>
       </div>
+
+      <TaskDetailModal
+        taskId={selectedTaskId}
+        open={!!selectedTaskId}
+        onOpenChange={(open) => { if (!open) setSelectedTaskId(null) }}
+      />
     </>
   )
 }

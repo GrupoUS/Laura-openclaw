@@ -1,4 +1,5 @@
 
+import { useRef } from 'react'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { AgentBadge } from '@/client/components/dashboard/shared/AgentBadge'
@@ -7,11 +8,27 @@ import { SubtaskProgress } from '@/client/components/dashboard/shared/SubtaskPro
 import { Badge } from '@/client/components/dashboard/ui/badge'
 import type { Task } from '@/shared/types/tasks'
 
-interface Props { task: Task; isDragging?: boolean }
+interface Props { task: Task; isDragging?: boolean; onTaskClick?: (task: Task) => void }
 
-export function TaskCard({ task, isDragging }: Props) {
+export function TaskCard({ task, isDragging, onTaskClick }: Props) {
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({ id: task.id })
+
+  const pointerStart = useRef<{ x: number; y: number } | null>(null)
+
+  const handlePointerDown = (e: React.PointerEvent) => {
+    pointerStart.current = { x: e.clientX, y: e.clientY }
+  }
+
+  const handlePointerUp = (e: React.PointerEvent) => {
+    if (!pointerStart.current || !onTaskClick) return
+    const dx = e.clientX - pointerStart.current.x
+    const dy = e.clientY - pointerStart.current.y
+    if (Math.abs(dx) < 5 && Math.abs(dy) < 5) {
+      onTaskClick(task)
+    }
+    pointerStart.current = null
+  }
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -27,6 +44,8 @@ export function TaskCard({ task, isDragging }: Props) {
       style={style}
       {...attributes}
       {...listeners}
+      onPointerDown={handlePointerDown}
+      onPointerUp={handlePointerUp}
       className={`
         group relative
         bg-white dark:bg-slate-800/90

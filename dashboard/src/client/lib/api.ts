@@ -3,7 +3,7 @@
  * Wraps fetch calls to tRPC/dashboard endpoints
  * Components that still use these helpers will work seamlessly
  */
-import type { Task, Subtask, AgentSummary, TaskStatus } from '@/shared/types/tasks'
+import type { Task, Subtask, AgentSummary, TaskStatus, Priority } from '@/shared/types/tasks'
 
 // ─── Tasks ────────────────────────────────────────
 export async function fetchTasks(filter?: {
@@ -68,6 +68,21 @@ export async function createSubtask(data: Record<string, unknown>): Promise<Subt
     body: JSON.stringify({ json: { ...data, taskId: Number(data.taskId) } }),
   })
   if (!res.ok) throw new Error(`createSubtask: ${res.status}`)
+  const json = await res.json()
+  return json.result?.data?.json?.data ?? json.result?.data?.data
+}
+
+export async function patchTaskFields(
+  id: string,
+  fields: { title?: string; description?: string; notes?: string; status?: TaskStatus; priority?: Priority }
+): Promise<Task> {
+  const res = await fetch('/trpc/tasks.update', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    credentials: 'include',
+    body: JSON.stringify({ json: { id: Number(id), ...fields } }),
+  })
+  if (!res.ok) throw new Error(`patchTaskFields: ${res.status}`)
   const json = await res.json()
   return json.result?.data?.json?.data ?? json.result?.data?.data
 }
