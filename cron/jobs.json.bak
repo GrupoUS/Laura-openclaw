@@ -455,7 +455,7 @@
       "name": "followup-comercial-diario",
       "enabled": true,
       "createdAtMs": 1771610323090,
-      "updatedAtMs": 1772110841427,
+      "updatedAtMs": 1772197235253,
       "schedule": {
         "kind": "cron",
         "expr": "0 10 * * 1-5"
@@ -476,10 +476,10 @@
         "to": "120363361363907454@g.us"
       },
       "state": {
-        "nextRunAtMs": 1772197200000,
-        "lastRunAtMs": 1772110800015,
+        "nextRunAtMs": 1772456400000,
+        "lastRunAtMs": 1772197200017,
         "lastStatus": "ok",
-        "lastDurationMs": 41412,
+        "lastDurationMs": 35236,
         "consecutiveErrors": 0,
         "lastRunStatus": "ok",
         "lastDelivered": false,
@@ -491,7 +491,7 @@
       "name": "sdr-audit-leads",
       "enabled": true,
       "createdAtMs": 1772075193853,
-      "updatedAtMs": 1772190460091,
+      "updatedAtMs": 1772204864879,
       "schedule": {
         "kind": "every",
         "everyMs": 1800000,
@@ -513,10 +513,10 @@
         "channel": "last"
       },
       "state": {
-        "nextRunAtMs": 1772192254663,
-        "lastRunAtMs": 1772190454663,
+        "nextRunAtMs": 1772206654802,
+        "lastRunAtMs": 1772204854802,
         "lastStatus": "ok",
-        "lastDurationMs": 5428,
+        "lastDurationMs": 10077,
         "consecutiveErrors": 0,
         "lastRunStatus": "ok",
         "lastDeliveryStatus": "delivered",
