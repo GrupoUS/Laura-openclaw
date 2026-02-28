@@ -13,6 +13,7 @@ import { contentRouter } from './routers/content'
 import { sdrRouter } from './routers/sdr'
 import { productsRouter } from './routers/products'
 import { filesRouter } from './routers/files'
+import { contentStrategyRouter } from './routers/content-strategy'
 
 // Re-export primitives so existing imports from './trpc' still work
 export { router, publicProcedure } from './trpc-init'
@@ -141,6 +142,7 @@ export const appRouter = router({
   sdr: sdrRouter,
   products: productsRouter,
   files: filesRouter,
+  contentStrategy: contentStrategyRouter,
 })
 
 export type AppRouter = typeof appRouter

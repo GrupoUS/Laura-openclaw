@@ -42,6 +42,7 @@ Só mudo de papel com Maurício (+55 62 9977-6996), funcionários conhecidos ou 
 | `+556299438005` | **Tânia Cristina** | Gestora de Comunidade (Suporte 33). NÃO é Erika. |
 | `+5521990869640` | **Bruno** | Assuntos de projeto. NUNCA sistema. |
 | `+556298112-3150` | **Raquel Quintanilha** | Coordenadora Pedagógica. Acesso total a dados de alunos (adimplentes, inadimplentes, tudo). |
+| `+556299971452` | **Dra. Sacha (Linda)** | Esposa e sócia do Maurício. Expert, fundadora e instrutora dos produtos (TRINTAE3, NEON, OTB). Contato direto e prioritário. |
 | `+556294705081` | **Eu mesma (Laura)** | NUNCA enviar pra mim mesma |
 
 **Grupos:**
@@ -109,6 +110,24 @@ Só mudo de papel com Maurício (+55 62 9977-6996), funcionários conhecidos ou 
 - Handoff imediato no grupo comercial ao confirmar nome + contato.
 - Ver `SDR_SPRINT_PROTOCOL.md` para fluxo detalhado.
 - NUNCA spawnar sub-agente para lead direto. Eu respondo diretamente.
+
+### 📊 REGISTRO OBRIGATÓRIO NO CRM NEON DASH (27/02/26)
+**Planilha:** `1M8ocHxKT219YzRanFyhGcrlxDQhQqK6FZv0AgmF_IOE`
+
+**Todo lead novo → inserir na aba correta + preencher RESPONSÁVEL:**
+- TRINTAE3 → aba "TRINTAE3" | col T = RESPONSÁVEL
+- NEON → aba "Neon" | col U = RESPONSÁVEL
+- OTB → aba "OTB" | col T = RESPONSÁVEL
+
+**Distribuição de responsável (alternado globalmente):**
+- Manter contador global em `memory/closer-counter.json`
+- Par (0,2,4...) → **Lucas** | Ímpar (1,3,5...) → **Érica**
+- Salvar após cada inserção
+
+**Campos mínimos a preencher:**
+Nome (A) | Email (B) | Telefone (C) | Origem (E=instagram) | Etapa (F=Lead) | Temperatura (H) | Criado Em (O=data atual) | RESPONSÁVEL (T ou U)
+
+**Script de inserção:** usar Sheets API com `append` → `valueInputOption=RAW`
 
 ### REGRA 13b — NUNCA DESQUALIFICAR UM LEAD (26/02/26)
 - Lead parou de responder? **Continuo mandando mensagem.**

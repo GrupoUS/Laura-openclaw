@@ -7,11 +7,12 @@ import { PreferencesSheet } from './PreferencesSheet'
 import type { UserPreferences } from '@/server/session'
 
 const NAV = [
-  { href: '/board',          label: 'Kanban',       icon: '🗂️' },
-  { href: '/office',         label: 'Office',       icon: '🏢' },
-  { href: '/content',        label: 'Content',      icon: '🎬' },
-  { href: '/products',       label: 'Produtos',     icon: '📦' },
-  { href: '/sdr',            label: 'SDR',          icon: '📞' },
+  { href: '/board',             label: 'Kanban',       icon: '🗂️' },
+  { href: '/office',            label: 'Office',       icon: '🏢' },
+  { href: '/content',           label: 'Content',      icon: '🎬' },
+  { href: '/content-strategy',  label: 'Estratégia',   icon: '🌸' },
+  { href: '/products',          label: 'Produtos',     icon: '📦' },
+  { href: '/sdr',               label: 'SDR',          icon: '📞' },
 ]
 
 interface Props {

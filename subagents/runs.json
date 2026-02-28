@@ -1,4 +1,222 @@
 {
   "version": 2,
-  "runs": {}
+  "runs": {
+    "bacc7a64-a7b8-4318-aca0-8baad20aaf74": {
+      "runId": "bacc7a64-a7b8-4318-aca0-8baad20aaf74",
+      "childSessionKey": "agent:celso:subagent:46f85ff9-dae2-4c46-b1e7-7cb3a008d1c1",
+      "requesterSessionKey": "agent:main:whatsapp:direct:+556299776996",
+      "requesterOrigin": {
+        "channel": "whatsapp",
+        "to": "+556299776996",
+        "accountId": "default"
+      },
+      "requesterDisplayKey": "agent:main:whatsapp:direct:+556299776996",
+      "task": "## Task: Estratégia de Conteúdo — Roteiro Completo Semana 02/03 a 07/03/2026\n**Prioridade:** 🔴 Alta — Maurício pediu pessoalmente\n\n### Contexto\nMaurício quer um roteiro completo de postagens para a semana que vem (02/03 a 07/03/2026) para os canais do Grupo US. Pediu pesquisa avançada e todos os agentes de marketing acionados.\n\n**Produtos:**\n- TRINTAE3 (Pós 534h — produto principal)\n- NEON (Mentoria clínicas avançadas)\n- OTB (experiência internacional)\n- Expert: Dra. Sacha Gualberto (Harvard, Xiamen)\n\n**Tendências 2026:**\n- Combo Reels curtos (alcance) + Carrosséis (salvos/engajamento) = estratégia mais eficaz\n- Stories convertem via DM\n- Segunda: motivacional | Terça: educativo | Quarta: prova social | Quinta: produto/oferta | Sexta: bastidores\n\n### Entregável\nCoordene sua equipe (Luca-P, Luca-I, Rafa, Maia, Duda) e consolide um roteiro completo salvo em:\n`/Users/mauricio/.openclaw/agents/main/workspace/memory/roteiro-semana-03-03-2026.md`\n\nPara cada dia (Seg a Sab), incluir:\n- Formato (Reel/Carrossel/Feed/Stories)\n- Tema/Gancho\n- Roteiro Reel (hook 3s + desenvolvimento + CTA)\n- Caption completa com emojis, hashtags e CTA\n- Objetivo (Alcance/Engajamento/Conversão)\n- Produto foco\n\n**Calendário sugerido:**\n- Seg 02/03: Motivacional + autoridade Dra. Sacha\n- Ter 03/03: Educativo — técnica avançada (\"você sabia que...\")\n- Qua 04/03: Prova social — depoimento/resultado aluna TRINTAE3\n- Qui 05/03: Pitch TRINTAE3 — 3 pilares (Técnica + Certificação + Comunidade)\n- Sex 06/03: Bastidores/entretenimento\n- Sab 07/03: Stories de engajamento (enquete, quiz)\n\n### Handoff\n1. Salvar arquivo no caminho acima\n2. ANNOUNCE resumindo: agentes acionados, o que cada um fez, resultado final",
+      "cleanup": "keep",
+      "expectsCompletionMessage": true,
+      "spawnMode": "run",
+      "model": "anthropic/claude-sonnet-4-6",
+      "runTimeoutSeconds": 300,
+      "createdAt": 1772237456457,
+      "startedAt": 1772237456539,
+      "archiveAtMs": 1772241056457,
+      "cleanupHandled": true,
+      "endedAt": 1772237668290,
+      "outcome": {
+        "status": "ok"
+      },
+      "endedReason": "subagent-complete",
+      "endedHookEmittedAt": 1772237668628,
+      "cleanupCompletedAt": 1772237668628
+    },
+    "01d333fa-716a-4bf2-84e3-94610668c6dc": {
+      "runId": "01d333fa-716a-4bf2-84e3-94610668c6dc",
+      "childSessionKey": "agent:luca-p:subagent:0b48ec01-7d36-4ed1-b9a9-221f7f6595cd",
+      "requesterSessionKey": "agent:main:whatsapp:direct:+556299776996",
+      "requesterOrigin": {
+        "channel": "whatsapp",
+        "to": "+556299776996",
+        "accountId": "default"
+      },
+      "requesterDisplayKey": "agent:main:whatsapp:direct:+556299776996",
+      "task": "## Task: Pesquisa de Tendências — Semana 02/03 a 07/03/2026\n**Prioridade:** 🔴 Alta\n\nPesquise tendências atuais de conteúdo para Instagram no nicho de saúde estética e pós-graduação em estética avançada. Foque em:\n\n1. Formatos que estão performando melhor agora (Reels, Carrossel, Stories)\n2. Temas virais da semana no nicho beleza/saúde/estética\n3. Hooks (ganchos) que estão gerando mais alcance\n4. Hashtags relevantes para o nicho\n5. Datas comemorativas relevantes na semana 02/03-07/03 (ex: Dia Internacional da Mulher é 08/03 — semana anterior pode capitalizar isso)\n\n**Salve o resultado em:** `/Users/mauricio/.openclaw/agents/main/workspace/memory/tendencias-semana-03-03.md`\n\nANNOUNCE ao concluir com resumo das principais tendências encontradas.",
+      "cleanup": "keep",
+      "expectsCompletionMessage": true,
+      "spawnMode": "run",
+      "model": "anthropic/claude-sonnet-4-6",
+      "runTimeoutSeconds": 240,
+      "createdAt": 1772237486276,
+      "startedAt": 1772237486355,
+      "archiveAtMs": 1772241086276,
+      "cleanupHandled": true,
+      "endedAt": 1772237613227,
+      "outcome": {
+        "status": "ok"
+      },
+      "endedReason": "subagent-complete",
+      "endedHookEmittedAt": 1772237616819,
+      "cleanupCompletedAt": 1772237616819
+    },
+    "42cd9fe6-2746-4274-aa56-823b4e06d79d": {
+      "runId": "42cd9fe6-2746-4274-aa56-823b4e06d79d",
+      "childSessionKey": "agent:rafa:subagent:1ae10edc-40f6-4811-a16a-f84944e09f38",
+      "requesterSessionKey": "agent:main:whatsapp:direct:+556299776996",
+      "requesterOrigin": {
+        "channel": "whatsapp",
+        "to": "+556299776996",
+        "accountId": "default"
+      },
+      "requesterDisplayKey": "agent:main:whatsapp:direct:+556299776996",
+      "task": "## Task: Copies — Roteiro de Postagens Semana 02/03-07/03/2026\n**Prioridade:** 🔴 Alta\n\nCrie as copies completas (captions) para 6 posts do Instagram do Grupo US para a semana 02/03 a 07/03/2026.\n\n**Contexto da marca:**\n- Grupo US: escola de pós-graduação em Saúde Estética Avançada\n- Expert: Dra. Sacha Gualberto (Harvard, Xiamen, +13 anos)\n- Produto principal: TRINTAE3 — 534h, 3 fases presenciais nacionais, Técnica + Certificação + Comunidade\n- Tom: profissional mas humano, aspiracional, motivador\n- IMPORTANTE: Semana pré-Dia da Mulher (08/03) — capitalizar esse tema\n\n**Calendário editorial:**\n- Seg 02/03: Motivacional + autoridade Dra. Sacha (Feed ou Carrossel)\n- Ter 03/03: Educativo — técnica avançada em estética (Carrossel \"você sabia que...\")\n- Qua 04/03: Prova social — depoimento ou resultado real de aluna TRINTAE3\n- Qui 05/03: Pitch TRINTAE3 — 3 pilares: Técnica + Certificação + Comunidade\n- Sex 06/03: Bastidores ou conteúdo humanizado da equipe/Dra. Sacha\n- Sab 07/03: Pré-Dia da Mulher — mensagem especial para a mulher que investe em si\n\n**Para cada post, entregar:**\n- Caption completa (com emojis, quebras de linha estilo Instagram)\n- CTA (chamada para ação)\n- Hashtags (15-20 relevantes)\n\n**Salve em:** `/Users/mauricio/.openclaw/agents/main/workspace/memory/copies-semana-03-03.md`\n\nANNOUNCE ao concluir com resumo dos 6 posts criados.",
+      "cleanup": "keep",
+      "expectsCompletionMessage": true,
+      "spawnMode": "run",
+      "model": "anthropic/claude-sonnet-4-6",
+      "runTimeoutSeconds": 240,
+      "createdAt": 1772237506027,
+      "startedAt": 1772237506100,
+      "archiveAtMs": 1772241106027,
+      "cleanupHandled": true,
+      "endedAt": 1772237589654,
+      "outcome": {
+        "status": "ok"
+      },
+      "endedReason": "subagent-complete",
+      "endedHookEmittedAt": 1772237593416,
+      "cleanupCompletedAt": 1772237593417
+    },
+    "b31d6367-ff51-439f-85d8-96a8d075c5f9": {
+      "runId": "b31d6367-ff51-439f-85d8-96a8d075c5f9",
+      "childSessionKey": "agent:maia:subagent:6ee26f63-e744-4c66-8a8c-86cdf0ef0219",
+      "requesterSessionKey": "agent:main:whatsapp:direct:+556299776996",
+      "requesterOrigin": {
+        "channel": "whatsapp",
+        "to": "+556299776996",
+        "accountId": "default"
+      },
+      "requesterDisplayKey": "agent:main:whatsapp:direct:+556299776996",
+      "task": "## Task: Roteiros de Reels — Semana 02/03-07/03/2026\n**Prioridade:** 🔴 Alta\n\nCrie roteiros completos para 3 Reels do Instagram do Grupo US para a semana 02/03 a 07/03/2026.\n\n**Contexto:**\n- Grupo US: escola de pós-graduação em Saúde Estética Avançada\n- Expert: Dra. Sacha Gualberto (autoridade nacional, Harvard, Xiamen)\n- Produto: TRINTAE3 — 534h, 3 pilares: Técnica + Certificação + Comunidade\n- Semana pré-Dia da Mulher (08/03) — excelente gancho emocional\n- Reels ideais: 30-60 segundos, hook nos primeiros 3 segundos\n\n**Reels a criar:**\n1. **Terça 03/03** — Educativo/Técnico: \"O procedimento que mais paga no mercado de estética em 2026\" (ou tema técnico viral)\n2. **Quinta 05/03** — Produto TRINTAE3: \"Por que 534h de formação muda tudo na sua carreira\"\n3. **Sexta 06/03** — Emocional/Bastidores: algo com a Dra. Sacha ou alunas (pré-Dia da Mulher)\n\n**Para cada Reel, entregar:**\n- Hook (primeiros 3 segundos — o que aparece na tela/fala)\n- Desenvolvimento (cenas, texto, narração)\n- CTA final\n- Música/estilo sugerido\n- Legenda para o post\n\n**Salve em:** `/Users/mauricio/.openclaw/agents/main/workspace/memory/roteiros-reels-semana-03-03.md`\n\nANNOUNCE ao concluir.",
+      "cleanup": "keep",
+      "expectsCompletionMessage": true,
+      "spawnMode": "run",
+      "model": "anthropic/claude-sonnet-4-6",
+      "runTimeoutSeconds": 240,
+      "createdAt": 1772237516286,
+      "startedAt": 1772237516362,
+      "archiveAtMs": 1772241116286,
+      "cleanupHandled": true,
+      "endedAt": 1772237599857,
+      "outcome": {
+        "status": "ok"
+      },
+      "endedReason": "subagent-complete",
+      "endedHookEmittedAt": 1772237603161,
+      "cleanupCompletedAt": 1772237603162
+    },
+    "163f4d6e-4133-4f57-b52e-b63973ea2f67": {
+      "runId": "163f4d6e-4133-4f57-b52e-b63973ea2f67",
+      "childSessionKey": "agent:duda:subagent:3193c899-ef50-42ba-a9d5-a3f0d9c0a732",
+      "requesterSessionKey": "agent:main:whatsapp:direct:+556299776996",
+      "requesterOrigin": {
+        "channel": "whatsapp",
+        "to": "+556299776996",
+        "accountId": "default"
+      },
+      "requesterDisplayKey": "agent:main:whatsapp:direct:+556299776996",
+      "task": "## Task: Calendário Editorial — Semana 02/03-07/03/2026\n**Prioridade:** 🔴 Alta\n\nMonte o calendário editorial completo da semana para o Instagram do Grupo US, organizando todos os posts por dia, horário ideal, formato e objetivo.\n\n**Contexto:**\n- Grupo US: escola de pós-graduação em Saúde Estética (TRINTAE3, NEON, OTB)\n- Expert: Dra. Sacha Gualberto\n- Semana estratégica: pré-Dia da Mulher (08/03)\n- Canais: Feed + Stories + Reels\n\n**Calendário base:**\n- Seg 02/03: Motivacional (Feed/Carrossel) — objetivo: alcance + salvos\n- Ter 03/03: Educativo Reel — objetivo: alcance orgânico\n- Qua 04/03: Prova social (Carrossel ou Feed) — objetivo: engajamento + confiança\n- Qui 05/03: Pitch TRINTAE3 (Reel ou Carrossel) — objetivo: conversão\n- Sex 06/03: Bastidores/Reel emocional — objetivo: conexão + compartilhamentos\n- Sab 07/03: Stories Dia da Mulher + enquete — objetivo: engajamento\n\n**Para cada dia, definir:**\n- Horário ideal de postagem (baseado em boas práticas 2026)\n- Formato exato (Reel / Carrossel X slides / Feed estático / Stories)\n- Objetivo principal (Alcance / Engajamento / Conversão / Salvos)\n- Stories complementares (o que postar nos stories do mesmo dia)\n- Prioridade (Alta / Média)\n\n**Salve em:** `/Users/mauricio/.openclaw/agents/main/workspace/memory/calendario-editorial-03-03.md`\n\nANNOUNCE ao concluir com o calendário organizado.",
+      "cleanup": "keep",
+      "expectsCompletionMessage": true,
+      "spawnMode": "run",
+      "model": "anthropic/claude-sonnet-4-6",
+      "runTimeoutSeconds": 240,
+      "createdAt": 1772237526667,
+      "startedAt": 1772237526739,
+      "archiveAtMs": 1772241126667,
+      "cleanupHandled": true,
+      "endedAt": 1772237585732,
+      "outcome": {
+        "status": "ok"
+      },
+      "endedReason": "subagent-complete",
+      "endedHookEmittedAt": 1772237590960,
+      "cleanupCompletedAt": 1772237590961
+    },
+    "2c66dbf3-62d1-41f8-8c53-c299a8487c96": {
+      "runId": "2c66dbf3-62d1-41f8-8c53-c299a8487c96",
+      "childSessionKey": "agent:luca-t:subagent:fc9d1209-4a0c-4209-b3e5-4be85d1ab400",
+      "requesterSessionKey": "agent:main:whatsapp:direct:+556299776996",
+      "requesterOrigin": {
+        "channel": "whatsapp",
+        "to": "+556299776996",
+        "accountId": "default"
+      },
+      "requesterDisplayKey": "agent:main:whatsapp:direct:+556299776996",
+      "task": "## Task: Estratégia de Tráfego Pago — Semana 02/03-07/03/2026\n**Prioridade:** 🔴 Alta\n\nCom base nos posts orgânicos que serão publicados na semana 02/03 a 07/03, defina quais posts têm potencial para impulsionamento pago (boost) e crie uma mini-estratégia de tráfego para amplificar o alcance.\n\n**Contexto:**\n- Grupo US: pós-graduação em Saúde Estética (TRINTAE3 — produto principal)\n- Semana pré-Dia da Mulher (08/03) — alto potencial para anúncios no nicho\n- Público-alvo: profissionais de saúde (enfermeiros, fisioterapeutas, biomédicos, médicos) que querem especializar em estética\n- Lead SDR capturado pelo WhatsApp → qualificação → closer\n\n**Definir:**\n1. Qual post da semana tem maior potencial para virar anúncio\n2. Segmentação sugerida (interesses, profissões, faixa etária)\n3. Objetivo da campanha (tráfego para WhatsApp / lead form / alcance)\n4. Orçamento diário sugerido (sem comprometer — apenas recomendação)\n5. CTA do anúncio (o que aparece no botão)\n\n**Salve em:** `/Users/mauricio/.openclaw/agents/main/workspace/memory/trafego-semana-03-03.md`\n\nANNOUNCE ao concluir.",
+      "cleanup": "keep",
+      "expectsCompletionMessage": true,
+      "spawnMode": "run",
+      "model": "anthropic/claude-sonnet-4-6",
+      "runTimeoutSeconds": 180,
+      "createdAt": 1772237537772,
+      "startedAt": 1772237537848,
+      "archiveAtMs": 1772241137772,
+      "cleanupHandled": true,
+      "endedAt": 1772237601894,
+      "outcome": {
+        "status": "ok"
+      },
+      "endedReason": "subagent-complete",
+      "endedHookEmittedAt": 1772237605725,
+      "cleanupCompletedAt": 1772237605725
+    },
+    "cf38cf48-938f-4bc6-aeba-6caef43ffd9f": {
+      "runId": "cf38cf48-938f-4bc6-aeba-6caef43ffd9f",
+      "childSessionKey": "agent:sara:subagent:a2ff4092-6d74-4bcc-81a9-12b1e5d8c54f",
+      "requesterSessionKey": "agent:main:whatsapp:direct:+556299776996",
+      "requesterOrigin": {
+        "channel": "whatsapp",
+        "to": "+556299776996",
+        "accountId": "default"
+      },
+      "requesterDisplayKey": "agent:main:whatsapp:direct:+556299776996",
+      "task": "## Task: Scripts de Pré-Venda para Stories — Semana 02/03-07/03/2026\n**Prioridade:** 🔴 Alta\n\nCrie scripts de pré-venda para os Stories do Instagram do Grupo US durante a semana 02/03-07/03, focados em aquecer leads e direcionar para o WhatsApp.\n\n**Contexto:**\n- TRINTAE3: Pós-graduação 534h em Saúde Estética Avançada\n- Semana pré-Dia da Mulher — gancho emocional poderoso\n- Stories devem ser conversacionais, curtos (5-7 segundos cada tela)\n- CTA: \"Chama no WhatsApp\" ou \"Link na bio\"\n\n**Criar:**\n1. Sequência de 3-5 stories para segunda (abertura de semana — curiosidade/gancho)\n2. Sequência de 3-5 stories para quinta (stories de venda TRINTAE3)\n3. Sequência especial para sexta/sábado (Dia da Mulher — emocional + oferta)\n\n**Para cada tela de story:**\n- Texto que aparece\n- Elemento visual sugerido (foto, vídeo, poll, etc.)\n- Sticker interativo (se aplicável: enquete, pergunta, contagem regressiva)\n\n**Salve em:** `/Users/mauricio/.openclaw/agents/main/workspace/memory/stories-prevenda-semana-03-03.md`\n\nANNOUNCE ao concluir.",
+      "cleanup": "keep",
+      "expectsCompletionMessage": true,
+      "spawnMode": "run",
+      "model": "anthropic/claude-sonnet-4-6",
+      "runTimeoutSeconds": 180,
+      "createdAt": 1772237546369,
+      "startedAt": 1772237546441,
+      "archiveAtMs": 1772241146369,
+      "cleanupHandled": true,
+      "endedAt": 1772237596138,
+      "outcome": {
+        "status": "ok"
+      },
+      "endedReason": "subagent-complete",
+      "endedHookEmittedAt": 1772237599408,
+      "cleanupCompletedAt": 1772237599409
+    },
+    "f07a11dd-00ff-4807-ae98-a553bc192c8c": {
+      "runId": "f07a11dd-00ff-4807-ae98-a553bc192c8c",
+      "childSessionKey": "agent:coder:subagent:4050903f-14da-4a00-b665-5c30f615442d",
+      "requesterSessionKey": "agent:main:whatsapp:direct:+556299776996",
+      "requesterOrigin": {
+        "channel": "whatsapp",
+        "to": "+556299776996",
+        "accountId": "default"
+      },
+      "requesterDisplayKey": "agent:main:whatsapp:direct:+556299776996",
+      "task": "## Task: Criar Página \"Estratégia de Conteúdo\" no Dashboard\n**Prioridade:** 🔴 Alta — Maurício precisa visualizar agora\n\n### Contexto\nO dashboard fica em `/Users/mauricio/.openclaw/dashboard/`.\nStack: Bun + React 19 + TypeScript + TanStack Router + tRPC 11 + Hono + Drizzle ORM + NeonDB + Tailwind CSS 4 + dnd-kit.\n**SEMPRE usar `bun` — nunca npm/yarn/pnpm.**\n**Deploy: `git push origin main` para Railway (laura.gpus.me)**\n\n### O que fazer\nCriar uma nova rota/página no dashboard em `/content-strategy` (ou `/estrategia`) que exiba os documentos de estratégia de conteúdo da semana de forma dinâmica e interativa.\n\n### Arquivos de conteúdo (ler e exibir no dashboard)\nTodos estão em `/Users/mauricio/.openclaw/agents/main/workspace/memory/`:\n1. `roteiro-semana-03-03-2026.md` — roteiro consolidado\n2. `copies-semana-03-03.md` — 6 captions completas\n3. `roteiros-reels-semana-03-03.md` — 3 roteiros de Reels\n4. `calendario-editorial-03-03.md` — calendário com horários\n5. `stories-prevenda-semana-03-03.md` — scripts Stories pré-venda\n6. `trafego-semana-03-03.md` — estratégia tráfego pago\n7. `tendencias-semana-03-03.md` — pesquisa de tendências\n\n### UI/UX da página\nCriar uma página visualmente rica com:\n\n1. **Header** com título \"Estratégia de Conteúdo — Semana 02–07/03/2026\" e badge \"Pré-Dia da Mulher 🌸\"\n\n2. **Calendário visual da semana** — cards por dia (Seg a Sab) mostrando:\n   - Dia e data\n   - Formato (Reel / Carrossel / Stories) com ícone/badge colorido\n   - Horário ideal de postagem\n   - Produto foco (TRINTAE3 / NEON / Brand)\n   - Objetivo (Alcance / Engajamento / Conversão)\n   - Clicar no card expande/abre detalhes\n\n3. **Tabs ou seções** para navegar entre os documentos:\n   - 📅 Calendário Editorial\n   - ✍️ Copies & Captions\n   - 🎬 Roteiros Reels\n   - 💬 Scripts Stories\n   - 📣 Tráfego Pago\n   - 🔍 Tendências\n\n4. **Cada seção** deve renderizar o markdown de forma bonita (usar uma lib de markdown rendering se disponível, ou parse manual)\n\n5. **Alertas de pendências** no topo:\n   - ⚠️ Confirmar disponibilidade Dra. Sacha para gravações\n   - ⚠️ Selecionar aluna para depoimento (Quarta)\n   - ⚠️ Aprovar orçamento de tráfego (~R$400-700)\n\n### Implementação\n- Criar o endpoint no backend (Hono/tRPC) que lê os arquivos markdown do filesystem\n- Criar o componente React da página\n- Adicionar a rota no TanStack Router\n- Adicionar link no menu de navegação do dashboard\n- Fazer build e commit: `git add -A && git commit -m \"feat: página estratégia de conteúdo semana 03/03\" && git push origin main`\n\n### Handoff ao concluir\n1. Confirmar que fez o push para Railway\n2. ANNOUNCE: URL da página no dashboard, o que foi criado, issues conhecidas\n3. Próximo passo: Maurício acessa laura.gpus.me/content-strategy para visualizar",
+      "cleanup": "keep",
+      "expectsCompletionMessage": true,
+      "spawnMode": "run",
+      "model": "anthropic/claude-sonnet-4-6",
+      "runTimeoutSeconds": 480,
+      "createdAt": 1772240030679,
+      "startedAt": 1772240030762,
+      "archiveAtMs": 1772243630679,
+      "cleanupHandled": false
+    }
+  }
 }

@@ -19,6 +19,7 @@ import { Route as OfficeRouteImport } from './routes/office'
 import { Route as EvolutionRouteImport } from './routes/evolution'
 import { Route as DashAgentsRouteImport } from './routes/dash-agents'
 import { Route as CronsRouteImport } from './routes/crons'
+import { Route as ContentStrategyRouteImport } from './routes/content-strategy'
 import { Route as ContentRouteImport } from './routes/content'
 import { Route as ConfigRouteImport } from './routes/config'
 import { Route as ChannelsRouteImport } from './routes/channels'
@@ -77,6 +78,13 @@ const CronsRoute = CronsRouteImport.update({
   path: '/crons',
   getParentRoute: () => rootRouteImport,
 } as any).lazy(() => import('./routes/crons.lazy').then((d) => d.Route))
+const ContentStrategyRoute = ContentStrategyRouteImport.update({
+  id: '/content-strategy',
+  path: '/content-strategy',
+  getParentRoute: () => rootRouteImport,
+} as any).lazy(() =>
+  import('./routes/content-strategy.lazy').then((d) => d.Route),
+)
 const ContentRoute = ContentRouteImport.update({
   id: '/content',
   path: '/content',
@@ -121,6 +129,7 @@ export interface FileRoutesByFullPath {
   '/channels': typeof ChannelsRoute
   '/config': typeof ConfigRoute
   '/content': typeof ContentRoute
+  '/content-strategy': typeof ContentStrategyRoute
   '/crons': typeof CronsRoute
   '/dash-agents': typeof DashAgentsRoute
   '/evolution': typeof EvolutionRoute
@@ -140,6 +149,7 @@ export interface FileRoutesByTo {
   '/channels': typeof ChannelsRoute
   '/config': typeof ConfigRoute
   '/content': typeof ContentRoute
+  '/content-strategy': typeof ContentStrategyRoute
   '/crons': typeof CronsRoute
   '/dash-agents': typeof DashAgentsRoute
   '/evolution': typeof EvolutionRoute
@@ -160,6 +170,7 @@ export interface FileRoutesById {
   '/channels': typeof ChannelsRoute
   '/config': typeof ConfigRoute
   '/content': typeof ContentRoute
+  '/content-strategy': typeof ContentStrategyRoute
   '/crons': typeof CronsRoute
   '/dash-agents': typeof DashAgentsRoute
   '/evolution': typeof EvolutionRoute
@@ -181,6 +192,7 @@ export interface FileRouteTypes {
     | '/channels'
     | '/config'
     | '/content'
+    | '/content-strategy'
     | '/crons'
     | '/dash-agents'
     | '/evolution'
@@ -200,6 +212,7 @@ export interface FileRouteTypes {
     | '/channels'
     | '/config'
     | '/content'
+    | '/content-strategy'
     | '/crons'
     | '/dash-agents'
     | '/evolution'
@@ -219,6 +232,7 @@ export interface FileRouteTypes {
     | '/channels'
     | '/config'
     | '/content'
+    | '/content-strategy'
     | '/crons'
     | '/dash-agents'
     | '/evolution'
@@ -239,6 +253,7 @@ export interface RootRouteChildren {
   ChannelsRoute: typeof ChannelsRoute
   ConfigRoute: typeof ConfigRoute
   ContentRoute: typeof ContentRoute
+  ContentStrategyRoute: typeof ContentStrategyRoute
   CronsRoute: typeof CronsRoute
   DashAgentsRoute: typeof DashAgentsRoute
   EvolutionRoute: typeof EvolutionRoute
@@ -323,6 +338,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CronsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/content-strategy': {
+      id: '/content-strategy'
+      path: '/content-strategy'
+      fullPath: '/content-strategy'
+      preLoaderRoute: typeof ContentStrategyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/content': {
       id: '/content'
       path: '/content'
@@ -383,6 +405,7 @@ const rootRouteChildren: RootRouteChildren = {
   ChannelsRoute: ChannelsRoute,
   ConfigRoute: ConfigRoute,
   ContentRoute: ContentRoute,
+  ContentStrategyRoute: ContentStrategyRoute,
   CronsRoute: CronsRoute,
   DashAgentsRoute: DashAgentsRoute,
   EvolutionRoute: EvolutionRoute,

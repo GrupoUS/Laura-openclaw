@@ -7,7 +7,8 @@
       "Bash(bunx biome check:*)",
       "Bash(git checkout:*)",
       "Bash(tail:*)",
-      "Bash(test:*)"
+      "Bash(test:*)",
+      "WebFetch(domain:developers.notion.com)"
     ],
     "deny": [],
     "ask": []
