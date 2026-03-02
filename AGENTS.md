@@ -1,5 +1,17 @@
 # OpenClaw — Agent Rules & Project Specification
 
+## 🎯 Contexto de Negócio (LEIA PRIMEIRO)
+
+> Antes de qualquer tarefa, consulte:
+> - `identity/brain-dump.md` — Quem é Maurício, quais são os produtos e metas
+> - `identity/mission-statement.md` — O Norte que guia TUDO
+
+**Regra:** Toda tarefa autônoma deve responder: *"Isso aproxima o Grupo US
+de escalar faturamento ou reduzir trabalho operacional?"*
+Se não, não execute sem aprovação explícita.
+
+---
+
 > **Single source of truth for ALL AI agent behavior AND project-level technical context.**
 
 ---

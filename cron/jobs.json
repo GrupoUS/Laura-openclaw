@@ -559,6 +559,105 @@
         "consecutiveErrors": 0,
         "lastDelivered": true
       }
+    },
+    {
+      "id": "morning-brief",
+      "agentId": "main",
+      "name": "Relatório Matinal Laura (07h BRT)",
+      "enabled": true,
+      "createdAtMs": 1772489000000,
+      "updatedAtMs": 1772489000000,
+      "schedule": {
+        "kind": "cron",
+        "expr": "0 10 * * *",
+        "tz": "UTC"
+      },
+      "sessionTarget": "isolated",
+      "wakeMode": "now",
+      "payload": {
+        "kind": "agentTurn",
+        "message": "Relatório matinal (07h BRT). Consulte identity/brain-dump.md e identity/mission-statement.md antes de agir.\n\n1. Resumo de leads no WhatsApp — quantos novos nas últimas 24h, status dos pendentes\n2. Tarefas pendentes do Notion — listar as mais urgentes\n3. Alertas financeiros do Asaas — cobranças vencidas, pagamentos recebidos\n\nEnvie o relatório consolidado para Maurício. Tom: objetivo, com dados.",
+        "model": "kilocode/google/gemini-3-flash-preview",
+        "thinking": "low",
+        "modelFallbacks": [
+          "kilocode/moonshotai/kimi-k2.5"
+        ]
+      },
+      "delivery": {
+        "mode": "announce",
+        "channel": "whatsapp",
+        "to": "+556299776996",
+        "bestEffort": true
+      },
+      "state": {
+        "consecutiveErrors": 0,
+        "nextRunAtMs": 1772532000000
+      }
+    },
+    {
+      "id": "afternoon-task",
+      "agentId": "main",
+      "name": "Tarefa Autônoma Laura (14h BRT)",
+      "enabled": true,
+      "createdAtMs": 1772489000000,
+      "updatedAtMs": 1772489000000,
+      "schedule": {
+        "kind": "cron",
+        "expr": "0 17 * * *",
+        "tz": "UTC"
+      },
+      "sessionTarget": "isolated",
+      "wakeMode": "now",
+      "payload": {
+        "kind": "agentTurn",
+        "message": "Execução autônoma (14h BRT). Consulte identity/brain-dump.md e identity/mission-statement.md.\n\nEscolha 1 tarefa do backlog do Notion que avance o Mission Statement e execute sem perguntar.\n\nCritério de seleção:\n1. Tem impacto direto em conversão, retenção ou redução operacional? → Execute\n2. Envolve gasto financeiro ou decisão estratégica? → Avise Maurício antes\n3. É repetitiva e já foi feita antes? → Automatize e documente em skills/\n\nApós concluir, registre o que foi feito.",
+        "model": "kilocode/google/gemini-3-flash-preview",
+        "thinking": "low",
+        "modelFallbacks": [
+          "kilocode/moonshotai/kimi-k2.5"
+        ]
+      },
+      "delivery": {
+        "mode": "none"
+      },
+      "state": {
+        "consecutiveErrors": 0,
+        "nextRunAtMs": 1772557200000
+      }
+    },
+    {
+      "id": "night-report",
+      "agentId": "main",
+      "name": "Relatório Noturno Laura (22h BRT)",
+      "enabled": true,
+      "createdAtMs": 1772489000000,
+      "updatedAtMs": 1772489000000,
+      "schedule": {
+        "kind": "cron",
+        "expr": "0 1 * * *",
+        "tz": "UTC"
+      },
+      "sessionTarget": "isolated",
+      "wakeMode": "now",
+      "payload": {
+        "kind": "agentTurn",
+        "message": "Relatório noturno (22h BRT). Consulte identity/brain-dump.md e identity/mission-statement.md.\n\n1. O que foi feito hoje — tarefas concluídas, leads contactados, automações executadas\n2. O que está em aberto — pendências, leads sem resposta, tarefas atrasadas\n3. Sugestão de prioridade para amanhã — o que move mais a agulha do faturamento\n\nEnvie o relatório para Maurício. Tom: conciso, com dados e recomendações.",
+        "model": "kilocode/google/gemini-3-flash-preview",
+        "thinking": "low",
+        "modelFallbacks": [
+          "kilocode/moonshotai/kimi-k2.5"
+        ]
+      },
+      "delivery": {
+        "mode": "announce",
+        "channel": "whatsapp",
+        "to": "+556299776996",
+        "bestEffort": true
+      },
+      "state": {
+        "consecutiveErrors": 0,
+        "nextRunAtMs": 1772499600000
+      }
     }
   ]
 }
