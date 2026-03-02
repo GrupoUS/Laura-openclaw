@@ -7,6 +7,25 @@
 
 ---
 
+## 📂 Google Drive — Estrutura de Pastas (NUNCA deixar arquivos na raiz!)
+
+**REGRA ABSOLUTA:** Todo arquivo criado no Drive deve ir direto para a pasta correta. JAMAIS deixar solto na raiz (`My Drive`).
+
+| Tipo de Arquivo | Pasta Destino | ID da Pasta |
+|----------------|---------------|-------------|
+| Resumos de reunião, relatórios Zoom, atas | **3. Reuniões \| Grupo US** | `1IVdKJxqeRezuM89amtmPdKp7B-sxRzlH` |
+| Gravações Zoom (.mp4, .vtt) | **4. Zoom \| Gravações** | `1XqJe8Q8ExJFm72qIECDiTwC7fLlHbVPb` |
+| Planilhas de leads, CRM, importações | **pasta Leads/CRM** (dentro de 1. Grupo US) | ver estrutura abaixo |
+| Arquivos de TI / IA / automação | **10. TI / IA** | `1JTER2-FG2wjlJTXDM2c6oZ15PkUeUYjs` |
+| Pesquisas e benchmarks | **5. Pesquisas** | `1SYpbU4prkKt71BDSBFnvcxxsGVjO0Pif` |
+| Infra e configurações técnicas | **5. Infra** | `19ihwxatV75-9kq-MCn_mFl8wnvomtUyX` |
+| AI / banco de dados | **5. AI Database** | `1VespmqjVQIj_qFTuAfBaxr3WE2QdQCER` |
+
+**Quando criar arquivo no Drive:** sempre passar `--parent <ID>` ou mover logo após criar.
+**Quando não souber a pasta certa:** perguntar ao Bruno antes de salvar na raiz.
+
+---
+
 ## Quick Reference
 
 ### Delegação de Agentes (Orquestração)

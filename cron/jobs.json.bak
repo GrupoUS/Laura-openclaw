@@ -455,7 +455,7 @@
       "name": "followup-comercial-diario",
       "enabled": true,
       "createdAtMs": 1771610323090,
-      "updatedAtMs": 1772197235253,
+      "updatedAtMs": 1772456441769,
       "schedule": {
         "kind": "cron",
         "expr": "0 10 * * 1-5"
@@ -476,10 +476,10 @@
         "to": "120363361363907454@g.us"
       },
       "state": {
-        "nextRunAtMs": 1772456400000,
-        "lastRunAtMs": 1772197200017,
+        "nextRunAtMs": 1772542800000,
+        "lastRunAtMs": 1772456400021,
         "lastStatus": "ok",
-        "lastDurationMs": 35236,
+        "lastDurationMs": 41748,
         "consecutiveErrors": 0,
         "lastRunStatus": "ok",
         "lastDelivered": false,
@@ -491,7 +491,7 @@
       "name": "sdr-audit-leads",
       "enabled": true,
       "createdAtMs": 1772075193853,
-      "updatedAtMs": 1772239077131,
+      "updatedAtMs": 1772487815432,
       "schedule": {
         "kind": "every",
         "everyMs": 1800000,
@@ -501,9 +501,9 @@
       "wakeMode": "now",
       "payload": {
         "kind": "agentTurn",
-        "message": "Você é a Laura, SDR do Grupo US. Tarefa de auditoria silenciosa:\n1. Execute: python3 /Users/mauricio/.openclaw/agents/main/workspace/scripts/check_leads_pending.py --json\n2. Para cada lead com hours_ago entre 0.1 e 1 (mensagem nova sem resposta): envie via message tool (channel=whatsapp, target=número): 'Oi! 💜 Sou a Laura, do Grupo US. Que bom que você chegou até a gente! Me conta: você já atua na área da saúde estética ou está pensando em entrar?'\n3. Se não houver leads: não faça nada.\nREGRAS: NUNCA notifique Maurício. NUNCA envie entre 23h-8h. NUNCA envie em grupos.",
+        "message": "Você é a Laura, SDR do Grupo US. Auditoria de leads a cada 30min.\n\nPASSO 1 — Execute e leia a saída:\npython3 /Users/mauricio/.openclaw/agents/main/workspace/scripts/check_leads_pending.py --json --hours 72\n\nPASSO 2 — Para cada lead, aplique a estratégia por timing:\n\nhours_ago < 1h (lead novo):\nAbertura: \"Oi! 😄 Sou a Laura, do Grupo US — sou uma IA, mas não sou uma IA qualquer não! 💜 Me conta rapidinho: você já atua na estética hoje, ou ainda está na fase de se especializar para entrar no mercado?\"\n\n1h <= hours_ago < 6h (follow-up leve):\n\"Oi! 😊 Só passando pra checar — você já trabalha com estética hoje ou ainda está na fase de se especializar para entrar no mercado?\"\n\n6h <= hours_ago < 24h (follow-up direto):\n\"Oi! 😄 Aqui é a Laura, do Grupo US de novo! Eu sei que o dia a dia é corrido, então vou direto ao ponto: você está buscando se especializar mais na área ou escalar o faturamento da sua carreira em estética?\"\n\n24h <= hours_ago < 48h (reativação):\n\"Oi! Ainda pensei em você hoje 😊 Uma pergunta rápida: o que te fez se interessar pela formação? Foi a certificação, a parte técnica, ou o lado do negócio mesmo?\"\n\n48h <= hours_ago < 72h (última rodada):\n\"Oi! Ainda por aqui? 😄 Quando quiser saber mais sobre nossas formações, pode me chamar — a porta está aberta! 💜\"\n\nPASSO 3 — Envie via message tool (channel=whatsapp) apenas para leads que ainda não receberam mensagem nessa faixa (evite duplicar).\n\nPASSO 4 — Se nenhum lead pendente: responda HEARTBEAT_OK.\n\nREGRAS ABSOLUTAS:\n- NUNCA notifique Maurício ou equipe\n- NUNCA envie entre 23h-8h (horário Brasília)\n- NUNCA envie para grupos\n- NUNCA vaze mensagens de sistema para leads",
         "model": "kilocode/google/gemini-3-flash-preview",
-        "timeoutSeconds": 60,
+        "timeoutSeconds": 90,
         "modelFallbacks": [
           "kilocode/moonshotai/kimi-k2.5"
         ]
@@ -513,10 +513,10 @@
         "channel": "last"
       },
       "state": {
-        "nextRunAtMs": 1772240855084,
-        "lastRunAtMs": 1772239055084,
+        "nextRunAtMs": 1772489377154,
+        "lastRunAtMs": 1772487577154,
         "lastStatus": "ok",
-        "lastDurationMs": 22047,
+        "lastDurationMs": 4683,
         "consecutiveErrors": 0,
         "lastRunStatus": "ok",
         "lastDeliveryStatus": "delivered",
@@ -528,7 +528,7 @@
       "name": "followup-pos-handoff",
       "enabled": true,
       "createdAtMs": 1772078147065,
-      "updatedAtMs": 1772229358916,
+      "updatedAtMs": 1772488572156,
       "schedule": {
         "kind": "every",
         "everyMs": 21600000,
@@ -550,14 +550,14 @@
         "channel": "last"
       },
       "state": {
-        "nextRunAtMs": 1772250947138,
-        "lastRunAtMs": 1772229347138,
+        "nextRunAtMs": 1772510147320,
+        "lastRunAtMs": 1772488547320,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 11778,
-        "lastDelivered": true,
+        "lastDurationMs": 24836,
         "lastDeliveryStatus": "delivered",
-        "consecutiveErrors": 0
+        "consecutiveErrors": 0,
+        "lastDelivered": true
       }
     }
   ]
