@@ -513,7 +513,7 @@
         "channel": "last"
       },
       "state": {
-        "nextRunAtMs": 1772494777208,
+        "nextRunAtMs": 1772539593853,
         "lastRunAtMs": 1772492977208,
         "lastStatus": "ok",
         "lastDurationMs": 6378,
@@ -550,7 +550,7 @@
         "channel": "last"
       },
       "state": {
-        "nextRunAtMs": 1772510147320,
+        "nextRunAtMs": 1772553347065,
         "lastRunAtMs": 1772488547320,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
@@ -591,7 +591,7 @@
       },
       "state": {
         "consecutiveErrors": 0,
-        "nextRunAtMs": 1772532000000
+        "nextRunAtMs": 1772618400000
       }
     },
     {
@@ -656,7 +656,7 @@
       },
       "state": {
         "consecutiveErrors": 0,
-        "nextRunAtMs": 1772499600000
+        "nextRunAtMs": 1772586000000
       }
     },
     {
@@ -683,7 +683,7 @@
         "channel": "last"
       },
       "state": {
-        "nextRunAtMs": 1772496354675
+        "nextRunAtMs": 1772539554675
       }
     },
     {
@@ -710,7 +710,7 @@
         "channel": "last"
       },
       "state": {
-        "nextRunAtMs": 1772517600000
+        "nextRunAtMs": 1772604000000
       }
     }
   ]

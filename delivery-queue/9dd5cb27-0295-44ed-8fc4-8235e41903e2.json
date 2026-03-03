@@ -22,7 +22,7 @@
       "./media/outbound/followup_1.mp3"
     ]
   },
-  "retryCount": 3,
+  "retryCount": 4,
   "lastError": "No active WhatsApp Web listener (account: default). Start the gateway, then link WhatsApp with: openclaw channels login --channel whatsapp --account default.",
-  "lastAttemptAt": 1772492418931
+  "lastAttemptAt": 1772538477068
 }
