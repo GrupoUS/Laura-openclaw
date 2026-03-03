@@ -16,6 +16,7 @@
     "agentId": "main",
     "text": "🔥 *Lead qualificado — TRINTAE3*\n\n👤 *Nome:* Bianca\n📱 *WhatsApp:* +556181772652\n📧 *E-mail:* byah.psouza@gmail.com\n📍 *Cidade:* Brazlândia - DF\n🎓 *Profissão:* Biomédica\n💬 *Perfil:* Iniciante, quer começar na estética, veio por indicação de pessoas próximas da área\n🌡️ *Temperatura:* Quente\n\n*Responsável:* Lucas\n*Próximo passo:* Entrar em contato e apresentar a formação 💜"
   },
-  "retryCount": 1,
-  "lastError": "No active WhatsApp Web listener (account: default). Start the gateway, then link WhatsApp with: openclaw channels login --channel whatsapp --account default."
+  "retryCount": 2,
+  "lastError": "No active WhatsApp Web listener (account: default). Start the gateway, then link WhatsApp with: openclaw channels login --channel whatsapp --account default.",
+  "lastAttemptAt": 1772492418949
 }

@@ -23,6 +23,7 @@
       "/tmp/relatorio_laura.ogg"
     ]
   },
-  "retryCount": 1,
-  "lastError": "Local media path is not under an allowed directory: /tmp/relatorio_laura.ogg"
+  "retryCount": 2,
+  "lastError": "No active WhatsApp Web listener (account: default). Start the gateway, then link WhatsApp with: openclaw channels login --channel whatsapp --account default.",
+  "lastAttemptAt": 1772492418946
 }

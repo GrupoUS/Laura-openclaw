@@ -13,6 +13,7 @@
   "threadId": null,
   "replyToId": null,
   "bestEffort": false,
-  "retryCount": 1,
-  "lastError": "No active WhatsApp Web listener (account: default). Start the gateway, then link WhatsApp with: openclaw channels login --channel whatsapp --account default."
+  "retryCount": 2,
+  "lastError": "No active WhatsApp Web listener (account: default). Start the gateway, then link WhatsApp with: openclaw channels login --channel whatsapp --account default.",
+  "lastAttemptAt": 1772492418944
 }

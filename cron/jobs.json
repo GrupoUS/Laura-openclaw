@@ -491,7 +491,7 @@
       "name": "sdr-audit-leads",
       "enabled": true,
       "createdAtMs": 1772075193853,
-      "updatedAtMs": 1772487815432,
+      "updatedAtMs": 1772493247630,
       "schedule": {
         "kind": "every",
         "everyMs": 1800000,
@@ -501,9 +501,9 @@
       "wakeMode": "now",
       "payload": {
         "kind": "agentTurn",
-        "message": "Você é a Laura, SDR do Grupo US. Auditoria de leads a cada 30min.\n\nPASSO 1 — Execute e leia a saída:\npython3 /Users/mauricio/.openclaw/agents/main/workspace/scripts/check_leads_pending.py --json --hours 72\n\nPASSO 2 — Para cada lead, aplique a estratégia por timing:\n\nhours_ago < 1h (lead novo):\nAbertura: \"Oi! 😄 Sou a Laura, do Grupo US — sou uma IA, mas não sou uma IA qualquer não! 💜 Me conta rapidinho: você já atua na estética hoje, ou ainda está na fase de se especializar para entrar no mercado?\"\n\n1h <= hours_ago < 6h (follow-up leve):\n\"Oi! 😊 Só passando pra checar — você já trabalha com estética hoje ou ainda está na fase de se especializar para entrar no mercado?\"\n\n6h <= hours_ago < 24h (follow-up direto):\n\"Oi! 😄 Aqui é a Laura, do Grupo US de novo! Eu sei que o dia a dia é corrido, então vou direto ao ponto: você está buscando se especializar mais na área ou escalar o faturamento da sua carreira em estética?\"\n\n24h <= hours_ago < 48h (reativação):\n\"Oi! Ainda pensei em você hoje 😊 Uma pergunta rápida: o que te fez se interessar pela formação? Foi a certificação, a parte técnica, ou o lado do negócio mesmo?\"\n\n48h <= hours_ago < 72h (última rodada):\n\"Oi! Ainda por aqui? 😄 Quando quiser saber mais sobre nossas formações, pode me chamar — a porta está aberta! 💜\"\n\nPASSO 3 — Envie via message tool (channel=whatsapp) apenas para leads que ainda não receberam mensagem nessa faixa (evite duplicar).\n\nPASSO 4 — Se nenhum lead pendente: responda HEARTBEAT_OK.\n\nREGRAS ABSOLUTAS:\n- NUNCA notifique Maurício ou equipe\n- NUNCA envie entre 23h-8h (horário Brasília)\n- NUNCA envie para grupos\n- NUNCA vaze mensagens de sistema para leads",
+        "message": "Você é a Laura, SDR do Grupo US. Auditoria de leads a cada 30min.\n\nPASSO 1 — Leads sem resposta (sessão):\npython3 /Users/mauricio/.openclaw/agents/main/workspace/scripts/check_leads_pending.py --json --hours 3\n\nPASSO 2 — Mensagens perdidas no gateway (crítico!):\npython3 /Users/mauricio/.openclaw/agents/main/workspace/scripts/check_gateway_missed.py --json --hours 1\n\nPara cada lead do PASSO 1 (hours_ago entre 0.05 e 3):\n- Se hours_ago < 1: envie abertura SDR\n- Se hours_ago entre 1 e 3: envie follow-up\n\nPara cada lead do PASSO 2 (mensagem chegou no gateway mas sem resposta):\n- Envie abertura SDR imediatamente: 'Oi! 💜 Sou a Laura, do Grupo US — sou uma IA, mas não sou uma IA qualquer não! Aqui você tira todas as dúvidas de forma bem descontraída. Me conta: você já atua na área da estética hoje, ou está pensando em começar?'\n\nSe nenhum lead pendente em ambos os passos: responda HEARTBEAT_OK.\n\nREGRAS: NUNCA notifique Maurício. NUNCA entre 23h-8h BRT. NUNCA em grupos.",
         "model": "kilocode/google/gemini-3-flash-preview",
-        "timeoutSeconds": 90,
+        "timeoutSeconds": 120,
         "modelFallbacks": [
           "kilocode/moonshotai/kimi-k2.5"
         ]
@@ -513,14 +513,14 @@
         "channel": "last"
       },
       "state": {
-        "nextRunAtMs": 1772489377154,
-        "lastRunAtMs": 1772487577154,
+        "nextRunAtMs": 1772494777208,
+        "lastRunAtMs": 1772492977208,
         "lastStatus": "ok",
-        "lastDurationMs": 4683,
+        "lastDurationMs": 6378,
         "consecutiveErrors": 0,
         "lastRunStatus": "ok",
-        "lastDeliveryStatus": "delivered",
-        "lastDelivered": true
+        "lastDeliveryStatus": "not-delivered",
+        "lastDelivered": false
       }
     },
     {
@@ -528,7 +528,7 @@
       "name": "followup-pos-handoff",
       "enabled": true,
       "createdAtMs": 1772078147065,
-      "updatedAtMs": 1772488572156,
+      "updatedAtMs": 1772493231946,
       "schedule": {
         "kind": "every",
         "everyMs": 21600000,
@@ -657,6 +657,60 @@
       "state": {
         "consecutiveErrors": 0,
         "nextRunAtMs": 1772499600000
+      }
+    },
+    {
+      "id": "1ecdeb8d-6817-49bd-b535-92012764519d",
+      "name": "sdr-followup-travados",
+      "enabled": true,
+      "createdAtMs": 1772489154675,
+      "updatedAtMs": 1772493220745,
+      "schedule": {
+        "kind": "every",
+        "everyMs": 7200000,
+        "anchorMs": 1772489154675
+      },
+      "sessionTarget": "isolated",
+      "wakeMode": "now",
+      "payload": {
+        "kind": "agentTurn",
+        "message": "Você é a Laura, SDR do Grupo US. Tarefa: follow-up em leads travados.\n\n1. Execute: python3 /Users/mauricio/.openclaw/agents/main/workspace/scripts/check_stalled_leads.py --json --min-hours 1.5 --max-hours 48\n\n2. Para cada lead retornado:\n   - bucket='followup_30min' (1.5-2h): envie uma mensagem curta reativando a conversa, referenciando o que o lead disse antes\n   - bucket='followup_2h' ou 'followup_24h' (2-26h): envie follow-up mais criativo/curioso\n   - bucket='followup_48h' (>26h): envie mensagem de reengajamento com nova pergunta ou ângulo diferente\n   - Use o campo 'last_asst_msg' para saber onde a conversa parou e retome de forma natural\n   - Envie via tool message (channel=whatsapp, target=número do lead)\n\n3. NUNCA envie para os números: +556299776996, +556195220319, +556199574354, +556299438005, +5562999990002, +5562999990099\n\n4. Se nenhum lead travado encontrado: responda HEARTBEAT_OK.\n\nREGRAS: NUNCA notifique Maurício. NUNCA envie entre 23h-8h BRT. NUNCA em grupos.",
+        "model": "kilocode/google/gemini-3-flash-preview",
+        "timeoutSeconds": 120
+      },
+      "delivery": {
+        "mode": "announce",
+        "channel": "last"
+      },
+      "state": {
+        "nextRunAtMs": 1772496354675
+      }
+    },
+    {
+      "id": "c0eeecf8-ac33-4b3f-8a10-6e112388c7b2",
+      "name": "self-heal-daily",
+      "enabled": true,
+      "createdAtMs": 1772490093216,
+      "updatedAtMs": 1772493222038,
+      "schedule": {
+        "kind": "cron",
+        "expr": "0 3 * * *",
+        "tz": "America/Sao_Paulo"
+      },
+      "sessionTarget": "isolated",
+      "wakeMode": "now",
+      "payload": {
+        "kind": "agentTurn",
+        "message": "Você é a Laura. Execute o ciclo diário de auto-aprimoramento do time de agentes.\n\nPASSO 1 — Revisar erros das últimas 24h:\npython3 /Users/mauricio/.openclaw/agents/main/workspace/scripts/self_heal.py review --hours 24\n\nPASSO 2 — Listar lições críticas e de alta prioridade:\npython3 /Users/mauricio/.openclaw/agents/main/workspace/scripts/self_heal.py lessons --severity critical\n\nPASSO 3 — Verificar se alguma lição NOVA surgiu:\npython3 /Users/mauricio/.openclaw/agents/main/workspace/scripts/agent_bus.py context --hours 24 --json\n\nPASSO 4 — Para cada lição nova com severity=critical:\n- Se ainda não foi aplicada em algum arquivo de regras (SOUL.md, AGENTS.md):\n  a) Adicionar uma nova REGRA no SOUL.md documentando o erro e o fix\n  b) Usar o comando log-lesson para marcar como auto_applied=true\n  c) Registrar no agent_bus: type=memory_updated, content='Lição X aplicada em SOUL.md'\n\nPASSO 5 — Gerar resumo e salvar em memory/YYYY-MM-DD.md (data de hoje):\nAdicionar seção '## Self-Heal [data]' com:\n- Erros encontrados\n- Lições geradas/atualizadas\n- Arquivos atualizados (se houver)\n- Status geral do sistema\n\nNÃO envie relatório para Maurício a menos que haja algo crítico novo.\nREGRAS: NUNCA modifique openclaw.json. NUNCA delete regras existentes, apenas adicione.",
+        "model": "kilocode/google/gemini-3-flash-preview",
+        "timeoutSeconds": 180
+      },
+      "delivery": {
+        "mode": "announce",
+        "channel": "last"
+      },
+      "state": {
+        "nextRunAtMs": 1772517600000
       }
     }
   ]
